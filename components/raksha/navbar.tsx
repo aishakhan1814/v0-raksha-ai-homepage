@@ -6,7 +6,7 @@ import { RakshaLogo } from './logo'
 const navLinks = [
   { label: 'How It Works', href: '/how-it-works' },
   { label: 'For Donors', href: '/for-donors' },
-  { label: 'For Patients', href: '#patients' },
+  { label: 'For Patients', href: '/for-patients' },
   { label: 'Impact', href: '#impact' },
   { label: 'Library', href: '#library' },
   { label: 'About', href: '#about' },
