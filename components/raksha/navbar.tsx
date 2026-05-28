@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { RakshaLogo } from './logo'
 
 const navLinks = [
-  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'How It Works', href: '/how-it-works' },
   { label: 'For Donors', href: '#donors' },
   { label: 'For Patients', href: '#patients' },
   { label: 'Impact', href: '#impact' },
