@@ -609,7 +609,7 @@ function SuccessScreen({ name, blood }: { name: string; blood: string }) {
         to patient's circle
       </div>
       <a
-        href="/"
+        href="/#register-donor"
         style={{
           background: "transparent",
           color: "#C0152A",
