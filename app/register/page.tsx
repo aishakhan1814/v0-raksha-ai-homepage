@@ -1,101 +1,108 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ReferenceLine, ResponsiveContainer, Area, AreaChart, Dot
-} from "recharts";
+import { useState, useEffect, useRef } from "react";
 
 // ── FONTS ─────────────────────────────────────────────────────────────────────
 const FONT_URL =
   "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap";
 
+// ── TYPES ─────────────────────────────────────────────────────────────────────
+interface FormData {
+  // Personal
+  firstName: string;
+  lastName: string;
+  dob: string;
+  gender: string;
+  // Contact
+  phone: string;
+  email: string;
+  city: string;
+  area: string;
+  // Medical
+  bloodGroup: string;
+  lastDonation: string;
+  hasThalassemiaDonation: boolean;
+  medicalConditions: string;
+  medications: string;
+  // Availability
+  availability: string[];
+  travelRadius: string;
+  emergencyAvailable: boolean;
+  // Consent
+  consentData: boolean;
+  consentContact: boolean;
+}
+
+type StepKey = "personal" | "contact" | "medical" | "availability" | "consent";
+
+interface Step {
+  id: StepKey;
+  label: string;
+  icon: string;
+}
+
+type FieldErrors = Partial<Record<keyof FormData, string>>;
+
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const STEPS: Step[] = [
+  { id: "personal", label: "Personal", icon: "◈" },
+  { id: "contact", label: "Contact", icon: "◉" },
+  { id: "medical", label: "Medical", icon: "◆" },
+  { id: "availability", label: "Availability", icon: "⊞" },
+  { id: "consent", label: "Consent", icon: "▤" },
+];
+
+const BLOOD_GROUPS = ["A+", "A−", "B+", "B−", "AB+", "AB−", "O+", "O−"];
+
+const CITIES = [
+  "Hyderabad", "Secunderabad", "Warangal", "Nizamabad",
+  "Karimnagar", "Khammam", "Ramagundam", "Mahbubnagar",
+];
+
+const AVAILABILITY_OPTIONS = [
+  "Weekday mornings",
+  "Weekday evenings",
+  "Weekend mornings",
+  "Weekend evenings",
+  "Flexible / On-call",
+];
+
+const TRAVEL_OPTIONS = ["< 5 km", "5–15 km", "15–30 km", "30+ km / Citywide"];
+
 // ── HELPERS ───────────────────────────────────────────────────────────────────
-function useCountUp(target, duration = 1600, trigger = true) {
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    if (!trigger) return;
-    let start = null;
-    const step = (ts) => {
-      if (!start) start = ts;
-      const p = Math.min((ts - start) / duration, 1);
-      setVal(+(p * target).toFixed(1));
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [target, duration, trigger]);
-  return val;
-}
-
-function useCountdown(targetDate) {
-  const [t, setT] = useState({ d: 0, h: 0, m: 0, s: 0 });
-  useEffect(() => {
-    const tick = () => {
-      const diff = new Date(targetDate) - new Date();
-      if (diff <= 0) return;
-      setT({ d: Math.floor(diff / 86400000), h: Math.floor((diff % 86400000) / 3600000), m: Math.floor((diff % 3600000) / 60000), s: Math.floor((diff % 60000) / 1000) });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [targetDate]);
-  return t;
-}
-
-const pad = (n) => String(n).padStart(2, "0");
-
-// ── MOCK DATA ──────────────────────────────────────────────────────────────────
-const PATIENT = { name: "Arjun", age: 9, blood: "B+", family: "Sharma Family", hospital: "Rainbow Thalassemia Centre", city: "Hyderabad", coordinator: "Dr. Meera Iyer" };
-const NEXT_TRANSFUSION = "2026-06-15T09:00:00";
-
-const HEALTH_DATA = [
-  { month: "Oct", hb: 7.2, trans: true }, { month: "Nov", hb: 10.8, trans: false },
-  { month: "Dec", hb: 7.8, trans: true }, { month: "Jan", hb: 11.1, trans: false },
-  { month: "Feb", hb: 7.4, trans: true }, { month: "Mar", hb: 10.4, trans: false },
-  { month: "Apr", hb: 7.6, trans: true }, { month: "May", hb: 10.4, trans: false },
-  { month: "Jun (est)", hb: null, trans: false },
-];
-
-const HISTORY = [
-  { id: 1, date: "Apr 18, 2026", unit: 2, hbBefore: 7.6, hbAfter: 10.8, donor: "Ramesh R.", reaction: false, center: "Rainbow TC" },
-  { id: 2, date: "Feb 10, 2026", unit: 2, hbBefore: 7.4, hbAfter: 10.4, donor: "Ramesh R.", reaction: false, center: "Rainbow TC" },
-  { id: 3, date: "Dec 12, 2025", unit: 2, hbBefore: 7.8, hbAfter: 11.1, donor: "Suresh K.", reaction: false, center: "KIMS Hospital" },
-  { id: 4, date: "Oct 5, 2025", unit: 2, hbBefore: 7.2, hbAfter: 10.8, donor: "Ramesh R.", reaction: false, center: "Rainbow TC" },
-  { id: 5, date: "Aug 1, 2025", unit: 2, hbBefore: 7.9, hbAfter: 11.3, donor: "Anita M.", reaction: false, center: "Niloufer Hospital" },
-];
-
-const DONORS = [
-  { id: 1, initials: "RR", name: "Ramesh R.", blood: "O+", reliability: 97, donations: 18, status: "Confirmed", primary: true, city: "Hyderabad" },
-  { id: 2, initials: "SK", name: "Suresh K.", blood: "B+", reliability: 84, donations: 11, status: "Standby", primary: false, city: "Hyderabad" },
-  { id: 3, initials: "AM", name: "Anita M.", blood: "O+", reliability: 78, donations: 7, status: "Outreach", primary: false, city: "Secunderabad" },
-];
-
-const CALENDAR_EVENTS = {
-  "2026-06-15": { type: "confirmed", label: "Transfusion" },
-  "2026-06-08": { type: "outreach", label: "Outreach" },
-  "2026-05-18": { type: "past", label: "Past" },
-  "2026-06-22": { type: "unconfirmed", label: "Window" },
-};
-
-const NAV = [
-  { id: "home", label: "Overview", icon: "⊞" },
-  { id: "calendar", label: "Calendar", icon: "◈" },
-  { id: "donors", label: "Donor Circle", icon: "◉" },
-  { id: "history", label: "History", icon: "▤" },
-  { id: "tracker", label: "Health Tracker", icon: "◆" },
-];
-
-// ── LOGO ───────────────────────────────────────────────────────────────────────
 function Logo() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <svg viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="42" style={{ flexShrink: 0 }}>
+      <svg
+        viewBox="0 0 48 56"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="38"
+        style={{ flexShrink: 0 }}
+      >
         <path d="M24 2L44 11V30C44 43 24 54 24 54C24 54 4 43 4 30V11L24 2Z" fill="#8B1A2A" />
-        <path d="M24 14C24 14 17 22.5 17 27C17 30.87 20.13 34 24 34C27.87 34 31 30.87 31 27C31 22.5 24 14 24 14Z" fill="white" opacity="0.95" />
-        <path d="M16 39Q20 36 24 39Q28 42 32 39" stroke="#2CA8A0" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-        <path d="M18 44Q21 41.5 24 44Q27 46.5 30 44" stroke="#E8897A" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+        <path
+          d="M24 14C24 14 17 22.5 17 27C17 30.87 20.13 34 24 34C27.87 34 31 30.87 31 27C31 22.5 24 14 24 14Z"
+          fill="white"
+          opacity="0.95"
+        />
+        <path
+          d="M16 39Q20 36 24 39Q28 42 32 39"
+          stroke="#2CA8A0"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          fill="none"
+        />
       </svg>
-      <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, lineHeight: 1 }}>
+      <span
+        style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 20,
+          fontWeight: 700,
+          lineHeight: 1,
+        }}
+      >
         <span style={{ color: "#FAF9F7" }}>Raksha</span>
         <span style={{ color: "#2CA8A0" }}>AI</span>
       </span>
@@ -103,47 +110,219 @@ function Logo() {
   );
 }
 
-// ── EMERGENCY MODAL ────────────────────────────────────────────────────────────
-function EmergencyModal({ onClose }) {
-  const [sent, setSent] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const handleSend = () => {
-    setLoading(true);
-    setTimeout(() => { setLoading(false); setSent(true); }, 1800);
-  };
+// ── FIELD COMPONENT ───────────────────────────────────────────────────────────
+interface FieldProps {
+  label: string;
+  error?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}
+
+function Field({ label, error, required, children }: FieldProps) {
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div style={{ background: "#111827", border: "1px solid #C0152A", borderRadius: 12, padding: 32, maxWidth: 480, width: "100%" }}>
-        {!sent ? (
-          <>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>🆘</div>
-            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 700, color: "#FAF9F7", marginBottom: 8 }}>Confirm Emergency Request</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#9CA3AF", marginBottom: 8, lineHeight: 1.6 }}>
-              This will immediately alert your coordinator <strong style={{ color: "#FAF9F7" }}>Dr. Meera Iyer</strong>, all confirmed donors in Arjun's circle, and the nearest compatible blood bank.
-            </div>
-            <div style={{ background: "#0A1628", borderRadius: 8, padding: "12px 16px", marginBottom: 20, fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B7280", lineHeight: 1.6 }}>
-              Patient: <span style={{ color: "#FAF9F7" }}>Arjun Sharma, B+</span><br />
-              Hospital: <span style={{ color: "#FAF9F7" }}>Rainbow Thalassemia Centre, Hyderabad</span><br />
-              Trigger time: <span style={{ color: "#FAF9F7", fontFamily: "'JetBrains Mono', monospace" }}>{new Date().toLocaleTimeString("en-IN")}</span>
-            </div>
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <button onClick={handleSend} disabled={loading} style={{ flex: 1, background: "#C0152A", color: "#fff", border: "none", padding: "13px 20px", fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, cursor: "pointer", borderRadius: 0 }}>
-                {loading ? "Sending Alert…" : "CONFIRM — TRIGGER NOW"}
-              </button>
-              <button onClick={onClose} style={{ background: "transparent", color: "#9CA3AF", border: "1px solid #6B7280", padding: "13px 20px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, cursor: "pointer", borderRadius: 0 }}>
-                Cancel
-              </button>
-            </div>
-          </>
-        ) : (
-          <div style={{ textAlign: "center", padding: "16px 0" }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
-            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 700, color: "#2CA8A0", marginBottom: 8 }}>Emergency Alert Sent</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#9CA3AF", lineHeight: 1.7 }}>
-              Dr. Meera Iyer has been notified.<br />
-              3 donors alerted. Expected response: <span style={{ color: "#2CA8A0", fontFamily: "'JetBrains Mono', monospace" }}>~12 minutes</span>
-            </div>
-            <button onClick={onClose} style={{ marginTop: 20, background: "#2CA8A0", color: "#fff", border: "none", padding: "10px 28px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, cursor: "pointer", borderRadius: 0 }}>Close</button>
+    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <label
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 11,
+          color: "#9CA3AF",
+          letterSpacing: "1.2px",
+          textTransform: "uppercase",
+        }}
+      >
+        {label}
+        {required && <span style={{ color: "#C0152A", marginLeft: 4 }}>*</span>}
+      </label>
+      {children}
+      {error && (
+        <span
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 11,
+            color: "#C0152A",
+          }}
+        >
+          ⚠ {error}
+        </span>
+      )}
+    </div>
+  );
+}
+
+// ── INPUT STYLE ───────────────────────────────────────────────────────────────
+const inputStyle: React.CSSProperties = {
+  background: "#0A1628",
+  border: "1px solid #1e293b",
+  borderRadius: 0,
+  color: "#FAF9F7",
+  fontFamily: "'DM Sans', sans-serif",
+  fontSize: 14,
+  padding: "12px 14px",
+  outline: "none",
+  width: "100%",
+  transition: "border-color 0.2s",
+};
+
+const inputFocusStyle: React.CSSProperties = {
+  ...inputStyle,
+  borderColor: "#2CA8A0",
+};
+
+// ── FOCUSED INPUT ─────────────────────────────────────────────────────────────
+interface FocusInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  hasError?: boolean;
+}
+
+function FocusInput({ hasError, style: _style, ...props }: FocusInputProps) {
+  const [focused, setFocused] = useState(false);
+  return (
+    <input
+      {...props}
+      style={{
+        ...inputStyle,
+        borderColor: hasError ? "#C0152A" : focused ? "#2CA8A0" : "#1e293b",
+      }}
+      onFocus={(e) => {
+        setFocused(true);
+        props.onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        setFocused(false);
+        props.onBlur?.(e);
+      }}
+    />
+  );
+}
+
+interface FocusSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  hasError?: boolean;
+}
+
+function FocusSelect({ hasError, children, style: _style, ...props }: FocusSelectProps) {
+  const [focused, setFocused] = useState(false);
+  return (
+    <select
+      {...props}
+      style={{
+        ...inputStyle,
+        borderColor: hasError ? "#C0152A" : focused ? "#2CA8A0" : "#1e293b",
+        appearance: "none",
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "right 14px center",
+        paddingRight: 36,
+        cursor: "pointer",
+      }}
+      onFocus={(e) => {
+        setFocused(true);
+        props.onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        setFocused(false);
+        props.onBlur?.(e);
+      }}
+    >
+      {children}
+    </select>
+  );
+}
+
+interface FocusTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  hasError?: boolean;
+}
+
+function FocusTextarea({ hasError, style: _style, ...props }: FocusTextareaProps) {
+  const [focused, setFocused] = useState(false);
+  return (
+    <textarea
+      {...props}
+      style={{
+        ...inputStyle,
+        borderColor: hasError ? "#C0152A" : focused ? "#2CA8A0" : "#1e293b",
+        resize: "vertical",
+        minHeight: 80,
+      }}
+      onFocus={(e) => {
+        setFocused(true);
+        props.onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        setFocused(false);
+        props.onBlur?.(e);
+      }}
+    />
+  );
+}
+
+// ── TOGGLE ────────────────────────────────────────────────────────────────────
+interface ToggleProps {
+  checked: boolean;
+  onChange: (val: boolean) => void;
+  label: string;
+  sublabel?: string;
+}
+
+function Toggle({ checked, onChange, label, sublabel }: ToggleProps) {
+  return (
+    <div
+      onClick={() => onChange(!checked)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 14,
+        cursor: "pointer",
+        padding: "14px 16px",
+        background: checked ? "rgba(44,168,160,0.08)" : "#0A1628",
+        border: `1px solid ${checked ? "#2CA8A0" : "#1e293b"}`,
+        borderRadius: 8,
+        transition: "all 0.2s",
+      }}
+    >
+      <div
+        style={{
+          width: 42,
+          height: 24,
+          borderRadius: 12,
+          background: checked ? "#2CA8A0" : "#1e293b",
+          position: "relative",
+          flexShrink: 0,
+          transition: "background 0.2s",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: 3,
+            left: checked ? 21 : 3,
+            width: 18,
+            height: 18,
+            borderRadius: "50%",
+            background: "#FAF9F7",
+            transition: "left 0.2s",
+          }}
+        />
+      </div>
+      <div>
+        <div
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 14,
+            color: checked ? "#FAF9F7" : "#9CA3AF",
+            fontWeight: checked ? 500 : 400,
+          }}
+        >
+          {label}
+        </div>
+        {sublabel && (
+          <div
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 11,
+              color: "#6B7280",
+              marginTop: 2,
+            }}
+          >
+            {sublabel}
           </div>
         )}
       </div>
@@ -151,446 +330,1046 @@ function EmergencyModal({ onClose }) {
   );
 }
 
-// ── EMERGENCY STRIP ────────────────────────────────────────────────────────────
-function EmergencyStrip({ onTrigger }) {
-  return (
-    <div style={{ background: "rgba(192,21,42,0.12)", border: "1px solid #C0152A", borderRadius: 10, padding: "20px 24px", marginTop: 32 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-        <div>
-          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#C0152A", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 4 }}>Emergency Protocol</div>
-          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#FAF9F7" }}>Arjun's hemoglobin is critically low or you have an urgent need?</div>
-        </div>
-        <button onClick={onTrigger} style={{ background: "#C0152A", color: "#fff", border: "none", padding: "12px 24px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700, cursor: "pointer", borderRadius: 0, display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.5px" }}>
-          🆘 TRIGGER EMERGENCY REQUEST
-        </button>
-      </div>
-    </div>
-  );
+// ── CHIP MULTI-SELECT ─────────────────────────────────────────────────────────
+interface ChipSelectProps {
+  options: string[];
+  selected: string[];
+  onChange: (vals: string[]) => void;
 }
 
-// ── PANEL 1 — HOME ─────────────────────────────────────────────────────────────
-function PanelHome({ countdown, onEmergency }) {
-  const hb = useCountUp(10.4, 1800);
-  const days = useCountUp(23, 1400);
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#C0152A", letterSpacing: "1.8px", textTransform: "uppercase", marginBottom: 8 }}>Family Dashboard</div>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 34, fontWeight: 700, color: "#FAF9F7", lineHeight: 1.2 }}>
-          Good morning, Sharma Family.<br />
-          <span style={{ color: "#9CA3AF", fontSize: 24, fontStyle: "italic" }}>Arjun is in safe hands today.</span>
-        </div>
-      </div>
-
-      {/* Next transfusion status card */}
-      <div style={{ background: "#111827", borderTop: "2px solid #2CA8A0", borderRadius: "0 0 12px 12px", padding: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 14, alignItems: "flex-start" }}>
-          <div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#2CA8A0", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 8 }}>Next Transfusion</div>
-            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 700, color: "#FAF9F7" }}>Jun 15, 2026 · 9:00 AM</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#9CA3AF", marginTop: 4 }}>Rainbow Thalassemia Centre · Hyderabad</div>
-            <div style={{ display: "flex", gap: 10, marginTop: 12, flexWrap: "wrap" }}>
-              <span style={{ background: "#2CA8A0", color: "#fff", padding: "4px 14px", fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.5px" }}>CONFIRMED ✓</span>
-              <span style={{ color: "#2CA8A0", fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 12 }}>Backup donor also confirmed</span>
-            </div>
-          </div>
-          <div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#6B7280", letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 6, textAlign: "right" }}>Countdown</div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 20, color: "#D4A847", letterSpacing: 2, textAlign: "right" }}>
-              {pad(countdown.d)}d {pad(countdown.h)}h {pad(countdown.m)}m {pad(countdown.s)}s
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Health snapshot */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 14 }}>
-        {[
-          { label: "Hemoglobin", value: hb.toFixed(1), unit: "g/dL", color: "#2CA8A0", note: "Within safe range" },
-          { label: "Days Since Last", value: Math.floor(days), unit: "days", color: "#D4A847", note: "Window approaching" },
-          { label: "Window Opens", value: "Jun 8", unit: "", color: "#2CA8A0", note: "Outreach triggered" },
-        ].map((s) => (
-          <div key={s.label} style={{ background: "#111827", border: "1px solid #1e293b", borderRadius: 12, padding: "18px 20px", borderLeft: `3px solid ${s.color}` }}>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#6B7280", letterSpacing: "1.3px", textTransform: "uppercase", marginBottom: 8 }}>{s.label}</div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 30, color: s.color }}>{s.value}<span style={{ fontSize: 13, color: "#6B7280", marginLeft: 4 }}>{s.unit}</span></div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#6B7280", marginTop: 6 }}>{s.note}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Quick insight */}
-      <div style={{ background: "#111827", borderLeft: "2px solid #2CA8A0", borderRadius: "0 12px 12px 0", padding: "16px 20px" }}>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#2CA8A0", letterSpacing: "1.3px", textTransform: "uppercase", marginBottom: 6 }}>AI Insight</div>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 600, color: "#FAF9F7", fontStyle: "italic" }}>
-          "Arjun's hemoglobin trend is stable. Average post-transfusion peak: <span style={{ color: "#2CA8A0" }}>10.9 g/dL</span>. Next expected drop to threshold in ~<span style={{ color: "#D4A847" }}>22–25 days</span>."
-        </div>
-      </div>
-
-      <EmergencyStrip onTrigger={onEmergency} />
-    </div>
-  );
-}
-
-// ── PANEL 2 — CALENDAR ─────────────────────────────────────────────────────────
-function PanelCalendar({ onEmergency }) {
-  const [selectedDay, setSelectedDay] = useState(null);
-  const today = new Date();
-  const year = 2026, month = 5; // June 2026 (0-indexed)
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  const getEventKey = (day) => {
-    const d = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    return CALENDAR_EVENTS[d] || null;
+function ChipSelect({ options, selected, onChange }: ChipSelectProps) {
+  const toggle = (opt: string) => {
+    onChange(
+      selected.includes(opt) ? selected.filter((s) => s !== opt) : [...selected, opt]
+    );
   };
-
-  const eventStyle = { confirmed: { bg: "#2CA8A0", color: "#fff" }, outreach: { bg: "#D4A847", color: "#0D0D0D" }, unconfirmed: { bg: "#C0152A", color: "#fff" }, past: { bg: "#8B1A2A", color: "#FAF9F7" } };
-
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#C0152A", letterSpacing: "1.8px", textTransform: "uppercase", marginBottom: 8 }}>Arjun's Schedule</div>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 700, color: "#FAF9F7" }}>Transfusion Calendar</div>
-      </div>
-
-      {/* Legend */}
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-        {[{ color: "#2CA8A0", label: "Confirmed" }, { color: "#D4A847", label: "Outreach" }, { color: "#C0152A", label: "Unconfirmed" }, { color: "#8B1A2A", label: "Past" }].map(l => (
-          <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ width: 10, height: 10, borderRadius: "50%", background: l.color }} />
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9CA3AF" }}>{l.label}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Calendar grid */}
-      <div style={{ background: "#111827", borderRadius: 12, padding: 20 }}>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 600, color: "#FAF9F7", marginBottom: 16, textAlign: "center" }}>June 2026</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: 4, marginBottom: 8 }}>
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => (
-            <div key={d} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#6B7280", textAlign: "center", paddingBottom: 8, letterSpacing: "0.5px" }}>{d}</div>
-          ))}
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: 4 }}>
-          {Array.from({ length: firstDay }).map((_, i) => <div key={`empty-${i}`} />)}
-          {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => {
-            const ev = getEventKey(day);
-            const isToday = day === today.getDate() && today.getMonth() === month && today.getFullYear() === year;
-            const style = ev ? eventStyle[ev.type] : { bg: "transparent", color: "#9CA3AF" };
-            return (
-              <div key={day} onClick={() => setSelectedDay(ev ? { day, ...ev } : null)} style={{
-                background: style.bg, color: style.color, borderRadius: 6,
-                padding: "8px 4px", textAlign: "center", cursor: ev ? "pointer" : "default",
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 13,
-                border: isToday ? "1px solid #FAF9F7" : "1px solid transparent",
-                transition: "opacity .15s",
-              }}
-                onMouseEnter={e => { if (ev) e.currentTarget.style.opacity = "0.8"; }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-              >
-                {day}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Popup */}
-      {selectedDay && (
-        <div style={{ background: "#111827", border: "1px solid #C0152A", borderRadius: 10, padding: 20 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#C0152A", letterSpacing: "1.3px", textTransform: "uppercase", marginBottom: 4 }}>June {selectedDay.day}, 2026</div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#FAF9F7" }}>{selectedDay.label}</div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#9CA3AF", marginTop: 4 }}>
-                {selectedDay.type === "confirmed" && "Transfusion confirmed. Ramesh R. (O+) attending."}
-                {selectedDay.type === "outreach" && "Coordinator reaching out to backup donors."}
-                {selectedDay.type === "unconfirmed" && "Donation window. Donor confirmation pending."}
-              </div>
-            </div>
-            <button onClick={() => setSelectedDay(null)} style={{ background: "transparent", border: "none", color: "#6B7280", cursor: "pointer", fontSize: 18 }}>✕</button>
-          </div>
-        </div>
-      )}
-
-      <EmergencyStrip onTrigger={onEmergency} />
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      {options.map((opt) => {
+        const active = selected.includes(opt);
+        return (
+          <button
+            key={opt}
+            type="button"
+            onClick={() => toggle(opt)}
+            style={{
+              background: active ? "#2CA8A0" : "transparent",
+              color: active ? "#fff" : "#9CA3AF",
+              border: `1px solid ${active ? "#2CA8A0" : "#1e293b"}`,
+              padding: "8px 16px",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12,
+              fontWeight: active ? 600 : 400,
+              cursor: "pointer",
+              borderRadius: 0,
+              transition: "all 0.15s",
+              letterSpacing: "0.3px",
+            }}
+          >
+            {active ? "✓ " : ""}{opt}
+          </button>
+        );
+      })}
     </div>
   );
 }
 
-// ── PANEL 3 — DONOR CIRCLE ─────────────────────────────────────────────────────
-function PanelDonors({ onEmergency }) {
+// ── PROGRESS BAR ──────────────────────────────────────────────────────────────
+function ProgressBar({ current, total }: { current: number; total: number }) {
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    const pct = ((current) / total) * 100;
+    const t = setTimeout(() => setWidth(pct), 100);
+    return () => clearTimeout(t);
+  }, [current, total]);
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#C0152A", letterSpacing: "1.8px", textTransform: "uppercase", marginBottom: 8 }}>Your Network</div>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 700, color: "#FAF9F7" }}>Donor Circle</div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#6B7280", marginTop: 4 }}>AI-matched blood donors committed to Arjun's care.</div>
-      </div>
+    <div
+      style={{
+        background: "#1e293b",
+        height: 3,
+        borderRadius: 2,
+        overflow: "hidden",
+        marginBottom: 32,
+      }}
+    >
+      <div
+        style={{
+          height: "100%",
+          width: `${width}%`,
+          background: "linear-gradient(90deg, #8B1A2A, #C0152A)",
+          borderRadius: 2,
+          transition: "width 0.5s cubic-bezier(.34,1.56,.64,1)",
+        }}
+      />
+    </div>
+  );
+}
 
-      {DONORS.map(d => (
-        <div key={d.id} style={{ background: "#111827", border: `1px solid ${d.primary ? "#2CA8A0" : "#D4A847"}`, borderRadius: 12, padding: 24 }}>
-          <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
-            <div style={{ width: 50, height: 50, borderRadius: "50%", background: d.primary ? "#8B1A2A" : "#1e293b", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: "#FAF9F7", flexShrink: 0 }}>
-              {d.initials}
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600, color: "#FAF9F7" }}>{d.name}</div>
-                <span style={{ padding: "2px 10px", fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.8px", background: d.primary ? "rgba(44,168,160,0.15)" : "rgba(212,168,71,0.15)", color: d.primary ? "#2CA8A0" : "#D4A847", border: `1px solid ${d.primary ? "#2CA8A0" : "#D4A847"}` }}>
-                  {d.primary ? "PRIMARY" : "BACKUP"}
-                </span>
+// ── STEP INDICATOR ─────────────────────────────────────────────────────────────
+function StepIndicator({
+  steps,
+  currentIndex,
+}: {
+  steps: Step[];
+  currentIndex: number;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 0,
+        marginBottom: 32,
+        overflowX: "auto",
+        paddingBottom: 4,
+      }}
+    >
+      {steps.map((step, i) => {
+        const done = i < currentIndex;
+        const active = i === currentIndex;
+        return (
+          <div
+            key={step.id}
+            style={{ display: "flex", alignItems: "center", flexShrink: 0 }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  background: done ? "#2CA8A0" : active ? "#C0152A" : "#1e293b",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: done ? 14 : 13,
+                  color: done || active ? "#fff" : "#6B7280",
+                  border: active ? "2px solid #C0152A" : "none",
+                  transition: "all 0.3s",
+                  boxShadow: active
+                    ? "0 0 12px rgba(192,21,42,0.4)"
+                    : "none",
+                }}
+              >
+                {done ? "✓" : step.icon}
               </div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#9CA3AF" }}>{d.blood} · {d.city} · {d.donations} donations total</div>
-              <div style={{ marginTop: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#6B7280" }}>Reliability</span>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#2CA8A0" }}>{d.reliability}%</span>
-                </div>
-                <ReliabilityBar value={d.reliability} />
-              </div>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: d.status === "Confirmed" ? "#2CA8A0" : d.status === "Standby" ? "#D4A847" : "#9CA3AF" }}>
-                {d.status === "Confirmed" ? "✓ " : ""}{d.status}
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 10,
+                  color: active ? "#FAF9F7" : done ? "#2CA8A0" : "#6B7280",
+                  letterSpacing: "0.5px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {step.label}
               </span>
             </div>
+            {i < steps.length - 1 && (
+              <div
+                style={{
+                  width: 40,
+                  height: 1,
+                  background: done ? "#2CA8A0" : "#1e293b",
+                  marginBottom: 18,
+                  transition: "background 0.3s",
+                }}
+              />
+            )}
           </div>
-        </div>
-      ))}
-
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <button style={{ background: "transparent", color: "#2CA8A0", border: "1px solid #2CA8A0", padding: "10px 22px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, cursor: "pointer", borderRadius: 0 }}>
-          Message Coordinator →
-        </button>
-      </div>
-
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: "#6B7280", fontStyle: "italic", lineHeight: 1.7 }}>
-        Donor identities are protected under Raksha AI's privacy protocol. Contact is mediated through the care coordinator only.
-      </div>
-
-      <EmergencyStrip onTrigger={onEmergency} />
+        );
+      })}
     </div>
   );
 }
 
-function ReliabilityBar({ value }) {
-  const [w, setW] = useState(0);
-  useEffect(() => { const t = setTimeout(() => setW(value), 400); return () => clearTimeout(t); }, [value]);
+// ── VALIDATE ──────────────────────────────────────────────────────────────────
+function validateStep(step: StepKey, data: FormData): FieldErrors {
+  const errors: FieldErrors = {};
+  if (step === "personal") {
+    if (!data.firstName.trim()) errors.firstName = "First name is required";
+    if (!data.lastName.trim()) errors.lastName = "Last name is required";
+    if (!data.dob) errors.dob = "Date of birth is required";
+    else {
+      const age = Math.floor(
+        (Date.now() - new Date(data.dob).getTime()) / (365.25 * 24 * 3600 * 1000)
+      );
+      if (age < 18) errors.dob = "Donor must be at least 18 years old";
+      if (age > 65) errors.dob = "Donor must be under 65 years old";
+    }
+    if (!data.gender) errors.gender = "Please select a gender";
+  }
+  if (step === "contact") {
+    if (!data.phone.trim()) errors.phone = "Phone number is required";
+    else if (!/^[6-9]\d{9}$/.test(data.phone.replace(/\s/g, "")))
+      errors.phone = "Enter a valid 10-digit Indian mobile number";
+    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
+      errors.email = "Enter a valid email address";
+    if (!data.city) errors.city = "Please select your city";
+  }
+  if (step === "medical") {
+    if (!data.bloodGroup) errors.bloodGroup = "Blood group is required";
+  }
+  if (step === "availability") {
+    if (data.availability.length === 0)
+      errors.availability = "Please select at least one availability slot";
+    if (!data.travelRadius) errors.travelRadius = "Please select travel radius";
+  }
+  if (step === "consent") {
+    if (!data.consentData) errors.consentData = "You must agree to data processing";
+    if (!data.consentContact)
+      errors.consentContact = "You must agree to be contacted for donations";
+  }
+  return errors;
+}
+
+// ── SUCCESS SCREEN ─────────────────────────────────────────────────────────────
+function SuccessScreen({ name, blood }: { name: string; blood: string }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 100);
+    return () => clearTimeout(t);
+  }, []);
   return (
-    <div style={{ background: "#1e293b", borderRadius: 4, height: 6, overflow: "hidden" }}>
-      <div style={{ height: "100%", width: `${w}%`, background: "#2CA8A0", borderRadius: 4, transition: "width 1.2s cubic-bezier(.34,1.56,.64,1)" }} />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "60vh",
+        textAlign: "center",
+        gap: 24,
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(20px)",
+        transition: "all 0.6s ease",
+      }}
+    >
+      <div style={{ fontSize: 64 }}>🩸</div>
+      <div
+        style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 38,
+          fontWeight: 700,
+          color: "#FAF9F7",
+          lineHeight: 1.2,
+        }}
+      >
+        Welcome to the Circle,
+        <br />
+        <span style={{ color: "#2CA8A0" }}>{name}.</span>
+      </div>
+      <div
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 15,
+          color: "#9CA3AF",
+          maxWidth: 420,
+          lineHeight: 1.7,
+        }}
+      >
+        Your{" "}
+        <span
+          style={{
+            color: "#C0152A",
+            fontFamily: "'JetBrains Mono', monospace",
+            fontWeight: 600,
+          }}
+        >
+          {blood}
+        </span>{" "}
+        donation commitment is now part of Arjun's care network. Dr. Meera Iyer
+        will reach out to verify and onboard you within 48 hours.
+      </div>
+      <div
+        style={{
+          background: "#111827",
+          borderTop: "2px solid #2CA8A0",
+          borderRadius: "0 0 10px 10px",
+          padding: "18px 28px",
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 13,
+          color: "#6B7280",
+          lineHeight: 1.6,
+          maxWidth: 420,
+          width: "100%",
+        }}
+      >
+        <span style={{ color: "#2CA8A0" }}>◈ What happens next</span>
+        <br />
+        Coordinator review → Background health check → Donor ID issued → Added
+        to patient's circle
+      </div>
+      <a
+        href="/"
+        style={{
+          background: "transparent",
+          color: "#C0152A",
+          border: "1px solid #C0152A",
+          padding: "12px 32px",
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 13,
+          fontWeight: 600,
+          cursor: "pointer",
+          textDecoration: "none",
+          letterSpacing: "0.5px",
+          display: "inline-block",
+        }}
+      >
+        Return to Dashboard →
+      </a>
     </div>
   );
 }
 
-// ── PANEL 4 — HISTORY ──────────────────────────────────────────────────────────
-function PanelHistory({ onEmergency }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#C0152A", letterSpacing: "1.8px", textTransform: "uppercase", marginBottom: 8 }}>Medical Records</div>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 700, color: "#FAF9F7" }}>Transfusion History</div>
-      </div>
+// ── MAIN PAGE ─────────────────────────────────────────────────────────────────
+export default function DonorRegisterPage() {
+  const [stepIndex, setStepIndex] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const topRef = useRef<HTMLDivElement>(null);
 
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>
-          <thead>
-            <tr style={{ borderBottom: "1px solid #1e293b" }}>
-              {["Date", "Units", "Hb Before", "Hb After", "Donor", "Reaction", "Centre"].map(h => (
-                <th key={h} style={{ padding: "10px 14px", textAlign: "left", fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#6B7280", letterSpacing: "1.3px", textTransform: "uppercase", whiteSpace: "nowrap" }}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {HISTORY.map((r, i) => (
-              <tr key={r.id} style={{ background: i % 2 === 0 ? "#111827" : "#0F1A2E" }}>
-                <td style={{ padding: "12px 14px", color: "#FAF9F7", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, whiteSpace: "nowrap" }}>{r.date}</td>
-                <td style={{ padding: "12px 14px", color: "#9CA3AF", textAlign: "center" }}>{r.unit}</td>
-                <td style={{ padding: "12px 14px", color: "#C0152A", fontFamily: "'JetBrains Mono', monospace", fontWeight: 500 }}>{r.hbBefore}</td>
-                <td style={{ padding: "12px 14px", color: "#2CA8A0", fontFamily: "'JetBrains Mono', monospace", fontWeight: 500 }}>{r.hbAfter}</td>
-                <td style={{ padding: "12px 14px", color: "#9CA3AF" }}>{r.donor}</td>
-                <td style={{ padding: "12px 14px" }}>
-                  {r.reaction
-                    ? <span style={{ color: "#C0152A", fontSize: 11 }}>⚠ Reaction</span>
-                    : <span style={{ color: "#1A7A4A", fontSize: 11 }}>✓ None</span>}
-                </td>
-                <td style={{ padding: "12px 14px", color: "#6B7280", fontSize: 12 }}>{r.center}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  const [form, setForm] = useState<FormData>({
+    firstName: "",
+    lastName: "",
+    dob: "",
+    gender: "",
+    phone: "",
+    email: "",
+    city: "",
+    area: "",
+    bloodGroup: "",
+    lastDonation: "",
+    hasThalassemiaDonation: false,
+    medicalConditions: "",
+    medications: "",
+    availability: [],
+    travelRadius: "",
+    emergencyAvailable: false,
+    consentData: false,
+    consentContact: false,
+  });
 
-      <div>
-        <button style={{ background: "transparent", color: "#C0152A", border: "1px solid #C0152A", padding: "10px 24px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, cursor: "pointer", borderRadius: 0 }}
-          onMouseEnter={e => { e.currentTarget.style.background = "#C0152A"; e.currentTarget.style.color = "#fff"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#C0152A"; }}>
-          Export for Doctor →
-        </button>
-      </div>
+  const currentStep = STEPS[stepIndex];
 
-      <EmergencyStrip onTrigger={onEmergency} />
-    </div>
-  );
-}
-
-// ── PANEL 5 — HEALTH TRACKER ───────────────────────────────────────────────────
-const CustomDot = (props) => {
-  const { cx, cy, payload } = props;
-  if (!payload || payload.hb === null) return null;
-  const isLow = payload.hb < 8;
-  return <circle cx={cx} cy={cy} r={isLow ? 6 : 4} fill={isLow ? "#C0152A" : "#2CA8A0"} stroke="#0D0D0D" strokeWidth={2} />;
-};
-
-const CustomTooltip = ({ active, payload, label }) => {
-  if (!active || !payload?.length) return null;
-  const v = payload[0]?.value;
-  return (
-    <div style={{ background: "#111827", border: "1px solid #1e293b", borderRadius: 8, padding: "10px 14px" }}>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#6B7280", marginBottom: 4 }}>{label}</div>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 16, color: v < 8 ? "#C0152A" : "#2CA8A0" }}>{v ? `${v} g/dL` : "—"}</div>
-      {v < 8 && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#C0152A", marginTop: 4 }}>⚠ Below safe threshold</div>}
-    </div>
-  );
-};
-
-function PanelTracker({ onEmergency }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#C0152A", letterSpacing: "1.8px", textTransform: "uppercase", marginBottom: 8 }}>AI Health Monitoring</div>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 700, color: "#FAF9F7" }}>Health Tracker</div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#6B7280", marginTop: 4 }}>Arjun's hemoglobin trend over the last 9 months.</div>
-      </div>
-
-      <div style={{ background: "#111827", borderRadius: 12, padding: "24px 16px 16px" }}>
-        <ResponsiveContainer width="100%" height={280}>
-          <AreaChart data={HEALTH_DATA} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id="hbGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#2CA8A0" stopOpacity={0.25} />
-                <stop offset="95%" stopColor="#2CA8A0" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
-            <XAxis dataKey="month" tick={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fill: "#6B7280" }} axisLine={false} tickLine={false} />
-            <YAxis domain={[5, 13]} tick={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fill: "#6B7280" }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
-            <ReferenceLine y={9.5} stroke="#1A7A4A" strokeDasharray="5 4" strokeWidth={1.5} label={{ value: "Safe min 9.5", fill: "#1A7A4A", fontSize: 10, fontFamily: "'DM Sans', sans-serif" }} />
-            <ReferenceLine y={7.0} stroke="#C0152A" strokeDasharray="5 4" strokeWidth={1.5} label={{ value: "Emergency 7.0", fill: "#C0152A", fontSize: 10, fontFamily: "'DM Sans', sans-serif" }} />
-            <Area type="monotone" dataKey="hb" stroke="#2CA8A0" strokeWidth={2.5} fill="url(#hbGrad)" dot={<CustomDot />} connectNulls={false} />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Stats row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 12 }}>
-        {[
-          { label: "Avg Peak Hb", value: "10.9", unit: "g/dL", color: "#2CA8A0" },
-          { label: "Avg Trough Hb", value: "7.6", unit: "g/dL", color: "#C0152A" },
-          { label: "Avg Cycle", value: "52", unit: "days", color: "#D4A847" },
-          { label: "Total Transfusions", value: "9", unit: "", color: "#FAF9F7" },
-        ].map(s => (
-          <div key={s.label} style={{ background: "#111827", border: "1px solid #1e293b", borderRadius: 10, padding: "14px 16px" }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 22, color: s.color }}>{s.value}<span style={{ fontSize: 11, color: "#6B7280", marginLeft: 3 }}>{s.unit}</span></div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#6B7280", marginTop: 5 }}>{s.label}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Trend insight */}
-      <div style={{ background: "#111827", borderLeft: "2px solid #2CA8A0", borderRadius: "0 12px 12px 0", padding: "16px 20px" }}>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#2CA8A0", letterSpacing: "1.3px", textTransform: "uppercase", marginBottom: 6 }}>Trend Insight</div>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 600, color: "#FAF9F7", fontStyle: "italic", lineHeight: 1.5 }}>
-          "Arjun's hemoglobin pattern is consistent. Sawtooth cycle averages <span style={{ color: "#2CA8A0" }}>52 days</span>. Trough reached at day ~<span style={{ color: "#D4A847" }}>48–55</span>. Pre-emptive scheduling reduces risk by <span style={{ color: "#2CA8A0" }}>68%</span>."
-        </div>
-      </div>
-
-      <EmergencyStrip onTrigger={onEmergency} />
-    </div>
-  );
-}
-
-// ── MAIN ──────────────────────────────────────────────────────────────────────
-export default function PatientDashboard() {
-  const [active, setActive] = useState("home");
-  const [showEmergency, setShowEmergency] = useState(false);
-  const countdown = useCountdown(NEXT_TRANSFUSION);
-
-  const PANELS = {
-    home: <PanelHome countdown={countdown} onEmergency={() => setShowEmergency(true)} />,
-    calendar: <PanelCalendar onEmergency={() => setShowEmergency(true)} />,
-    donors: <PanelDonors onEmergency={() => setShowEmergency(true)} />,
-    history: <PanelHistory onEmergency={() => setShowEmergency(true)} />,
-    tracker: <PanelTracker onEmergency={() => setShowEmergency(true)} />,
+  const set = <K extends keyof FormData>(key: K, val: FormData[K]) => {
+    setForm((prev) => ({ ...prev, [key]: val }));
+    setErrors((prev) => ({ ...prev, [key]: undefined }));
   };
 
+  const handleNext = () => {
+    const errs = validateStep(currentStep.id, form);
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      topRef.current?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    setErrors({});
+    if (stepIndex < STEPS.length - 1) {
+      setStepIndex((i) => i + 1);
+      topRef.current?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      setSubmitted(true);
+    }
+  };
+
+  const handleBack = () => {
+    setErrors({});
+    setStepIndex((i) => Math.max(0, i - 1));
+    topRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // ── STEP PANELS ──────────────────────────────────────────────────────────────
+  const renderStep = () => {
+    switch (currentStep.id) {
+      case "personal":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <SectionTitle>Personal Information</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <Field label="First Name" required error={errors.firstName}>
+                <FocusInput
+                  type="text"
+                  placeholder="Ramesh"
+                  value={form.firstName}
+                  onChange={(e) => set("firstName", e.target.value)}
+                  hasError={!!errors.firstName}
+                />
+              </Field>
+              <Field label="Last Name" required error={errors.lastName}>
+                <FocusInput
+                  type="text"
+                  placeholder="Kumar"
+                  value={form.lastName}
+                  onChange={(e) => set("lastName", e.target.value)}
+                  hasError={!!errors.lastName}
+                />
+              </Field>
+            </div>
+            <Field label="Date of Birth" required error={errors.dob}>
+              <FocusInput
+                type="date"
+                value={form.dob}
+                onChange={(e) => set("dob", e.target.value)}
+                hasError={!!errors.dob}
+                max={new Date(Date.now() - 18 * 365.25 * 24 * 3600 * 1000)
+                  .toISOString()
+                  .split("T")[0]}
+              />
+            </Field>
+            <Field label="Gender" required error={errors.gender}>
+              <FocusSelect
+                value={form.gender}
+                onChange={(e) => set("gender", e.target.value)}
+                hasError={!!errors.gender}
+              >
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other / Prefer not to say</option>
+              </FocusSelect>
+            </Field>
+            <InfoNote>
+              Donors must be between 18 and 65 years of age and in general good health. Age is verified at the time of donation.
+            </InfoNote>
+          </div>
+        );
+
+      case "contact":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <SectionTitle>Contact Details</SectionTitle>
+            <Field label="Mobile Number" required error={errors.phone}>
+              <FocusInput
+                type="tel"
+                placeholder="9876543210"
+                value={form.phone}
+                onChange={(e) => set("phone", e.target.value)}
+                hasError={!!errors.phone}
+                maxLength={10}
+              />
+            </Field>
+            <Field label="Email Address" error={errors.email}>
+              <FocusInput
+                type="email"
+                placeholder="ramesh@example.com (optional)"
+                value={form.email}
+                onChange={(e) => set("email", e.target.value)}
+                hasError={!!errors.email}
+              />
+            </Field>
+            <Field label="City" required error={errors.city}>
+              <FocusSelect
+                value={form.city}
+                onChange={(e) => set("city", e.target.value)}
+                hasError={!!errors.city}
+              >
+                <option value="">Select city</option>
+                {CITIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </FocusSelect>
+            </Field>
+            <Field label="Locality / Area">
+              <FocusInput
+                type="text"
+                placeholder="e.g. Banjara Hills, Ameerpet…"
+                value={form.area}
+                onChange={(e) => set("area", e.target.value)}
+              />
+            </Field>
+            <InfoNote>
+              Your contact details are shared only with the Raksha AI care coordinator and never with patients or third parties directly.
+            </InfoNote>
+          </div>
+        );
+
+      case "medical":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <SectionTitle>Medical Information</SectionTitle>
+            <Field label="Blood Group" required error={errors.bloodGroup}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {BLOOD_GROUPS.map((bg) => {
+                  const active = form.bloodGroup === bg;
+                  return (
+                    <button
+                      key={bg}
+                      type="button"
+                      onClick={() => set("bloodGroup", bg)}
+                      style={{
+                        background: active ? "#C0152A" : "transparent",
+                        color: active ? "#fff" : "#9CA3AF",
+                        border: `1px solid ${active ? "#C0152A" : errors.bloodGroup ? "#C0152A" : "#1e293b"}`,
+                        padding: "10px 18px",
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        borderRadius: 0,
+                        transition: "all 0.15s",
+                        minWidth: 56,
+                      }}
+                    >
+                      {bg}
+                    </button>
+                  );
+                })}
+              </div>
+              {errors.bloodGroup && (
+                <span
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 11,
+                    color: "#C0152A",
+                  }}
+                >
+                  ⚠ {errors.bloodGroup}
+                </span>
+              )}
+            </Field>
+            <Field label="Date of Last Donation">
+              <FocusInput
+                type="date"
+                value={form.lastDonation}
+                onChange={(e) => set("lastDonation", e.target.value)}
+                max={new Date().toISOString().split("T")[0]}
+              />
+            </Field>
+            <Toggle
+              checked={form.hasThalassemiaDonation}
+              onChange={(v) => set("hasThalassemiaDonation", v)}
+              label="I have donated for thalassemia patients before"
+              sublabel="Experienced donors are prioritised in the matching algorithm"
+            />
+            <Field label="Existing Medical Conditions">
+              <FocusTextarea
+                placeholder="List any chronic conditions, surgeries, or health issues (leave blank if none)"
+                value={form.medicalConditions}
+                onChange={(e) => set("medicalConditions", e.target.value)}
+                rows={3}
+              />
+            </Field>
+            <Field label="Current Medications">
+              <FocusTextarea
+                placeholder="List any medications you are currently taking (leave blank if none)"
+                value={form.medications}
+                onChange={(e) => set("medications", e.target.value)}
+                rows={2}
+              />
+            </Field>
+            <InfoNote>
+              Medical information is reviewed by our care coordinator. Certain medications or conditions may temporarily defer eligibility — this is assessed individually.
+            </InfoNote>
+          </div>
+        );
+
+      case "availability":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <SectionTitle>Availability &amp; Commitment</SectionTitle>
+            <Field
+              label="When are you available to donate?"
+              required
+              error={errors.availability}
+            >
+              <ChipSelect
+                options={AVAILABILITY_OPTIONS}
+                selected={form.availability}
+                onChange={(v) => set("availability", v)}
+              />
+            </Field>
+            <Field label="Willing to travel up to" required error={errors.travelRadius}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {TRAVEL_OPTIONS.map((opt) => {
+                  const active = form.travelRadius === opt;
+                  return (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => set("travelRadius", opt)}
+                      style={{
+                        background: active ? "#2CA8A0" : "transparent",
+                        color: active ? "#fff" : "#9CA3AF",
+                        border: `1px solid ${active ? "#2CA8A0" : errors.travelRadius ? "#C0152A" : "#1e293b"}`,
+                        padding: "9px 16px",
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 12,
+                        fontWeight: active ? 600 : 400,
+                        cursor: "pointer",
+                        borderRadius: 0,
+                        transition: "all 0.15s",
+                      }}
+                    >
+                      {active ? "✓ " : ""}
+                      {opt}
+                    </button>
+                  );
+                })}
+              </div>
+              {errors.travelRadius && (
+                <span
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 11,
+                    color: "#C0152A",
+                  }}
+                >
+                  ⚠ {errors.travelRadius}
+                </span>
+              )}
+            </Field>
+            <Toggle
+              checked={form.emergencyAvailable}
+              onChange={(v) => set("emergencyAvailable", v)}
+              label="Available for emergency requests"
+              sublabel="You may be contacted with little notice in critical situations"
+            />
+            <div
+              style={{
+                background: "rgba(192,21,42,0.08)",
+                border: "1px solid rgba(192,21,42,0.3)",
+                borderRadius: 8,
+                padding: "14px 18px",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13,
+                color: "#9CA3AF",
+                lineHeight: 1.7,
+              }}
+            >
+              <span style={{ color: "#C0152A", fontWeight: 600 }}>
+                ◆ What this means:
+              </span>{" "}
+              You are committing to be available for Arjun's transfusion schedule,
+              approximately every 45–60 days. You will always be contacted at least
+              7 days in advance for planned donations.
+            </div>
+          </div>
+        );
+
+      case "consent":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <SectionTitle>Consent &amp; Declaration</SectionTitle>
+
+            <div
+              style={{
+                background: "#111827",
+                border: "1px solid #1e293b",
+                borderRadius: 8,
+                padding: "16px 20px",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13,
+                color: "#9CA3AF",
+                lineHeight: 1.8,
+                maxHeight: 200,
+                overflowY: "auto",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11,
+                  color: "#6B7280",
+                  letterSpacing: "1.2px",
+                  textTransform: "uppercase",
+                  marginBottom: 10,
+                }}
+              >
+                Donor Agreement — Please Read
+              </div>
+              By registering as a donor on Raksha AI, you acknowledge that:{" "}
+              <strong style={{ color: "#FAF9F7" }}>
+                (1) Your personal and medical data will be stored securely and used
+                solely to match you with patients requiring blood transfusions.
+              </strong>{" "}
+              (2) Your identity is protected and will not be shared directly with
+              patients. All communication is mediated by a certified care
+              coordinator.{" "}
+              <strong style={{ color: "#FAF9F7" }}>
+                (3) Donation is entirely voluntary. You may withdraw from the circle
+                at any time by contacting your coordinator.
+              </strong>{" "}
+              (4) Raksha AI is a coordination platform and does not conduct blood
+              collection directly. All donations occur at certified centres. (5) You
+              confirm that the information provided is accurate to the best of your
+              knowledge.
+            </div>
+
+            <Toggle
+              checked={form.consentData}
+              onChange={(v) => set("consentData", v)}
+              label="I agree to the data processing terms above"
+              sublabel="Required to proceed"
+            />
+            {errors.consentData && (
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11,
+                  color: "#C0152A",
+                  marginTop: -8,
+                }}
+              >
+                ⚠ {errors.consentData}
+              </span>
+            )}
+
+            <Toggle
+              checked={form.consentContact}
+              onChange={(v) => set("consentContact", v)}
+              label="I consent to being contacted for donation appointments"
+              sublabel="Via phone call or SMS from the care coordinator"
+            />
+            {errors.consentContact && (
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11,
+                  color: "#C0152A",
+                  marginTop: -8,
+                }}
+              >
+                ⚠ {errors.consentContact}
+              </span>
+            )}
+
+            {/* Summary card */}
+            <div
+              style={{
+                background: "#111827",
+                borderTop: "2px solid #C0152A",
+                borderRadius: "0 0 10px 10px",
+                padding: "18px 20px",
+                marginTop: 8,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11,
+                  color: "#C0152A",
+                  letterSpacing: "1.2px",
+                  textTransform: "uppercase",
+                  marginBottom: 12,
+                }}
+              >
+                Registration Summary
+              </div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "8px 20px",
+                }}
+              >
+                {[
+                  ["Name", `${form.firstName} ${form.lastName}`],
+                  ["Blood Group", form.bloodGroup || "—"],
+                  ["City", form.city || "—"],
+                  ["Phone", form.phone || "—"],
+                  ["Availability", form.availability.length > 0 ? `${form.availability.length} slots` : "—"],
+                  ["Emergency", form.emergencyAvailable ? "Yes ✓" : "No"],
+                ].map(([k, v]) => (
+                  <div key={k}>
+                    <div
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 10,
+                        color: "#6B7280",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.8px",
+                      }}
+                    >
+                      {k}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 13,
+                        color: "#FAF9F7",
+                        marginTop: 2,
+                      }}
+                    >
+                      {v}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  if (submitted) {
+    return (
+      <PageShell>
+        <SuccessScreen
+          name={form.firstName}
+          blood={form.bloodGroup}
+        />
+      </PageShell>
+    );
+  }
+
   return (
-    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "'DM Sans', sans-serif", background: "#0D0D0D", color: "#FAF9F7" }}>
+    <PageShell>
+      <div ref={topRef} />
+
+      {/* Header */}
+      <div style={{ marginBottom: 32 }}>
+        <div
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 11,
+            color: "#C0152A",
+            letterSpacing: "1.8px",
+            textTransform: "uppercase",
+            marginBottom: 8,
+          }}
+        >
+          Join the Network
+        </div>
+        <div
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: 34,
+            fontWeight: 700,
+            color: "#FAF9F7",
+            lineHeight: 1.2,
+          }}
+        >
+          Become a Donor.
+          <br />
+          <span
+            style={{
+              color: "#9CA3AF",
+              fontSize: 22,
+              fontWeight: 600,
+              fontStyle: "italic",
+            }}
+          >
+            Save a life, one cycle at a time.
+          </span>
+        </div>
+      </div>
+
+      <StepIndicator steps={STEPS} currentIndex={stepIndex} />
+      <ProgressBar current={stepIndex + 1} total={STEPS.length} />
+
+      {/* Form body */}
+      <div
+        style={{
+          background: "#111827",
+          border: "1px solid #1e293b",
+          borderRadius: 12,
+          padding: "28px 28px",
+        }}
+      >
+        {renderStep()}
+      </div>
+
+      {/* Navigation */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 24,
+          gap: 12,
+        }}
+      >
+        <button
+          type="button"
+          onClick={handleBack}
+          disabled={stepIndex === 0}
+          style={{
+            background: "transparent",
+            color: stepIndex === 0 ? "#1e293b" : "#9CA3AF",
+            border: `1px solid ${stepIndex === 0 ? "#1e293b" : "#6B7280"}`,
+            padding: "12px 24px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13,
+            cursor: stepIndex === 0 ? "not-allowed" : "pointer",
+            borderRadius: 0,
+          }}
+        >
+          ← Back
+        </button>
+
+        <div
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 11,
+            color: "#6B7280",
+          }}
+        >
+          {stepIndex + 1} / {STEPS.length}
+        </div>
+
+        <button
+          type="button"
+          onClick={handleNext}
+          style={{
+            background: "#C0152A",
+            color: "#fff",
+            border: "none",
+            padding: "13px 28px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13,
+            fontWeight: 700,
+            cursor: "pointer",
+            borderRadius: 0,
+            letterSpacing: "0.5px",
+            minWidth: 160,
+          }}
+        >
+          {stepIndex === STEPS.length - 1
+            ? "COMPLETE REGISTRATION →"
+            : `NEXT: ${STEPS[stepIndex + 1]?.label?.toUpperCase()} →`}
+        </button>
+      </div>
+
+      {/* Privacy footer */}
+      <div
+        style={{
+          marginTop: 24,
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 11,
+          color: "#6B7280",
+          textAlign: "center",
+          lineHeight: 1.7,
+          fontStyle: "italic",
+        }}
+      >
+        Your data is encrypted and never shared with third parties.
+        <br />
+        Donor identities are protected under Raksha AI's privacy protocol.
+      </div>
+    </PageShell>
+  );
+}
+
+// ── LAYOUT HELPERS ─────────────────────────────────────────────────────────────
+function PageShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#0D0D0D",
+        color: "#FAF9F7",
+        fontFamily: "'DM Sans', sans-serif",
+      }}
+    >
       <style>{`
         @import url('${FONT_URL}');
-        *{box-sizing:border-box;margin:0;padding:0;}
-        ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:#0A1628;}::-webkit-scrollbar-thumb{background:#C0152A;border-radius:2px;}
-        @keyframes pulse-border{0%,100%{box-shadow:0 0 0 1.5px #C0152A;}50%{box-shadow:0 0 0 3px #C0152A,0 0 12px rgba(192,21,42,0.4);}}
-        @keyframes dot-pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
-        @media(max-width:768px){.sidebar{display:none!important;}.mobile-tabs{display:flex!important;}.main-scroll{padding-bottom:80px!important;}}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0A1628; }
+        ::-webkit-scrollbar-thumb { background: #C0152A; border-radius: 2px; }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
+        select option { background: #0A1628; color: #FAF9F7; }
+        @media (max-width: 600px) {
+          .form-grid { grid-template-columns: 1fr !important; }
+        }
       `}</style>
 
-      {showEmergency && <EmergencyModal onClose={() => setShowEmergency(false)} />}
+      {/* Top nav bar */}
+      <div
+        style={{
+          borderBottom: "1px solid #1e293b",
+          padding: "16px 32px",
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+          position: "sticky",
+          top: 0,
+          background: "rgba(13,13,13,0.95)",
+          backdropFilter: "blur(8px)",
+          zIndex: 50,
+        }}
+      >
+        <Logo />
+        <div
+          style={{
+            width: 1,
+            height: 24,
+            background: "#1e293b",
+            marginLeft: 8,
+          }}
+        />
+        <span
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13,
+            color: "#6B7280",
+          }}
+        >
+          Donor Registration
+        </span>
+      </div>
 
-      {/* SIDEBAR */}
-      <aside className="sidebar" style={{ width: 240, background: "#0A1628", borderRight: "1px solid #1e293b", position: "sticky", top: 0, height: "100vh", display: "flex", flexDirection: "column", padding: "24px 0", flexShrink: 0 }}>
-        <div style={{ padding: "0 20px 20px" }}>
-          <Logo />
-          <div style={{ marginTop: 18 }}>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: "#FAF9F7" }}>{PATIENT.family}</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B7280", marginTop: 2 }}>Patient: {PATIENT.name}, {PATIENT.age}</div>
-          </div>
-        </div>
+      {/* Page content */}
+      <div
+        style={{
+          maxWidth: 640,
+          margin: "0 auto",
+          padding: "48px 24px 80px",
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
 
-        <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, padding: "0 8px" }}>
-          {NAV.map(n => {
-            const isActive = active === n.id;
-            return (
-              <button key={n.id} onClick={() => setActive(n.id)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 12px", background: isActive ? "#111827" : "transparent", border: "none", borderLeft: isActive ? "2px solid #C0152A" : "2px solid transparent", cursor: "pointer", width: "100%", textAlign: "left", color: isActive ? "#FAF9F7" : "#9CA3AF", fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, borderRadius: "0 6px 6px 0", transition: "all .15s" }}
-                onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = "#FAF9F7"; }}
-                onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = "#9CA3AF"; }}
-              >
-                <span style={{ fontSize: 16, opacity: 0.9 }}>{n.icon}</span>{n.label}
-              </button>
-            );
-          })}
-        </nav>
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        fontFamily: "'Cormorant Garamond', serif",
+        fontSize: 22,
+        fontWeight: 700,
+        color: "#FAF9F7",
+        paddingBottom: 12,
+        borderBottom: "1px solid #1e293b",
+        marginBottom: 4,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
-        {/* Emergency button pinned */}
-        <div style={{ padding: "0 12px 20px" }}>
-          <button onClick={() => setShowEmergency(true)} style={{ width: "100%", background: "#C0152A", color: "#fff", border: "none", padding: "13px 14px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700, cursor: "pointer", borderRadius: 0, letterSpacing: "0.5px", animation: "pulse-border 2s infinite" }}>
-            🆘 EMERGENCY REQUEST
-          </button>
-        </div>
-      </aside>
-
-      {/* MAIN */}
-      <main className="main-scroll" style={{ flex: 1, overflowY: "auto", padding: "36px 32px" }}>
-        <div style={{ maxWidth: 860, margin: "0 auto" }}>
-          {PANELS[active]}
-        </div>
-      </main>
-
-      {/* MOBILE BOTTOM TABS */}
-      <nav className="mobile-tabs" style={{ display: "none", position: "fixed", bottom: 0, left: 0, right: 0, background: "#0A1628", borderTop: "1px solid #1e293b", padding: "8px 0 12px", zIndex: 100, justifyContent: "space-around" }}>
-        {NAV.map(n => (
-          <button key={n.id} onClick={() => setActive(n.id)} style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3, color: active === n.id ? "#C0152A" : "#6B7280", fontFamily: "'DM Sans', sans-serif", fontSize: 10 }}>
-            <span style={{ fontSize: 20 }}>{n.icon}</span>
-            {n.label.split(" ")[0]}
-          </button>
-        ))}
-        <button onClick={() => setShowEmergency(true)} style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3, color: "#C0152A", fontFamily: "'DM Sans', sans-serif", fontSize: 10, animation: "pulse-border 2s infinite" }}>
-          <span style={{ fontSize: 20 }}>🆘</span>SOS
-        </button>
-      </nav>
+function InfoNote({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        background: "rgba(44,168,160,0.07)",
+        borderLeft: "2px solid #2CA8A0",
+        padding: "12px 16px",
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 12,
+        color: "#9CA3AF",
+        lineHeight: 1.7,
+        borderRadius: "0 6px 6px 0",
+      }}
+    >
+      {children}
     </div>
   );
 }
