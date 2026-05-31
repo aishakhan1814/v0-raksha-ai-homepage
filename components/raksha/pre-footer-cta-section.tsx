@@ -63,7 +63,7 @@ export function PreFooterCTASection() {
         <FadeIn delay={300}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href=""
+              href="/register/donor"
               className="w-full sm:w-auto px-8 py-4 bg-raksha-blood text-raksha-white font-medium hover:bg-raksha-crimson transition-colors flex items-center justify-center gap-2"
             >
               I Want to Donate Blood
