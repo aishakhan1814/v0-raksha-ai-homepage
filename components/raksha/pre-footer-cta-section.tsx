@@ -72,7 +72,7 @@ export function PreFooterCTASection() {
               </svg>
             </a>
             <a
-              href="#register-patient"
+              href=""
               className="w-full sm:w-auto px-8 py-4 border border-raksha-white/50 text-raksha-white font-medium hover:border-raksha-white transition-colors flex items-center justify-center gap-2"
             >
               Register My Patient
