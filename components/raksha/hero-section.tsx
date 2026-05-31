@@ -72,7 +72,7 @@ export function HeroSection() {
                 Register as a Donor
               </a>
               <a
-                href="#request-blood"
+                href=""
                 className="px-8 py-4 border border-raksha-white/50 text-raksha-white font-medium hover:border-raksha-white transition-colors text-center"
               >
                 Find Blood for My Patient
