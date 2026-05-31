@@ -31,7 +31,7 @@ export function HIWCTASection() {
               Register as Donor
             </a>
             <a
-              href="#register-patient"
+              href=""
               className="px-8 py-4 border border-raksha-white text-raksha-white text-sm font-semibold hover:bg-raksha-white/10 transition-colors w-full sm:w-auto"
             >
               Register for Care Coordination
