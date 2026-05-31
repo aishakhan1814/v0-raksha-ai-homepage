@@ -54,7 +54,7 @@ export function TwoJourneysSection() {
               </p>
 
               <a
-                href=""
+                href="/register/donor"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-raksha-blood text-raksha-white font-medium hover:bg-raksha-crimson transition-colors"
               >
                 Become a Raksha Donor
