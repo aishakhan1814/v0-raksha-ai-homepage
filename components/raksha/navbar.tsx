@@ -119,7 +119,7 @@ export function Navbar() {
                   Register as Donor
                 </a>
                 <a
-                  href="#request-blood"
+                  href="/register/patient"
                   className="px-5 py-2.5 border border-raksha-white/50 text-raksha-white text-sm font-medium text-center"
                 >
                   Request Blood
