@@ -25,7 +25,7 @@ export function HIWCTASection() {
         <FadeIn delay={200}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
             <a
-              href="#register-donor"
+              href=""
               className="px-8 py-4 bg-raksha-white text-raksha-blood text-sm font-semibold hover:bg-raksha-white/90 transition-colors w-full sm:w-auto"
             >
               Register as Donor
