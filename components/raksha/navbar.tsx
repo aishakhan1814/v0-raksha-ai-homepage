@@ -113,7 +113,7 @@ export function Navbar() {
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-raksha-wine/30">
                 <a
-                  href="/register/patient"
+                  href=""
                   className="px-5 py-2.5 bg-raksha-blood text-raksha-white text-sm font-medium text-center"
                 >
                   Register as Donor
