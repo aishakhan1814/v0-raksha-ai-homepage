@@ -68,7 +68,7 @@ export function Navbar() {
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-3">
             <a
-              href="#register-donor"
+              href=""
               className="px-5 py-2.5 bg-raksha-blood text-raksha-white text-sm font-medium hover:bg-raksha-crimson transition-colors"
             >
               Register as Donor
