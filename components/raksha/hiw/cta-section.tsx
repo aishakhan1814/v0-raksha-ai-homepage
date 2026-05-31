@@ -42,7 +42,7 @@ export function HIWCTASection() {
         <FadeIn delay={300}>
           <p className="text-raksha-white/50 text-sm mt-8">
             Already registered?{' '}
-            <a href="" className="text-raksha-white underline hover:no-underline">
+            <a href="/signin" className="text-raksha-white underline hover:no-underline">
               Sign in to your account
             </a>
           </p>
