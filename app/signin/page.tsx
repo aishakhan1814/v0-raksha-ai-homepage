@@ -104,12 +104,12 @@ export default function SignInPage() {
   }
 
   const bloodDrops = [
-    { width: 120, top: "8%",  left: "4%",   transform: "rotate(-15deg)" },
-    { width: 60,  top: "20%", right: "6%",  transform: "rotate(10deg)"  },
-    { width: 90,  bottom: "15%", left: "8%", transform: "rotate(5deg)"  },
-    { width: 50,  top: "55%", right: "3%",  transform: "rotate(-20deg)" },
+    { width: 120, top: "8%", left: "4%", transform: "rotate(-15deg)" },
+    { width: 60, top: "20%", right: "6%", transform: "rotate(10deg)" },
+    { width: 90, bottom: "15%", left: "8%", transform: "rotate(5deg)" },
+    { width: 50, top: "55%", right: "3%", transform: "rotate(-20deg)" },
     { width: 150, bottom: "5%", right: "12%", transform: "rotate(8deg)" },
-    { width: 40,  top: "40%", left: "2%",   transform: "rotate(-5deg)"  },
+    { width: 40, top: "40%", left: "2%", transform: "rotate(-5deg)" },
   ];
 
   return (
@@ -201,28 +201,28 @@ export default function SignInPage() {
         }
       `}</style>
 
-      <div style={{ minHeight:"100vh", display:"flex", position:"relative", overflow:"hidden" }}>
+      <div style={{ minHeight: "100vh", display: "flex", position: "relative", overflow: "hidden" }}>
 
-        <canvas ref={canvasRef} style={{ position:"fixed", inset:0, zIndex:0, pointerEvents:"none" }} />
+        <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }} />
 
         {mounted && bloodDrops.map((d, i) => (
-          <BloodDrop key={i} style={{ width:d.width, height:d.width*1.25, top:(d as any).top, left:(d as any).left, right:(d as any).right, bottom:(d as any).bottom, transform:d.transform }} />
+          <BloodDrop key={i} style={{ width: d.width, height: d.width * 1.25, top: (d as any).top, left: (d as any).left, right: (d as any).right, bottom: (d as any).bottom, transform: d.transform }} />
         ))}
 
         {/* ── LEFT PANEL ── */}
-        <div className="rk-left" style={{ flex:"0 0 480px", minHeight:"100vh", display:"flex", flexDirection:"column", justifyContent:"center", padding:"2.5rem 3rem", position:"relative", zIndex:10, background:"rgba(10,22,40,0.97)", borderRight:"1px solid rgba(139,26,42,0.3)" }}>
+        <div className="rk-left" style={{ flex: "0 0 480px", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "2.5rem 3rem", position: "relative", zIndex: 10, background: "rgba(10,22,40,0.97)", borderRight: "1px solid rgba(139,26,42,0.3)" }}>
           <div className="rk-scanline" />
 
           {/* Logo */}
-          <div style={{ marginBottom:"3rem" }}>
-            <a href="/" style={{ display:"inline-flex", alignItems:"center", gap:12, textDecoration:"none" }}>
+          <div style={{ marginBottom: "3rem" }}>
+            <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
               <div className="rk-shield-float"><ShieldIcon size={36} /></div>
               <div>
-                <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"1.3rem", fontWeight:600, lineHeight:1 }}>
-                  <span style={{ color:"#FAF9F7" }}>Raksha</span>
-                  <span style={{ color:"#2CA8A0" }}> AI</span>
+                <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "1.3rem", fontWeight: 600, lineHeight: 1 }}>
+                  <span style={{ color: "#FAF9F7" }}>Raksha</span>
+                  <span style={{ color: "#2CA8A0" }}> AI</span>
                 </div>
-                <div style={{ fontSize:"0.58rem", letterSpacing:"0.18em", color:"#6B7280", textTransform:"uppercase", marginTop:3 }}>
+                <div style={{ fontSize: "0.58rem", letterSpacing: "0.18em", color: "#6B7280", textTransform: "uppercase", marginTop: 3 }}>
                   Blood Intelligence & Care
                 </div>
               </div>
@@ -232,150 +232,150 @@ export default function SignInPage() {
           {/* Form card */}
           <div className="rk-card">
 
-            <div style={{ marginBottom:"2rem" }}>
-              <p style={{ fontSize:"0.7rem", fontWeight:600, textTransform:"uppercase", letterSpacing:"0.2em", color:"#9B2335", marginBottom:10 }}>— Welcome back</p>
-              <h1 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"2.8rem", fontWeight:700, lineHeight:1.05, color:"#FAF9F7", marginBottom:10 }}>
-                Sign in to<br /><em style={{ fontStyle:"italic", color:"#E8897A" }}>your circle.</em>
+            <div style={{ marginBottom: "2rem" }}>
+              <p style={{ fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.2em", color: "#9B2335", marginBottom: 10 }}>— Welcome back</p>
+              <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "2.8rem", fontWeight: 700, lineHeight: 1.05, color: "#FAF9F7", marginBottom: 10 }}>
+                Sign in to<br /><em style={{ fontStyle: "italic", color: "#E8897A" }}>your circle.</em>
               </h1>
-              <p style={{ fontSize:"0.88rem", color:"#6B7280", fontWeight:300, lineHeight:1.6 }}>
+              <p style={{ fontSize: "0.88rem", color: "#6B7280", fontWeight: 300, lineHeight: 1.6 }}>
                 Your donors, your patients, your care network — all in one place.
               </p>
             </div>
 
             {/* Account type */}
-            <div style={{ marginBottom:"1.5rem" }}>
-              <span className="rk-label" style={{ color:errors.accountType ? "#C0152A" : "#6B7280" }}>I am signing in as *</span>
-              <div style={{ display:"flex", gap:10 }}>
-                <button type="button" className={`rk-type ${form.accountType==="donor" ? "sel-donor" : ""}`}
-                  onClick={() => { setForm(f=>({...f,accountType:"donor"})); setErrors(e=>({...e,accountType:undefined})); }}>
-                  <span style={{ fontSize:"1.4rem" }}>🩸</span>
-                  <span style={{ fontSize:"0.82rem", fontWeight:600, color:form.accountType==="donor"?"#FAF9F7":"#9CA3AF", letterSpacing:"0.04em" }}>DONOR</span>
-                  {form.accountType==="donor" && <span style={{ position:"absolute", top:6, right:8, width:8, height:8, borderRadius:"50%", background:"#C0152A", boxShadow:"0 0 6px #C0152A" }} />}
+            <div style={{ marginBottom: "1.5rem" }}>
+              <span className="rk-label" style={{ color: errors.accountType ? "#C0152A" : "#6B7280" }}>I am signing in as *</span>
+              <div style={{ display: "flex", gap: 10 }}>
+                <button type="button" className={`rk-type ${form.accountType === "donor" ? "sel-donor" : ""}`}
+                  onClick={() => { setForm(f => ({ ...f, accountType: "donor" })); setErrors(e => ({ ...e, accountType: undefined })); }}>
+                  <span style={{ fontSize: "1.4rem" }}>🩸</span>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 600, color: form.accountType === "donor" ? "#FAF9F7" : "#9CA3AF", letterSpacing: "0.04em" }}>DONOR</span>
+                  {form.accountType === "donor" && <span style={{ position: "absolute", top: 6, right: 8, width: 8, height: 8, borderRadius: "50%", background: "#C0152A", boxShadow: "0 0 6px #C0152A" }} />}
                 </button>
-                <button type="button" className={`rk-type ${form.accountType==="patient" ? "sel-patient" : ""}`}
-                  onClick={() => { setForm(f=>({...f,accountType:"patient"})); setErrors(e=>({...e,accountType:undefined})); }}>
-                  <span style={{ fontSize:"1.4rem" }}>🛡️</span>
-                  <span style={{ fontSize:"0.82rem", fontWeight:600, color:form.accountType==="patient"?"#FAF9F7":"#9CA3AF", letterSpacing:"0.04em" }}>PATIENT / FAMILY</span>
-                  {form.accountType==="patient" && <span style={{ position:"absolute", top:6, right:8, width:8, height:8, borderRadius:"50%", background:"#2CA8A0", boxShadow:"0 0 6px #2CA8A0" }} />}
+                <button type="button" className={`rk-type ${form.accountType === "patient" ? "sel-patient" : ""}`}
+                  onClick={() => { setForm(f => ({ ...f, accountType: "patient" })); setErrors(e => ({ ...e, accountType: undefined })); }}>
+                  <span style={{ fontSize: "1.4rem" }}>🛡️</span>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 600, color: form.accountType === "patient" ? "#FAF9F7" : "#9CA3AF", letterSpacing: "0.04em" }}>PATIENT / FAMILY</span>
+                  {form.accountType === "patient" && <span style={{ position: "absolute", top: 6, right: 8, width: 8, height: 8, borderRadius: "50%", background: "#2CA8A0", boxShadow: "0 0 6px #2CA8A0" }} />}
                 </button>
               </div>
-              {errors.accountType && <p style={{ color:"#C0152A", fontSize:"0.73rem", marginTop:6 }}>{errors.accountType}</p>}
+              {errors.accountType && <p style={{ color: "#C0152A", fontSize: "0.73rem", marginTop: 6 }}>{errors.accountType}</p>}
             </div>
 
             {/* Email */}
-            <div style={{ marginBottom:"1.2rem" }}>
-              <label className="rk-label" style={{ color:errors.email?"#C0152A":focusedField==="email"?"#FAF9F7":"#6B7280" }}>Email Address *</label>
-              <input type="email" className={`rk-input${errors.email?" rk-err":""}`}
+            <div style={{ marginBottom: "1.2rem" }}>
+              <label className="rk-label" style={{ color: errors.email ? "#C0152A" : focusedField === "email" ? "#FAF9F7" : "#6B7280" }}>Email Address *</label>
+              <input type="email" className={`rk-input${errors.email ? " rk-err" : ""}`}
                 value={form.email}
-                onChange={e=>{setForm(f=>({...f,email:e.target.value}));setErrors(er=>({...er,email:undefined}));}}
-                onFocus={()=>setFocusedField("email")} onBlur={()=>setFocusedField(null)}
+                onChange={e => { setForm(f => ({ ...f, email: e.target.value })); setErrors(er => ({ ...er, email: undefined })); }}
+                onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)}
                 placeholder="you@example.com" autoComplete="email" />
-              {errors.email && <p style={{ color:"#C0152A", fontSize:"0.73rem", marginTop:5 }}>{errors.email}</p>}
+              {errors.email && <p style={{ color: "#C0152A", fontSize: "0.73rem", marginTop: 5 }}>{errors.email}</p>}
             </div>
 
             {/* Password */}
-            <div style={{ marginBottom:"0.5rem" }}>
-              <label className="rk-label" style={{ color:errors.password?"#C0152A":focusedField==="password"?"#FAF9F7":"#6B7280" }}>Password *</label>
-              <div style={{ position:"relative" }}>
-                <input type={showPassword?"text":"password"} className={`rk-input${errors.password?" rk-err":""}`}
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label className="rk-label" style={{ color: errors.password ? "#C0152A" : focusedField === "password" ? "#FAF9F7" : "#6B7280" }}>Password *</label>
+              <div style={{ position: "relative" }}>
+                <input type={showPassword ? "text" : "password"} className={`rk-input${errors.password ? " rk-err" : ""}`}
                   value={form.password}
-                  onChange={e=>{setForm(f=>({...f,password:e.target.value}));setErrors(er=>({...er,password:undefined}));}}
-                  onFocus={()=>setFocusedField("password")} onBlur={()=>setFocusedField(null)}
+                  onChange={e => { setForm(f => ({ ...f, password: e.target.value })); setErrors(er => ({ ...er, password: undefined })); }}
+                  onFocus={() => setFocusedField("password")} onBlur={() => setFocusedField(null)}
                   placeholder="Enter your password" autoComplete="current-password"
-                  style={{ paddingRight:56 }} />
-                <button type="button" onClick={()=>setShowPassword(v=>!v)}
-                  style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", color:"#6B7280", fontSize:"0.75rem", fontFamily:"inherit", padding:0, letterSpacing:"0.08em" }}>
-                  {showPassword?"HIDE":"SHOW"}
+                  style={{ paddingRight: 56 }} />
+                <button type="button" onClick={() => setShowPassword(v => !v)}
+                  style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#6B7280", fontSize: "0.75rem", fontFamily: "inherit", padding: 0, letterSpacing: "0.08em" }}>
+                  {showPassword ? "HIDE" : "SHOW"}
                 </button>
               </div>
-              {errors.password && <p style={{ color:"#C0152A", fontSize:"0.73rem", marginTop:5 }}>{errors.password}</p>}
+              {errors.password && <p style={{ color: "#C0152A", fontSize: "0.73rem", marginTop: 5 }}>{errors.password}</p>}
             </div>
 
             {/* Forgot */}
-            <div style={{ textAlign:"right", marginBottom:"1.8rem" }}>
-              <a href="/forgot-password" style={{ fontSize:"0.78rem", color:"#6B7280", textDecoration:"none", letterSpacing:"0.04em" }}
-                onMouseEnter={e=>(e.currentTarget.style.color="#2CA8A0")}
-                onMouseLeave={e=>(e.currentTarget.style.color="#6B7280")}>
+            <div style={{ textAlign: "right", marginBottom: "1.8rem" }}>
+              <a href="/forgot-password" style={{ fontSize: "0.78rem", color: "#6B7280", textDecoration: "none", letterSpacing: "0.04em" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "#2CA8A0")}
+                onMouseLeave={e => (e.currentTarget.style.color = "#6B7280")}>
                 Forgot password?
               </a>
             </div>
 
             {/* API error */}
             {apiError && (
-              <div style={{ background:"rgba(192,21,42,0.1)", border:"1px solid rgba(192,21,42,0.35)", borderRadius:4, padding:"12px 14px", marginBottom:"1.2rem", display:"flex", gap:10, alignItems:"flex-start" }}>
-                <span style={{ color:"#C0152A", flexShrink:0 }}>⚠</span>
-                <p style={{ color:"#FAF9F7", fontSize:"0.85rem", fontWeight:300, lineHeight:1.5 }}>{apiError}</p>
+              <div style={{ background: "rgba(192,21,42,0.1)", border: "1px solid rgba(192,21,42,0.35)", borderRadius: 4, padding: "12px 14px", marginBottom: "1.2rem", display: "flex", gap: 10, alignItems: "flex-start" }}>
+                <span style={{ color: "#C0152A", flexShrink: 0 }}>⚠</span>
+                <p style={{ color: "#FAF9F7", fontSize: "0.85rem", fontWeight: 300, lineHeight: 1.5 }}>{apiError}</p>
               </div>
             )}
 
             {/* Submit */}
             <button className="rk-btn" onClick={handleSubmit} disabled={loading}>
               {loading ? (
-                <span style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10 }}>
-                  <span style={{ width:16, height:16, border:"2px solid rgba(255,255,255,0.35)", borderTopColor:"#fff", borderRadius:"50%", display:"inline-block", animation:"spin 0.8s linear infinite" }} />
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+                  <span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.35)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "spin 0.8s linear infinite" }} />
                   Verifying…
                 </span>
-              ) : `Sign In ${form.accountType==="donor"?"as Donor":form.accountType==="patient"?"as Patient":"→"}`}
+              ) : `Sign In ${form.accountType === "donor" ? "as Donor" : form.accountType === "patient" ? "as Patient" : "→"}`}
             </button>
 
             {/* Divider */}
-            <div className="rk-divider" style={{ margin:"1.8rem 0" }}>
-              <span style={{ fontSize:"0.72rem", color:"#4B5563", letterSpacing:"0.1em", textTransform:"uppercase" }}>or</span>
+            <div className="rk-divider" style={{ margin: "1.8rem 0" }}>
+              <span style={{ fontSize: "0.72rem", color: "#4B5563", letterSpacing: "0.1em", textTransform: "uppercase" }}>or</span>
             </div>
 
             {/* Register links */}
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               <a href="/register/donor" className="rk-reg-btn donor-btn">🩸 Register Donor</a>
               <a href="/register/patient" className="rk-reg-btn patient-btn">🛡️ Register Patient</a>
             </div>
 
-            <p style={{ marginTop:"2rem", fontSize:"0.72rem", color:"#374151", textAlign:"center", lineHeight:1.6, letterSpacing:"0.02em" }}>
+            <p style={{ marginTop: "2rem", fontSize: "0.72rem", color: "#374151", textAlign: "center", lineHeight: 1.6, letterSpacing: "0.02em" }}>
               Protected by end-to-end encryption. Your health data is never sold.
             </p>
           </div>
         </div>
 
         {/* ── RIGHT PANEL ── */}
-        <div className="rk-right" style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"space-between", padding:"3rem", position:"relative", overflow:"hidden", zIndex:5 }}>
-          <div style={{ position:"absolute", right:"-60px", top:"50%", transform:"translateY(-50%)", opacity:0.04, pointerEvents:"none" }}><ShieldIcon size={520} /></div>
-          <div style={{ position:"absolute", top:"30%", left:0, right:0, height:1, background:"rgba(139,26,42,0.12)" }} />
-          <div style={{ position:"absolute", top:"65%", left:0, right:0, height:1, background:"rgba(139,26,42,0.08)" }} />
+        <div className="rk-right" style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "3rem", position: "relative", overflow: "hidden", zIndex: 5 }}>
+          <div style={{ position: "absolute", right: "-60px", top: "50%", transform: "translateY(-50%)", opacity: 0.04, pointerEvents: "none" }}><ShieldIcon size={520} /></div>
+          <div style={{ position: "absolute", top: "30%", left: 0, right: 0, height: 1, background: "rgba(139,26,42,0.12)" }} />
+          <div style={{ position: "absolute", top: "65%", left: 0, right: 0, height: 1, background: "rgba(139,26,42,0.08)" }} />
 
-          <p style={{ fontSize:"0.65rem", fontWeight:600, letterSpacing:"0.22em", textTransform:"uppercase", color:"#9B2335" }}>
+          <p style={{ fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.22em", textTransform: "uppercase", color: "#9B2335" }}>
             Raksha AI · Blood Intelligence
           </p>
 
-          <div style={{ maxWidth:480, position:"relative", zIndex:2 }}>
-            <div style={{ width:40, height:3, background:"#C0152A", marginBottom:"2rem" }} />
-            <blockquote style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"2.6rem", fontWeight:600, lineHeight:1.15, color:"#FAF9F7", marginBottom:"1.5rem" }}>
+          <div style={{ maxWidth: 480, position: "relative", zIndex: 2 }}>
+            <div style={{ width: 40, height: 3, background: "#C0152A", marginBottom: "2rem" }} />
+            <blockquote style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "2.6rem", fontWeight: 600, lineHeight: 1.15, color: "#FAF9F7", marginBottom: "1.5rem" }}>
               "Every sign-in<br />
-              <em style={{ color:"#E8897A", fontStyle:"italic" }}>saves a life</em><br />
+              <em style={{ color: "#E8897A", fontStyle: "italic" }}>saves a life</em><br />
               somewhere in India."
             </blockquote>
-            <p style={{ fontSize:"0.82rem", color:"#6B7280", fontWeight:300, lineHeight:1.7, maxWidth:360 }}>
+            <p style={{ fontSize: "0.82rem", color: "#6B7280", fontWeight: 300, lineHeight: 1.7, maxWidth: 360 }}>
               Our AI works behind the scenes — matching donors, scheduling transfusions, and alerting your care circle — so no patient misses their window.
             </p>
           </div>
 
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"1.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1.5rem" }}>
             {[
-              { val:"14,800+", label:"Active Patients", delay:"0.1s" },
-              { val:"97.3%",  label:"Fulfilment Rate",  delay:"0.2s" },
-              { val:"4.2×",   label:"Avg Donor Circle", delay:"0.3s" },
-            ].map((s,i) => (
-              <div key={i} className="rk-stat" style={{ animationDelay:s.delay }}>
-                <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:"1.6rem", fontWeight:500, color:"#FAF9F7", marginBottom:4 }}>{s.val}</div>
-                <div style={{ fontSize:"0.7rem", textTransform:"uppercase", letterSpacing:"0.1em", color:"#6B7280", fontWeight:500 }}>{s.label}</div>
-                <div style={{ width:24, height:2, background:"#C0152A", marginTop:8 }} />
+              { val: "14,800+", label: "Active Patients", delay: "0.1s" },
+              { val: "97.3%", label: "Fulfilment Rate", delay: "0.2s" },
+              { val: "4.2×", label: "Avg Donor Circle", delay: "0.3s" },
+            ].map((s, i) => (
+              <div key={i} className="rk-stat" style={{ animationDelay: s.delay }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "1.6rem", fontWeight: 500, color: "#FAF9F7", marginBottom: 4 }}>{s.val}</div>
+                <div style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", color: "#6B7280", fontWeight: 500 }}>{s.label}</div>
+                <div style={{ width: 24, height: 2, background: "#C0152A", marginTop: 8 }} />
               </div>
             ))}
           </div>
 
-          <div style={{ borderLeft:"3px solid #E8897A", paddingLeft:"1.2rem", maxWidth:400 }}>
-            <p style={{ fontStyle:"italic", fontSize:"0.88rem", color:"#9CA3AF", fontWeight:300, lineHeight:1.7, marginBottom:6 }}>
+          <div style={{ borderLeft: "3px solid #E8897A", paddingLeft: "1.2rem", maxWidth: 400 }}>
+            <p style={{ fontStyle: "italic", fontSize: "0.88rem", color: "#9CA3AF", fontWeight: 300, lineHeight: 1.7, marginBottom: 6 }}>
               "My daughter's transfusions are now scheduled automatically. I haven't missed a single one since joining Raksha."
             </p>
-            <cite style={{ fontSize:"0.73rem", color:"#E8897A", fontStyle:"normal", fontWeight:500 }}>
+            <cite style={{ fontSize: "0.73rem", color: "#E8897A", fontStyle: "normal", fontWeight: 500 }}>
               — Priya S., Parent · Hyderabad
             </cite>
           </div>
