@@ -66,7 +66,7 @@ export function HeroSection() {
           <FadeIn delay={300}>
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <a
-                href="#register-donor"
+                href="/register/donor"
                 className="px-8 py-4 bg-raksha-blood text-raksha-white font-medium hover:bg-raksha-crimson transition-colors text-center"
               >
                 Register as a Donor
