@@ -99,7 +99,7 @@ export function TwoJourneysSection() {
               </p>
 
               <a
-                href="#register-patient"
+                href=""
                 className="inline-flex items-center gap-2 px-6 py-3 border border-raksha-blood text-raksha-blood font-medium hover:bg-raksha-blood hover:text-raksha-white transition-colors"
               >
                 Register Your Patient
