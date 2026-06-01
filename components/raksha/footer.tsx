@@ -12,7 +12,7 @@ const footerLinks = {
   resources: [
     { label: 'Blood Donation Guide', href: '#' },
     { label: 'Thalassemia FAQ', href: '#' },
-    { label: 'Research Library', href: '#library' },
+    { label: 'Research Library', href: '' },
     { label: 'Partner With Us', href: '#' },
   ],
   company: [
