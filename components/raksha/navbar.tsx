@@ -9,7 +9,7 @@ const navLinks = [
   { label: 'For Patients', href: '/for-patients' },
   { label: 'Impact', href: '/impact' },
   { label: 'Library', href: '/library' },
-  { label: 'About', href: '#about' },
+  { label: 'About', href: '/about' },
 ]
 
 export function Navbar() {
