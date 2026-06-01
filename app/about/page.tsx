@@ -777,7 +777,7 @@ function Navbar() {
       <ul className="navbar-links">
         <li><a href="/">Home</a></li>
         <li><a href="/about" className="active">About</a></li>
-        <li><a href="/">Donate Blood</a></li>
+        <li><a href="/register/donor">Donate Blood</a></li>
         <li><a href="/patients">For Patients</a></li>
         <li><a href="/ai">AI Assistant</a></li>
         <li><a href="/register" className="navbar-cta">Get Started</a></li>
