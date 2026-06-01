@@ -8,7 +8,7 @@ const navLinks = [
   { label: 'For Donors', href: '/for-donors' },
   { label: 'For Patients', href: '/for-patients' },
   { label: 'Impact', href: '/impact' },
-  { label: 'Library', href: '' },
+  { label: 'Library', href: '/library' },
   { label: 'About', href: '#about' },
 ]
 
