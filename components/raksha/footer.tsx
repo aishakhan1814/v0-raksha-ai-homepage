@@ -7,7 +7,7 @@ const footerLinks = {
     { label: 'How It Works', href: '#how-it-works' },
     { label: 'For Donors', href: '#donors' },
     { label: 'For Patients', href: '#patients' },
-    { label: 'Impact Dashboard', href: '#impact' },
+    { label: 'Impact Dashboard', href: '' },
   ],
   resources: [
     { label: 'Blood Donation Guide', href: '#' },
