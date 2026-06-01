@@ -1395,7 +1395,7 @@ export default function DonorRegisterPage() {
           </p>
           <div className="success-id">Donor ID: {donorId}</div>
           <div className="success-ctas">
-            <a href="/dashboard" className="btn-teal">Go to Dashboard</a>
+            <a href="/dashboard/donor" className="btn-teal">Go to Dashboard</a>
             <a href="/" className="btn-outline-sm">Back to Home</a>
           </div>
         </div>
