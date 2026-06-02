@@ -990,7 +990,7 @@ export default function AboutPage() {
           </p>
           <div className="closing-ctas fade-up delay-3">
             <a href="/register/donor" className="btn-primary">Register as a Donor</a>
-            <a href="/patients" className="btn-outline">Enroll Your Patient</a>
+            <a href="/register/patient" className="btn-outline">Enroll Your Patient</a>
           </div>
         </div>
       </section>
