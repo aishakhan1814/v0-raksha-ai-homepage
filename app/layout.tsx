@@ -10,7 +10,6 @@ import {
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import GlobalHeader from "@/components/GlobalHeader";
 
 // ─── FONTS ────────────────────────────────────────────────────────────────────
 const cormorant = Cormorant_Garamond({
