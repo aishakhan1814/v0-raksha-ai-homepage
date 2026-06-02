@@ -989,7 +989,7 @@ export default function AboutPage() {
             Thalassemia patients need blood transfusions every 2–4 weeks for life. Behind every transfusion is a donor who showed up. Raksha AI makes showing up effortless — we find patients near you, notify you when you match, and coordinate everything end-to-end.
           </p>
           <div className="closing-ctas fade-up delay-3">
-            <a href="/register" className="btn-primary">Register as a Donor</a>
+            <a href="/register/donor" className="btn-primary">Register as a Donor</a>
             <a href="/patients" className="btn-outline">Enroll Your Patient</a>
           </div>
         </div>
