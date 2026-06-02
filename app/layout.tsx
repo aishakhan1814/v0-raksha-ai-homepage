@@ -1,7 +1,4 @@
 // app/layout.tsx
-// ── NO "use client" here — server component required for metadata + fonts ──
-// The language switcher lives in GlobalHeader (a separate client component)
-
 import type { Metadata } from "next";
 import {
   Cormorant_Garamond,
@@ -41,7 +38,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
-      { url: "/icon-dark-32x32.png",  media: "(prefers-color-scheme: dark)"  },
+      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
       { url: "/icon.svg", type: "image/svg+xml" },
     ],
     apple: "/apple-icon.png",
@@ -59,17 +56,7 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased bg-raksha-deep text-raksha-white">
 
-        {/*
-          GlobalHeader renders on EVERY page automatically.
-          It contains the logo + the LanguageSwitcher dropdown.
-          It's a "use client" component imported here safely.
-        */}
-        <GlobalHeader />
-
-        {/*
-          Every page.tsx in your /app folder renders here.
-          The header is always above it.
-        */}
+        {/* Main content area */}
         <main>
           {children}
         </main>
