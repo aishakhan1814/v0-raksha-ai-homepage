@@ -780,7 +780,7 @@ function Navbar() {
         <li><a href="/register/donor">Donate Blood</a></li>
         <li><a href="/register/patient">For Patients</a></li>
         <li><a href="/ai">AI Assistant</a></li>
-        <li><a href="/register" className="navbar-cta">Get Started</a></li>
+        <li><a href="/register/donor" className="navbar-cta">Get Started</a></li>
       </ul>
     </nav>
   );
