@@ -1,9 +1,11 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { FadeIn } from './fade-in'
 import { Counter } from './counter'
 
 export function MissionSection() {
+  const t = useTranslations()
   return (
     <section className="relative py-24 lg:py-32 bg-raksha-navy grain-overlay">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,27 +13,16 @@ export function MissionSection() {
           {/* Left - Pull Quote */}
           <FadeIn>
             <blockquote className="font-display text-3xl sm:text-4xl lg:text-[44px] text-raksha-warm italic leading-snug">
-              &ldquo;Every Thalassemia patient deserves a donor who keeps coming back.&rdquo;
+              &ldquo;{t('mission.quote')}&rdquo;
             </blockquote>
           </FadeIn>
 
           {/* Right - Body Text */}
           <FadeIn delay={100}>
             <div className="space-y-6 text-raksha-muted leading-relaxed">
-              <p>
-                Thalassemia Major is a genetic blood disorder that requires lifelong blood transfusions — 
-                typically every 2-3 weeks. Without regular transfusions, patients face severe anemia, 
-                organ damage, and shortened life expectancy.
-              </p>
-              <p>
-                In India alone, over 1 lakh children are born with Thalassemia Major every year. 
-                Each patient needs 500-700 transfusions over their lifetime. That&apos;s not just 
-                500 blood bags — it&apos;s 500 moments of uncertainty, coordination, and hope.
-              </p>
-              <p>
-                Raksha AI was built to eliminate that uncertainty. We match patients with committed 
-                donors, predict transfusion needs, and ensure no patient ever faces a shortage alone.
-              </p>
+              <p>{t('mission.desc1')}</p>
+              <p>{t('mission.desc2')}</p>
+              <p>{t('mission.desc3')}</p>
             </div>
           </FadeIn>
         </div>
@@ -43,25 +34,25 @@ export function MissionSection() {
               <p className="font-mono text-4xl lg:text-5xl text-raksha-blood mb-2">
                 <Counter end={100000} suffix="+" />
               </p>
-              <p className="text-raksha-white font-medium">Thalassemia patients in India</p>
+              <p className="text-raksha-white font-medium">{t('mission.stat1Label')}</p>
             </div>
           </FadeIn>
           
           <FadeIn delay={100}>
             <div className="bg-[#111827] p-8 border-t border-raksha-wine">
               <p className="font-mono text-4xl lg:text-5xl text-raksha-blood mb-2">
-                Every 21 Days
+                {t('mission.stat2Title')}
               </p>
-              <p className="text-raksha-white font-medium">Average transfusion frequency</p>
+              <p className="text-raksha-white font-medium">{t('mission.stat2Desc')}</p>
             </div>
           </FadeIn>
           
           <FadeIn delay={200}>
             <div className="bg-[#111827] p-8 border-t border-raksha-wine">
               <p className="font-mono text-4xl lg:text-5xl text-raksha-blood mb-2">
-                <Counter end={500} />–700
+                {t('mission.stat3Count')}
               </p>
-              <p className="text-raksha-white font-medium">Transfusions per lifetime</p>
+              <p className="text-raksha-white font-medium">{t('mission.stat3Label')}</p>
             </div>
           </FadeIn>
         </div>

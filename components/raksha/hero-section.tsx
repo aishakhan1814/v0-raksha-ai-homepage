@@ -1,10 +1,14 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useTranslations } from 'next-intl'
+import { useLocale } from 'next-intl'
 import { FadeIn } from './fade-in'
 
 export function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const t = useTranslations()
+  const locale = useLocale()
 
   useEffect(() => {
     if (videoRef.current) {
@@ -46,36 +50,35 @@ export function HeroSection() {
         <div className="max-w-3xl">
           <FadeIn>
             <p className="text-raksha-crimson text-xs sm:text-sm uppercase tracking-[0.2em] font-medium mb-6">
-              Blood Warriors × Raksha AI
+              {t('hero.tagline')}
             </p>
           </FadeIn>
           
           <FadeIn delay={100}>
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-[80px] text-raksha-white leading-[1.1] mb-6 text-balance">
-              Saving a life shouldn&apos;t require a miracle. Just a match.
+              {t('hero.title')}
             </h1>
           </FadeIn>
           
           <FadeIn delay={200}>
             <p className="text-lg sm:text-xl text-raksha-muted max-w-xl mb-8 leading-relaxed">
-              Raksha AI connects voluntary blood donors with Thalassemia patients across India — 
-              through intelligent matching, automated scheduling, and care that never stops.
+              {t('hero.description')}
             </p>
           </FadeIn>
           
           <FadeIn delay={300}>
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <a
-                href="/register/donor"
+                href={`/${locale}/register/donor`}
                 className="px-8 py-4 bg-raksha-blood text-raksha-white font-medium hover:bg-raksha-crimson transition-colors text-center"
               >
-                Register as a Donor
+                {t('hero.cta1')}
               </a>
               <a
-                href="/register/patient"
+                href={`/${locale}/register/patient`}
                 className="px-8 py-4 border border-raksha-white/50 text-raksha-white font-medium hover:border-raksha-white transition-colors text-center"
               >
-                Find Blood for My Patient
+                {t('hero.cta2')}
               </a>
             </div>
           </FadeIn>
@@ -83,18 +86,18 @@ export function HeroSection() {
           <FadeIn delay={400}>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-raksha-white">1,00,000+</span>
-                <span className="text-raksha-muted">Patients</span>
+                <span className="font-mono text-raksha-white">{t('hero.stat1Count')}</span>
+                <span className="text-raksha-muted">{t('hero.stat1Label')}</span>
               </div>
               <div className="w-px h-4 bg-raksha-crimson" />
               <div className="flex items-center gap-2">
-                <span className="font-mono text-raksha-white">Every 21 Days</span>
-                <span className="text-raksha-muted">Transfusion</span>
+                <span className="font-mono text-raksha-white">{t('hero.stat2Label')}</span>
+                <span className="text-raksha-muted">{t('hero.stat2Desc')}</span>
               </div>
               <div className="w-px h-4 bg-raksha-crimson" />
               <div className="flex items-center gap-2">
-                <span className="font-mono text-raksha-white">500+</span>
-                <span className="text-raksha-muted">Transfusions / Lifetime</span>
+                <span className="font-mono text-raksha-white">{t('hero.stat3Count')}</span>
+                <span className="text-raksha-muted">{t('hero.stat3Desc')}</span>
               </div>
             </div>
           </FadeIn>
@@ -103,7 +106,7 @@ export function HeroSection() {
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <span className="text-xs text-raksha-muted uppercase tracking-widest">Scroll</span>
+        <span className="text-xs text-raksha-muted uppercase tracking-widest">{t('hero.scroll')}</span>
         <div className="w-px h-8 bg-raksha-crimson/30 relative overflow-hidden">
           <div className="absolute inset-x-0 bg-raksha-blood animate-scroll-line h-full" />
         </div>

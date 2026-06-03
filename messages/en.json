@@ -1,0 +1,83 @@
+{
+  "nav": {
+    "howItWorks": "How It Works",
+    "forDonors": "For Donors",
+    "forPatients": "For Patients",
+    "impact": "Impact",
+    "library": "Library",
+    "about": "About",
+    "registerDonor": "Register as Donor",
+    "requestBlood": "Request Blood"
+  },
+  "hero": {
+    "tagline": "Blood Warriors × Raksha AI",
+    "title": "Saving a life shouldn't require a miracle. Just a match.",
+    "description": "Raksha AI connects voluntary blood donors with Thalassemia patients across India — through intelligent matching, automated scheduling, and care that never stops.",
+    "cta1": "Register as a Donor",
+    "cta2": "Find Blood for My Patient",
+    "stat1Count": "1,00,000+",
+    "stat1Label": "Patients",
+    "stat2Label": "Every 21 Days",
+    "stat2Desc": "Transfusion",
+    "stat3Count": "500+",
+    "stat3Desc": "Transfusions / Lifetime",
+    "scroll": "Scroll"
+  },
+  "mission": {
+    "quote": "Every Thalassemia patient deserves a donor who keeps coming back.",
+    "desc1": "Thalassemia Major is a genetic blood disorder that requires lifelong blood transfusions — typically every 2-3 weeks. Without regular transfusions, patients face severe anemia, organ damage, and shortened life expectancy.",
+    "desc2": "In India alone, over 1 lakh children are born with Thalassemia Major every year. Each patient needs 500-700 transfusions over their lifetime. That's not just 500 blood bags — it's 500 moments of uncertainty, coordination, and hope.",
+    "desc3": "Raksha AI was built to eliminate that uncertainty. We match patients with committed donors, predict transfusion needs, and ensure no patient ever faces a shortage alone.",
+    "stat1Count": "100000+",
+    "stat1Label": "Thalassemia patients in India",
+    "stat2Title": "Every 21 Days",
+    "stat2Desc": "Average transfusion frequency",
+    "stat3Count": "500–700",
+    "stat3Label": "Transfusions per lifetime"
+  },
+  "footer": {
+    "description": "Protecting lives, one match at a time. Raksha AI is transforming blood donation in India through intelligent matching and care coordination.",
+    "platform": "Platform",
+    "platformLinks": {
+      "howItWorks": "How It Works",
+      "forDonors": "For Donors",
+      "forPatients": "For Patients",
+      "impactDashboard": "Impact Dashboard"
+    },
+    "resources": "Resources",
+    "resourcesLinks": {
+      "bloodGuide": "Blood Donation Guide",
+      "faq": "Thalassemia FAQ",
+      "library": "Research Library",
+      "partner": "Partner With Us"
+    },
+    "company": "Company",
+    "companyLinks": {
+      "about": "About Raksha AI",
+      "team": "Our Team",
+      "careers": "Careers",
+      "press": "Press Kit"
+    },
+    "legal": "Legal",
+    "legalLinks": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy"
+    },
+    "emergency": "24/7 Emergency Blood Request: +91 1800-RAKSHA-AI",
+    "copyright": "© {year} Raksha AI. All rights reserved.",
+    "socialLabels": {
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn",
+      "youtube": "YouTube"
+    }
+  },
+  "language": {
+    "english": "English",
+    "telugu": "తెలుగు",
+    "hindi": "हिंदी",
+    "tamil": "தமிழ்",
+    "select": "Select Language"
+  }
+}

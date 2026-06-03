@@ -1,18 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
+import { useLocale } from 'next-intl'
 import { RakshaLogo } from './logo'
-
-const navLinks = [
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'For Donors', href: '/for-donors' },
-  { label: 'For Patients', href: '/for-patients' },
-  { label: 'Impact', href: '/impact' },
-  { label: 'Library', href: '/library' },
-  { label: 'About', href: '/about' },
-]
+import { LanguageSwitcher } from './language-switcher'
 
 export function Navbar() {
+  const t = useTranslations()
+  const locale = useLocale()
+  
+  const navLinks = [
+    { label: t('nav.howItWorks'), href: `/${locale}/how-it-works` },
+    { label: t('nav.forDonors'), href: `/${locale}/for-donors` },
+    { label: t('nav.forPatients'), href: `/${locale}/for-patients` },
+    { label: t('nav.impact'), href: `/${locale}/impact` },
+    { label: t('nav.library'), href: `/${locale}/library` },
+    { label: t('nav.about'), href: `/${locale}/about` },
+  ]
+
   const [scrolled, setScrolled] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -48,7 +54,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <a href="/" className="shrink-0">
+          <a href={`/${locale}`} className="shrink-0">
             <RakshaLogo height={36} variant="dark" />
           </a>
 
@@ -68,17 +74,20 @@ export function Navbar() {
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-3">
             <a
-              href="/register/donor"
+              href={`/${locale}/register/donor`}
               className="px-5 py-2.5 bg-raksha-blood text-raksha-white text-sm font-medium hover:bg-raksha-crimson transition-colors"
             >
-              Register as Donor
+              {t('nav.registerDonor')}
             </a>
             <a
-              href="/register/patient"
+              href={`/${locale}/register/patient`}
               className="px-5 py-2.5 border border-raksha-white/50 text-raksha-white text-sm font-medium hover:border-raksha-white transition-colors"
             >
-              Request Blood
+              {t('nav.requestBlood')}
             </a>
+            <div className="ml-4">
+              <LanguageSwitcher />
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -113,17 +122,20 @@ export function Navbar() {
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-raksha-wine/30">
                 <a
-                  href="/register/donor"
+                  href={`/${locale}/register/donor`}
                   className="px-5 py-2.5 bg-raksha-blood text-raksha-white text-sm font-medium text-center"
                 >
-                  Register as Donor
+                  {t('nav.registerDonor')}
                 </a>
                 <a
-                  href="/register/patient"
+                  href={`/${locale}/register/patient`}
                   className="px-5 py-2.5 border border-raksha-white/50 text-raksha-white text-sm font-medium text-center"
                 >
-                  Request Blood
+                  {t('nav.requestBlood')}
                 </a>
+                <div className="pt-2">
+                  <LanguageSwitcher />
+                </div>
               </div>
             </div>
           </div>
