@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useTranslations } from '@/lib/i18n-context'
 import { FadeIn } from '../fade-in'
 
 export function HIWHeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [activeTab, setActiveTab] = useState<'donors' | 'patients'>('donors')
+  const t = useTranslations()
 
   useEffect(() => {
     if (videoRef.current) {
@@ -40,13 +42,13 @@ export function HIWHeroSection() {
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
         <FadeIn>
           <span className="inline-block text-raksha-crimson text-xs font-medium tracking-[0.15em] uppercase mb-6">
-            THE RAKSHA AI PROCESS
+            {t('howItWorks.hero.tagline')}
           </span>
         </FadeIn>
 
         <FadeIn delay={100}>
           <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-raksha-white leading-[1.1] text-balance">
-            From chaos to coordination — in minutes, not days.
+            {t('howItWorks.hero.title')}
           </h1>
         </FadeIn>
 

@@ -1,10 +1,12 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useTranslations } from '@/lib/i18n-context'
 import { FadeIn } from '../fade-in'
 
 export function DonorsHeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const t = useTranslations()
 
   useEffect(() => {
     if (videoRef.current) {
@@ -39,7 +41,7 @@ export function DonorsHeroSection() {
                 For Blood Donors
               </span>
               <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-raksha-white leading-[1.1] text-balance">
-                You are not just a blood type. You are someone&apos;s lifeline.
+                {t('forDonors.hero.title')}
               </h1>
               <p className="font-sans text-xl text-raksha-muted max-w-[560px]">
                 Join thousands of verified donors who receive personalized match requests 

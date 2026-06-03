@@ -1,24 +1,27 @@
 'use client'
 
+import { useTranslations } from '@/lib/i18n-context'
 import { FadeIn } from '../fade-in'
 
-const beforeItems = [
-  'Frantic WhatsApp groups at 2 AM',
-  'Calling 50+ donors, getting 3 responses',
-  'No way to know who is eligible today',
-  'Spreadsheets and paper records lost in chaos',
-  'Families exhausted, donors frustrated',
-]
-
-const afterItems = [
-  'AI matches verified, eligible donors instantly',
-  'Real-time availability and location tracking',
-  'Smart scheduling prevents donor fatigue',
-  'Complete digital records and reminders',
-  'Families supported, donors empowered',
-]
-
 export function ProblemSection() {
+  const t = useTranslations()
+
+  const beforeItems = [
+    t('howItWorks.problem.before1'),
+    t('howItWorks.problem.before2'),
+    t('howItWorks.problem.before3'),
+    t('howItWorks.problem.before4'),
+    t('howItWorks.problem.before5'),
+  ]
+
+  const afterItems = [
+    t('howItWorks.problem.after1'),
+    t('howItWorks.problem.after2'),
+    t('howItWorks.problem.after3'),
+    t('howItWorks.problem.after4'),
+    t('howItWorks.problem.after5'),
+  ]
+
   return (
     <section className="relative">
       {/* Split Background */}
@@ -40,10 +43,10 @@ export function ProblemSection() {
             <div className="space-y-8">
               <div>
                 <span className="inline-block text-raksha-crimson/70 text-xs font-medium tracking-[0.15em] uppercase mb-4">
-                  BEFORE RAKSHA
+                  {t('howItWorks.problem.beforeLabel')}
                 </span>
                 <h2 className="font-display text-3xl sm:text-4xl text-raksha-white/80 leading-tight">
-                  The old way was broken.
+                  {t('howItWorks.problem.beforeTitle')}
                 </h2>
               </div>
 
@@ -65,10 +68,10 @@ export function ProblemSection() {
             <div className="space-y-8">
               <div>
                 <span className="inline-block text-raksha-teal text-xs font-medium tracking-[0.15em] uppercase mb-4">
-                  WITH RAKSHA AI
+                  {t('howItWorks.problem.afterLabel')}
                 </span>
                 <h2 className="font-display text-3xl sm:text-4xl text-raksha-white leading-tight">
-                  Intelligence changes everything.
+                  {t('howItWorks.problem.afterTitle')}
                 </h2>
               </div>
 

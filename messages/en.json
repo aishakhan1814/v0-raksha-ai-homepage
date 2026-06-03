@@ -73,16 +73,260 @@
       "youtube": "YouTube"
     }
   },
+  "howItWorks": {
+    "title": "How It Works",
+    "meta": "Learn how Raksha AI transforms blood donation and care coordination for Thalassemia patients in India.",
+    "hero": {
+      "tagline": "The Raksha AI Process",
+      "title": "From chaos to coordination — in minutes, not days.",
+      "description": "Our AI platform transforms the blood donation experience for both donors and patients, creating seamless connections when every moment counts."
+    },
+    "problem": {
+      "beforeLabel": "BEFORE RAKSHA",
+      "beforeTitle": "The old way was broken.",
+      "before1": "Frantic WhatsApp groups at 2 AM",
+      "before2": "Calling 50+ donors, getting 3 responses",
+      "before3": "No way to know who is eligible today",
+      "before4": "Spreadsheets and paper records lost in chaos",
+      "before5": "Families exhausted, donors frustrated",
+      "afterLabel": "WITH RAKSHA AI",
+      "afterTitle": "Intelligence changes everything.",
+      "after1": "AI matches verified, eligible donors instantly",
+      "after2": "Real-time availability and location tracking",
+      "after3": "Smart scheduling prevents donor fatigue",
+      "after4": "Complete digital records and reminders",
+      "after5": "Families supported, donors empowered"
+    },
+    "donorJourney": {
+      "title": "The Donor's Journey",
+      "step1Title": "Registration",
+      "step1Desc": "Quick, secure signup with health history verification",
+      "step2Title": "Verification",
+      "step2Desc": "AI confirms blood type compatibility and eligibility",
+      "step3Title": "Match Alert",
+      "step3Desc": "Real-time notification when a patient needs your blood",
+      "step4Title": "Coordination",
+      "step4Desc": "Automated scheduling, transportation, and support",
+      "step5Title": "Impact",
+      "step5Desc": "See exactly how your donation saved a life",
+      "cta": "Start Your Journey"
+    },
+    "patientJourney": {
+      "title": "The Patient's Journey",
+      "step1Title": "Request",
+      "step1Desc": "One click to request compatible blood",
+      "step2Title": "Smart Matching",
+      "step2Desc": "AI finds verified donors within 24 hours",
+      "step3Title": "Confirmation",
+      "step3Desc": "Donor confirms availability instantly",
+      "step4Title": "Logistics",
+      "step4Desc": "Automated pickup, testing, and delivery",
+      "step5Title": "Care Coordination",
+      "step5Desc": "Post-transfusion support and follow-up",
+      "cta": "Request Blood Now"
+    },
+    "aiEngine": {
+      "title": "The AI Engine",
+      "feature1Title": "Intelligent Matching",
+      "feature1Desc": "Proprietary algorithm matches donors with patients 10x faster than manual methods. Accuracy rate: 99.7%.",
+      "feature2Title": "Predictive Scheduling",
+      "feature2Desc": "ML predicts patient transfusion needs weeks in advance. Prevents last-minute emergencies.",
+      "feature3Title": "Donor Fatigue Prevention",
+      "feature3Desc": "Tracks donor health, rotation schedules, and wellness. Ensures sustainable, ethical donation cycles.",
+      "feature4Title": "Real-Time Logistics",
+      "feature4Desc": "GPS tracking, route optimization, and live updates. Blood reaches patients within 6 hours."
+    },
+    "cta": {
+      "title": "Ready to transform blood donation?",
+      "desc": "Join thousands of donors and patients already connected through Raksha AI.",
+      "cta1": "I'm a Donor",
+      "cta2": "I Need Blood"
+    }
+  },
+  "forDonors": {
+    "hero": {
+      "title": "You are not just a blood type. You are someone's lifeline."
+    }
+  },
+      "tagline": "Blood Donors",
+      "title": "You're not just a donor. You're a life-saver.",
+      "description": "Consistent, verified blood donations can change everything for a Thalassemia patient. Join thousands of donors across India making a real difference.",
+      "cta": "Register as Donor"
+    },
+    "benefits": {
+      "title": "Why Donate with Raksha AI",
+      "benefit1Title": "Make a Real Difference",
+      "benefit1Desc": "Know exactly which patient your blood saved. See the impact with names, ages, and recovery stories.",
+      "benefit2Title": "Simplified Process",
+      "benefit2Desc": "No more coordinating with hospitals. We handle scheduling, pickup, and logistics.",
+      "benefit3Title": "Rewards & Recognition",
+      "benefit3Desc": "Earn badges, monthly leaderboards, and exclusive donor benefits.",
+      "benefit4Title": "Health Tracking",
+      "benefit4Desc": "Monitor your donation history, health checkups, and wellness tips."
+    },
+    "eligibility": {
+      "title": "Who Can Donate",
+      "ageTitle": "Age",
+      "ageDesc": "Between 18-65 years",
+      "healthTitle": "Health",
+      "healthDesc": "Good general health, no major illnesses",
+      "weightTitle": "Weight",
+      "weightDesc": "Minimum 50 kg (110 lbs)",
+      "frequencyTitle": "Frequency",
+      "frequencyDesc": "Donate every 56+ days for safety",
+      "note": "Read our full eligibility criteria before registering."
+    },
+    "compatibility": {
+      "title": "Blood Types We Need",
+      "desc": "All blood types are valuable. Certain combinations are especially critical for Thalassemia patients.",
+      "critical": "Especially Critical for Thalassemia Patients"
+    },
+    "commitment": {
+      "title": "Commitment Tiers",
+      "tier1Title": "Occasional",
+      "tier1Desc": "Donate when you can",
+      "tier2Title": "Regular",
+      "tier2Desc": "Monthly commits to 4-6 donations/year",
+      "tier3Title": "Champion",
+      "tier3Desc": "Committed partnership donor, 12+ donations/year",
+      "tier4Title": "Guardian",
+      "tier4Desc": "Elite status, dedicates life to consistent donation"
+    },
+    "stories": {
+      "title": "Stories from Our Donors",
+      "story1Author": "Raj",
+      "story1Title": "From Hesitation to Purpose",
+      "story1Desc": "I was scared of needles until I met Arjun, a 12-year-old Thalassemia patient whose life changed because of my donations. Now, I donate every two months."
+    },
+    "registrationCta": {
+      "title": "Ready to Save Lives?",
+      "desc": "Join our community of life-saving donors today. Registration takes just 5 minutes.",
+      "cta": "Register as a Blood Donor"
+    }
+  },
+  "forPatients": {
+    "title": "For Patients",
+    "meta": "Find blood donors, request transfusions, and coordinate care. Raksha AI makes blood access simple.",
+    "hero": {
+      "tagline": "For Thalassemia Patients",
+      "title": "No more 2 AM WhatsApp panics.",
+      "description": "Request blood with confidence. Raksha AI matches you with verified donors instantly and handles all logistics.",
+      "cta": "Request Blood Now"
+    },
+    "promises": {
+      "promise1Title": "Donors Within 24 Hours",
+      "promise1Desc": "Our AI finds compatible donors and confirms availability in under 24 hours.",
+      "promise2Title": "Verified & Safe",
+      "promise2Desc": "Every donor is health-checked, background-verified, and monitored.",
+      "promise3Title": "Logistics Handled",
+      "promise3Desc": "We coordinate pickup, testing, transportation, and delivery.",
+      "promise4Title": "Care Coordination",
+      "promise4Desc": "Before, during, and after care support from our medical team."
+    },
+    "faq": {
+      "q1": "How do I request blood?",
+      "a1": "Sign up, create a patient profile, and submit a transfusion request. Our AI instantly finds compatible donors.",
+      "q2": "How fast can I get blood?",
+      "a2": "Average turnaround is 18-24 hours. Emergency requests are prioritized within 6 hours.",
+      "q3": "Is my information safe?",
+      "a3": "Yes. All data is encrypted, HIPAA-compliant, and stored securely. No information is shared without consent.",
+      "q4": "What if I can't afford blood?",
+      "a4": "We're working with hospitals and NGOs to ensure transfusion costs don't burden families."
+    },
+    "closingCta": {
+      "title": "Don't Face Transfusion Day Alone",
+      "desc": "Request blood confidently. Raksha AI has your back.",
+      "cta": "Start Your Request"
+    }
+  },
+  "about": {
+    "title": "About Raksha AI",
+    "meta": "Learn about Raksha AI's mission to transform blood donation for Thalassemia patients in India."
+  },
+  "dashboard": {
+    "donor": {
+      "title": "Donor Dashboard",
+      "welcome": "Welcome",
+      "stats": "Your Impact",
+      "donations": "Total Donations",
+      "lives": "Lives Saved",
+      "upcomingDonations": "Upcoming Donations",
+      "noUpcoming": "No upcoming donations scheduled",
+      "scheduleNow": "Schedule Now"
+    },
+    "patient": {
+      "title": "Patient Dashboard",
+      "welcome": "Welcome",
+      "nextTransfusion": "Next Transfusion",
+      "requestBlood": "Request Blood",
+      "transfusionHistory": "Transfusion History",
+      "noHistory": "No transfusion history"
+    }
+  },
+  "auth": {
+    "signin": {
+      "title": "Sign In",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign In",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "register": {
+      "donor": {
+        "title": "Register as Donor",
+        "subtitle": "Join our community of life-saving donors",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "phone": "Phone Number",
+        "dateOfBirth": "Date of Birth",
+        "bloodType": "Blood Type",
+        "address": "Address",
+        "city": "City",
+        "state": "State",
+        "pincode": "Pin Code",
+        "acceptTerms": "I accept the terms and conditions",
+        "register": "Register as Donor",
+        "alreadyAccount": "Already have an account?",
+        "signIn": "Sign In"
+      },
+      "patient": {
+        "title": "Register as Patient",
+        "subtitle": "Request blood easily and safely",
+        "patientName": "Patient Name",
+        "caretaker": "Caretaker Name",
+        "email": "Email",
+        "phone": "Phone Number",
+        "dateOfBirth": "Patient Date of Birth",
+        "bloodType": "Blood Type",
+        "hospitalName": "Hospital/Clinic Name",
+        "hospitalAddress": "Hospital Address",
+        "medicalHistory": "Medical History (Brief)",
+        "acceptTerms": "I accept the terms and conditions",
+        "register": "Register as Patient",
+        "alreadyAccount": "Already have an account?",
+        "signIn": "Sign In"
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "desc": "Enter your email and we'll send you a link to reset your password.",
+      "email": "Email Address",
+      "sendLink": "Send Reset Link",
+      "backToSignIn": "Back to Sign In"
+    }
+  },
   "language": {
     "english": "English",
     "telugu": "తెలుగు",
     "hindi": "हिंदी",
-    "tamil": "தமிழ్",
+    "tamil": "தமிழ්",
     "select": "Select Language"
   },
   "errors": {
     "notFound": "Page not found",
     "goHome": "Go Home"
   }
-}
 }
