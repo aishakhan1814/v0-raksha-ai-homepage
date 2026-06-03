@@ -5,8 +5,6 @@ import {
   JetBrains_Mono,
 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
 import './globals.css'
 
 // ─── FONTS ────────────────────────────────────────────────────────────────────
@@ -50,21 +48,16 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const locale = await getLocale()
-  const messages = await getMessages()
-
   return (
     <html
-      lang={locale}
+      lang="en"
       className={`${cormorant.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
     >
       <body className="font-sans antialiased bg-raksha-deep text-raksha-white">
-        <NextIntlClientProvider messages={messages}>
-          {/* Main content area */}
-          <main>{children}</main>
+        {/* Main content area */}
+        <main>{children}</main>
 
-          {process.env.NODE_ENV === 'production' && <Analytics />}
-        </NextIntlClientProvider>
+        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )

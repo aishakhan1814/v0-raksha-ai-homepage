@@ -1,7 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
-import { useLocale } from 'next-intl'
+import { useTranslations, useLocale } from '@/lib/i18n-context'
 import { RakshaLogo } from './logo'
 
 export function Footer() {

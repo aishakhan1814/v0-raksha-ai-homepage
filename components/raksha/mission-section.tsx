@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@/lib/i18n-context'
 import { FadeIn } from './fade-in'
 import { Counter } from './counter'
 

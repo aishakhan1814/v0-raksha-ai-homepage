@@ -77,7 +77,12 @@
     "english": "English",
     "telugu": "తెలుగు",
     "hindi": "हिंदी",
-    "tamil": "தமிழ்",
+    "tamil": "தமிழ్",
     "select": "Select Language"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "goHome": "Go Home"
   }
+}
 }
