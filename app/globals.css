@@ -1,0 +1,184 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── CSS custom properties (for non-Tailwind usage, JS, etc.) ─────────────── */
+:root {
+  --raksha-crimson:    #9B2335;
+  --raksha-wine:       #8B1A2A;
+  --raksha-blood:      #C0152A;
+  --raksha-teal:       #2CA8A0;
+  --raksha-teal-light: #4CC9C1;
+  --raksha-coral:      #E8897A;
+  --raksha-deep:       #0D0D0D;
+  --raksha-navy:       #0A1628;
+  --raksha-warm:       #F5ECD7;
+  --raksha-white:      #FAF9F7;
+  --raksha-muted:      #6B7280;
+  --raksha-gold:       #D4A847;
+  --raksha-green:      #1A7A4A;
+
+  --background:            #0D0D0D;
+  --foreground:            #FAF9F7;
+  --card:                  #111827;
+  --card-foreground:       #FAF9F7;
+  --popover:               #0A1628;
+  --popover-foreground:    #FAF9F7;
+  --primary:               #C0152A;
+  --primary-foreground:    #FAF9F7;
+  --secondary:             #0A1628;
+  --secondary-foreground:  #FAF9F7;
+  --muted:                 #1e293b;
+  --muted-foreground:      #6B7280;
+  --accent:                #2CA8A0;
+  --accent-foreground:     #FAF9F7;
+  --destructive:           #C0152A;
+  --destructive-foreground:#FAF9F7;
+  --border:                #8B1A2A;
+  --input:                 #1e293b;
+  --ring:                  #9B2335;
+  --radius:                1rem;
+}
+
+/* ─── Tailwind v4 @theme — MUST use literal values, not var() chains ────────── */
+@theme inline {
+  /* Fonts */
+  --font-sans:    'DM Sans', system-ui, sans-serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Raksha brand colors */
+  --color-raksha-crimson:    #9B2335;
+  --color-raksha-wine:       #8B1A2A;
+  --color-raksha-blood:      #C0152A;
+  --color-raksha-teal:       #2CA8A0;
+  --color-raksha-teal-light: #4CC9C1;
+  --color-raksha-coral:      #E8897A;
+  --color-raksha-deep:       #0D0D0D;
+  --color-raksha-navy:       #0A1628;
+  --color-raksha-warm:       #F5ECD7;
+  --color-raksha-white:      #FAF9F7;
+  --color-raksha-muted:      #6B7280;
+  --color-raksha-gold:       #D4A847;
+  --color-raksha-green:      #1A7A4A;
+
+  /* Semantic tokens */
+  --color-background:           #0D0D0D;
+  --color-foreground:           #FAF9F7;
+  --color-card:                 #111827;
+  --color-card-foreground:      #FAF9F7;
+  --color-popover:              #0A1628;
+  --color-popover-foreground:   #FAF9F7;
+  --color-primary:              #C0152A;
+  --color-primary-foreground:   #FAF9F7;
+  --color-secondary:            #0A1628;
+  --color-secondary-foreground: #FAF9F7;
+  --color-muted:                #1e293b;
+  --color-muted-foreground:     #6B7280;
+  --color-accent:               #2CA8A0;
+  --color-accent-foreground:    #FAF9F7;
+  --color-destructive:          #C0152A;
+  --color-destructive-foreground: #FAF9F7;
+  --color-border:               #8B1A2A;
+  --color-input:                #1e293b;
+  --color-ring:                 #9B2335;
+
+  /* Radius */
+  --radius-sm: 0.75rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+}
+
+/* ─── Base layer ────────────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-raksha-deep text-raksha-white;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+}
+
+/* ─── Grain overlay ─────────────────────────────────────────────────────────── */
+.grain-overlay {
+  position: relative;
+}
+.grain-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── Marquee ───────────────────────────────────────────────────────────────── */
+@keyframes marquee {
+  0%   { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+.animate-marquee-reverse {
+  animation: marquee 35s linear infinite reverse;
+}
+
+/* ─── Ripple (hero) ─────────────────────────────────────────────────────────── */
+@keyframes ripple {
+  0%   { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+.ripple-ring {
+  position: absolute;
+  border: 1px solid #C0152A;
+  border-radius: 50%;
+  animation: ripple 4s ease-out infinite;
+}
+
+/* ─── Scroll indicator ──────────────────────────────────────────────────────── */
+@keyframes scroll-line {
+  0%     { transform: scaleY(0);  transform-origin: top; }
+  50%    { transform: scaleY(1);  transform-origin: top; }
+  50.01% { transform-origin: bottom; }
+  100%   { transform: scaleY(0);  transform-origin: bottom; }
+}
+.animate-scroll-line {
+  animation: scroll-line 2s ease-in-out infinite;
+}
+
+/* ─── Fade up ───────────────────────────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.8s ease-out forwards;
+}
+
+/* ─── Counter ───────────────────────────────────────────────────────────────── */
+.counter-animate {
+  transition: all 0.05s ease-out;
+}
+
+/* ─── Partner ticker ────────────────────────────────────────────────────────── */
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker 25s linear infinite;
+}
+
+/* ─── Video background ──────────────────────────────────────────────────────── */
+.video-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
