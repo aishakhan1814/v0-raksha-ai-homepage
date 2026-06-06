@@ -266,7 +266,11 @@ function CategoryGrid({ search }: { search: string }) {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "20px" }}>
             {filtered.map((cat, i) => (
-              <a key={cat.id} href={`/library/${cat.slug}`}
+             <a key={cat.id} href={`/library/${cat.slug}`}
+  onClick={(e) => {
+    e.preventDefault();
+    window.open("https://www.bloodwarriors.in/talks", "_blank", "noopener,noreferrer");
+  }}
                 style={{
                   background: "#111827", border: "1px solid #1e293b", borderRadius: "16px",
                   padding: "28px 24px", textDecoration: "none", display: "block",
