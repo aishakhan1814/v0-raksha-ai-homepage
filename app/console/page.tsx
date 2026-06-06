@@ -7,7 +7,7 @@ import { BridgesPanel } from "@/components/raksha/console/bridges-panel"
 import { InactivityPanel } from "@/components/raksha/console/inactivity-panel"
 import { DemandPanel } from "@/components/raksha/console/demand-panel"
 import { EmergencyPanel } from "@/components/raksha/console/emergency-panel"
-import {SLA Enforcement} from "@/components/raksha/con"
+import {SLA Enforcement} from "@/components/raksha/console/sla-page"
 
 type Tab = "overview" | "directory" | "bridges" | "emergency" | "inactivity" | "demand"
 
