@@ -11,6 +11,21 @@ const chaosWords = [
   'MANUAL FOLLOW-UP', 'PATIENT ANXIETY'
 ]
 
+// Deterministic pseudo-random generator seeded by index so the server and client
+// render identical markup (prevents React hydration mismatches).
+function seeded(index: number, salt: number) {
+  const x = Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453
+  return x - Math.floor(x)
+}
+
+function chaosStyle(index: number) {
+  return {
+    fontSize: `${14 + seeded(index, 1) * 14}px`,
+    opacity: 0.2 + seeded(index, 2) * 0.8,
+    transform: `rotate(${(seeded(index, 3) - 0.5) * 6}deg)`,
+  }
+}
+
 export function RealityWallSection() {
   const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -57,11 +72,7 @@ export function RealityWallSection() {
                 <span
                   key={i}
                   className="text-raksha-white font-medium"
-                  style={{
-                    fontSize: `${14 + Math.random() * 14}px`,
-                    opacity: 0.2 + Math.random() * 0.8,
-                    transform: `rotate(${(Math.random() - 0.5) * 6}deg)`,
-                  }}
+                  style={chaosStyle(i)}
                 >
                   {word}
                 </span>
@@ -76,11 +87,7 @@ export function RealityWallSection() {
                 <span
                   key={i}
                   className="text-raksha-white font-medium"
-                  style={{
-                    fontSize: `${14 + Math.random() * 14}px`,
-                    opacity: 0.2 + Math.random() * 0.8,
-                    transform: `rotate(${(Math.random() - 0.5) * 6}deg)`,
-                  }}
+                  style={chaosStyle(i + 100)}
                 >
                   {word}
                 </span>
@@ -95,11 +102,7 @@ export function RealityWallSection() {
                 <span
                   key={i}
                   className="text-raksha-white font-medium"
-                  style={{
-                    fontSize: `${14 + Math.random() * 14}px`,
-                    opacity: 0.2 + Math.random() * 0.8,
-                    transform: `rotate(${(Math.random() - 0.5) * 6}deg)`,
-                  }}
+                  style={chaosStyle(i + 200)}
                 >
                   {word}
                 </span>
