@@ -1,5 +1,5 @@
 "use client"
-
+import SLAPage from "@/components/raksha/console/sla-page";
 import { useState } from "react"
 import { StatsPanel } from "@/components/raksha/console/stats-panel"
 import { DonorTable } from "@/components/raksha/console/donor-table"
