@@ -10,6 +10,7 @@ const navLinks = [
   { label: 'Impact', href: '/impact' },
   { label: 'Library', href: '/library' },
   { label: 'About', href: '/about' },
+  { label: 'Console', href: '/console' },
 ]
 
 export function Navbar() {
