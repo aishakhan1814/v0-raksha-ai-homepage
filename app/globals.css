@@ -42,7 +42,7 @@
 }
 
 /* ─── Tailwind v4 @theme — MUST use literal values, not var() chains ────────── */
-@theme inline {
+@theme {
   /* Fonts */
   --font-sans:    'DM Sans', system-ui, sans-serif;
   --font-display: 'Cormorant Garamond', Georgia, serif;
