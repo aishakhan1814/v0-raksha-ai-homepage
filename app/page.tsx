@@ -1,6 +1,6 @@
 import { Navbar } from '@/components/raksha/navbar'
 import { HeroSection } from '@/components/raksha/hero-section'
-
+import { RealityWallSection } from '@/components/raksha/reality-wall-section'
 import { MissionSection } from '@/components/raksha/mission-section'
 import { TwoJourneysSection } from '@/components/raksha/two-journeys-section'
 import { HowItWorksSection } from '@/components/raksha/how-it-works-section'
