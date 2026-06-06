@@ -5,11 +5,13 @@ import { useState, useEffect, useRef, useCallback } from "react";
 // ─── TYPES ───────────────────────────────────────────────────────────────────
 
 interface Category {
-  id: string;
-  emoji: string;
-  title: string;
-  sub: string;
-  slug: string;
+  id: string
+  emoji: string
+  title: string
+  sub: string
+  slug: string
+  href: string          // internal route — always works in v0
+  externalUrl?: string  // optional — only used if you explicitly want external link
 }
 
 interface Article {
@@ -37,16 +39,80 @@ interface BloodBank {
 
 // ─── STATIC DATA ─────────────────────────────────────────────────────────────
 
-const CATEGORIES: Category[] = [
-  { id: "1", emoji: "🔬", title: "What Is Thalassemia?", sub: "A plain language guide for donors, friends, and new families", slug: "what-is-thalassemia" },
-  { id: "2", emoji: "🩸", title: "Understanding Blood Compatibility", sub: "Beyond ABO: Rh phenotype, Kell, and why it matters", slug: "blood-compatibility" },
-  { id: "3", emoji: "📋", title: "Transfusion-Dependent Thalassemia", sub: "A complete patient and family guide", slug: "transfusion-dependent" },
-  { id: "4", emoji: "💊", title: "Iron Overload & Chelation Therapy", sub: "What it is, why it happens, and how to manage it", slug: "iron-overload-chelation" },
-  { id: "5", emoji: "🏥", title: "Bone Marrow Transplant", sub: "Is my child eligible? What does the process look like?", slug: "bone-marrow-transplant" },
-  { id: "6", emoji: "🏫", title: "Thalassemia at School", sub: "Supporting a child with TDT in daily life", slug: "thalassemia-at-school" },
-  { id: "7", emoji: "❓", title: "Donor FAQs", sub: "What happens to my blood? Does it hurt? What's extended typing?", slug: "donor-faqs" },
-  { id: "8", emoji: "🗺️", title: "Blood Bank Directory", sub: "Searchable by city, searchable by blood bank name", slug: "blood-bank-directory" },
-];
+export const CATEGORIES: Category[] = [
+  {
+    id: "1",
+    emoji: "🔬",
+    title: "What Is Thalassemia?",
+    sub: "A plain language guide for donors, friends, and new families",
+    slug: "what-is-thalassemia",
+    href: "/library/what-is-thalassemia",
+    externalUrl: "https://www.bloodwarriors.in/talks",
+  },
+  {
+    id: "2",
+    emoji: "🩸",
+    title: "Understanding Blood Compatibility",
+    sub: "Beyond ABO: Rh phenotype, Kell, and why it matters",
+    slug: "blood-compatibility",
+    href: "/library/blood-compatibility",
+    externalUrl: "https://www.bloodwarriors.in/talks",
+  },
+  {
+    id: "3",
+    emoji: "📋",
+    title: "Transfusion-Dependent Thalassemia",
+    sub: "A complete patient and family guide",
+    slug: "transfusion-dependent",
+    href: "/library/transfusion-dependent",
+    externalUrl: "https://www.bloodwarriors.in/talks",
+  },
+  {
+    id: "4",
+    emoji: "💊",
+    title: "Iron Overload & Chelation Therapy",
+    sub: "What it is, why it happens, and how to manage it",
+    slug: "iron-overload-chelation",
+    href: "/library/iron-overload-chelation",
+    externalUrl: "https://www.bloodwarriors.in/talks",
+  },
+  {
+    id: "5",
+    emoji: "🏥",
+    title: "Bone Marrow Transplant",
+    sub: "Is my child eligible? What does the process look like?",
+    slug: "bone-marrow-transplant",
+    href: "/library/bone-marrow-transplant",
+    externalUrl: "https://www.bloodwarriors.in/talks",
+  },
+  {
+    id: "6",
+    emoji: "🏫",
+    title: "Thalassemia at School",
+    sub: "Supporting a child with TDT in daily life",
+    slug: "thalassemia-at-school",
+    href: "/library/thalassemia-at-school",
+    externalUrl: "https://www.bloodwarriors.in/talks",
+  },
+  {
+    id: "7",
+    emoji: "❓",
+    title: "Donor FAQs",
+    sub: "What happens to my blood? Does it hurt? What\u2019s extended typing?",
+    slug: "donor-faqs",
+    href: "/library/donor-faqs",
+    externalUrl: "https://www.bloodwarriors.in/talks",
+  },
+  {
+    id: "8",
+    emoji: "🗺\uFE0F",
+    title: "Blood Bank Directory",
+    sub: "Searchable by city, searchable by blood bank name",
+    slug: "blood-bank-directory",
+    href: "/library/blood-bank-directory",
+    externalUrl: "https://www.bloodwarriors.in/talks",
+  },
+]
 
 const ARTICLES: Article[] = [
   {
