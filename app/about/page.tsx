@@ -560,6 +560,63 @@ const GLOBAL_CSS = `
     line-height: 1.7;
   }
 
+  /* ── ASSISTANT CARD ── */
+  .assistant-section {
+    position: relative;
+    background: var(--raksha-navy);
+    padding: 100px 0;
+    overflow: hidden;
+  }
+  .assistant-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+  .assistant-card {
+    display: block;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 44px 40px;
+    text-decoration: none;
+    max-width: 560px;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .assistant-card:hover {
+    border-color: var(--raksha-blood);
+    transform: translateY(-3px);
+  }
+  .assistant-card-icon {
+    margin-bottom: 20px;
+  }
+  .assistant-card-icon svg { animation: assistantPulse 2.4s ease-in-out infinite; }
+  @keyframes assistantPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.07); }
+  }
+  .assistant-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #FAF9F7;
+    margin-bottom: 10px;
+  }
+  .assistant-card-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--raksha-muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .assistant-card-cta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--raksha-blood);
+  }
+
   /* ── SECTION 6: CLOSING ── */
   .closing-section {
     position: relative;
@@ -779,7 +836,7 @@ function Navbar() {
         <li><a href="/about" className="active">About</a></li>
         <li><a href="/register/donor">Donate Blood</a></li>
         <li><a href="/register/patient">For Patients</a></li>
-        <li><a href="/ai">AI Assistant</a></li>
+        <li><a href="/ai-assistant">AI Assistant</a></li>
         <li><a href="/register/donor" className="navbar-cta">Get Started</a></li>
       </ul>
     </nav>
@@ -973,6 +1030,33 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <div className="section-rule" />
+
+      {/* ── ASSISTANT CARD ── */}
+      <section className="assistant-section grain">
+        <div className="assistant-inner">
+          <span className="section-label fade-up">Have a Question?</span>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(32px,3.5vw,48px)", fontWeight: 700, color: "var(--raksha-white)", marginTop: 16, marginBottom: 40 }} className="fade-up delay-1">
+            Talk to the Raksha Assistant
+          </h2>
+          <a href="/ai-assistant" className="assistant-card fade-up delay-2">
+            <div className="assistant-card-icon">
+              <svg viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg" width="34" height="40">
+                <path d="M24 2L44 11V30C44 43 24 54 24 54C24 54 4 43 4 30V11L24 2Z" fill="#8B1A2A"/>
+                <path d="M24 14C24 14 17 22.5 17 27C17 30.87 20.13 34 24 34C27.87 34 31 30.87 31 27C31 22.5 24 14 24 14Z" fill="white" opacity="0.95"/>
+                <path d="M16 39Q20 36 24 39Q28 42 32 39" stroke="#2CA8A0" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+                <path d="M18 44Q21 41.5 24 44Q27 46.5 30 44" stroke="#E8897A" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+              </svg>
+            </div>
+            <div className="assistant-card-title">Raksha Assistant</div>
+            <p className="assistant-card-sub">
+              Ask our AI anything about blood donation, Thalassemia, and how Raksha AI works.
+            </p>
+            <span className="assistant-card-cta">Start a conversation →</span>
+          </a>
         </div>
       </section>
 

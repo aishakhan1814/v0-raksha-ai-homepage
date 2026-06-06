@@ -9,6 +9,7 @@ const navLinks = [
   { label: 'For Patients', href: '/for-patients' },
   { label: 'Impact', href: '/impact' },
   { label: 'Library', href: '/library' },
+  { label: 'AI Assistant', href: '/ai-assistant' },
   { label: 'About', href: '/about' },
 ]
 
