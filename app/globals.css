@@ -181,6 +181,18 @@
   animation: ticker 25s linear infinite;
 }
 
+/* SLA tracker pulse (failed / active stage dot) */
+@keyframes slaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229,57,53,0.5); }
+  50% { box-shadow: 0 0 0 5px rgba(229,57,53,0); }
+}
+
+/* SLA inline panel expand */
+@keyframes slaExpand {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Video background utility */
 .video-bg {
   position: absolute;
