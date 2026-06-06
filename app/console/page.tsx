@@ -100,6 +100,7 @@ export default function ConsolePage() {
         {tab === "emergency" && <EmergencyPanel />}
         {tab === "inactivity" && <InactivityPanel />}
         {tab === "demand" && <DemandPanel />}
+        {tab === "sla" && < />}
       </main>
     </div>
   )
