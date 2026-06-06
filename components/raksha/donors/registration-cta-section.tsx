@@ -66,12 +66,17 @@ export function RegistrationCTASection() {
 
         <FadeIn delay={0.3}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="px-10 py-4 bg-raksha-white text-raksha-blood font-sans font-semibold text-lg hover:bg-raksha-white/90 transition-colors">
+            <a href="/register/donor" className="px-10 py-4 bg-raksha-white text-raksha-blood font-sans font-semibold text-lg hover:bg-raksha-white/90 transition-colors">
               Register as a Donor
-            </button>
-            <button className="px-10 py-4 border border-raksha-white/50 text-raksha-white font-sans font-medium hover:bg-raksha-white/10 transition-colors">
+            </a>
+            <a
+              href="https://www.bloodwarriors.in/about"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-10 py-4 border border-raksha-white/50 text-raksha-white font-sans font-medium hover:bg-raksha-white/10 transition-colors"
+            >
               Learn More
-            </button>
+            </a>
           </div>
         </FadeIn>
 

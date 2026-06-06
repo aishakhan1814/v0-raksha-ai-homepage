@@ -84,10 +84,10 @@ export function EligibilitySection() {
 
         <FadeIn delay={0.3}>
           <div className="text-center mt-12">
-            <button className="px-8 py-4 bg-raksha-blood text-raksha-white font-sans font-semibold text-lg hover:bg-[#a01123] transition-colors inline-flex items-center gap-2">
+            <a href="/register/donor" className="px-8 py-4 bg-raksha-blood text-raksha-white font-sans font-semibold text-lg hover:bg-[#a01123] transition-colors inline-flex items-center gap-2">
               I&apos;m Eligible — Register Now
               <span aria-hidden="true">→</span>
-            </button>
+            </a>
           </div>
         </FadeIn>
       </div>

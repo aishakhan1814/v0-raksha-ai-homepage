@@ -46,9 +46,12 @@ export function DonorsHeroSection() {
                 when a Thalassemia patient needs their specific blood type.
               </p>
               <div className="space-y-3">
-                <button className="px-8 py-4 bg-raksha-blood text-raksha-white font-sans font-semibold text-lg hover:bg-[#a01123] transition-colors">
+                <a
+                  href="/register/donor"
+                  className="inline-block px-8 py-4 bg-raksha-blood text-raksha-white font-sans font-semibold text-lg hover:bg-[#a01123] transition-colors"
+                >
                   Register as a Donor
-                </button>
+                </a>
                 <p className="text-sm font-sans text-raksha-muted">
                   Takes 3 minutes. Free. No obligation.
                 </p>
