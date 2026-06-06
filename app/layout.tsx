@@ -6,6 +6,7 @@ import {
   JetBrains_Mono,
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { RakshaAssistant } from "@/components/raksha/raksha-assistant";
 import "./globals.css";
 
 // ─── FONTS ────────────────────────────────────────────────────────────────────
@@ -60,6 +61,9 @@ export default function RootLayout({
         <main>
           {children}
         </main>
+
+        {/* Floating multilingual AI assistant — available on every page */}
+        <RakshaAssistant />
 
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
