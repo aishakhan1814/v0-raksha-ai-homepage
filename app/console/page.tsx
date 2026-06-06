@@ -9,7 +9,7 @@ import { DemandPanel } from "@/components/raksha/console/demand-panel"
 import { EmergencyPanel } from "@/components/raksha/console/emergency-panel"
 import  SLAEnforcement from "@/components/raksha/console/sla-page"
 
-type Tab = "overview" | "directory" | "bridges" | "emergency" | "inactivity" | "demand"
+type Tab = "overview" | "directory" | "bridges" | "emergency" | "inactivity" | "demand" | "sla"
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "overview", label: "Overview" },
@@ -18,7 +18,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "emergency", label: "Eligible Donors" },
   { id: "inactivity", label: "Inactivity" },
   { id: "demand", label: "Demand Map" },
-  { id: "sla", label: "Sla enforcement" },
+  { id: "sla", label: "SLA Enforcement" },
 ]
 
 function Logo() {
