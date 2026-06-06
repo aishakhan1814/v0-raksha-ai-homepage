@@ -87,6 +87,38 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply, timestamp: new Date().toISOString() })
   } catch (error) {
     console.error("[v0] AI Assistant Error:", error)
+
+    if (error instanceof Anthropic.APIError) {
+      const status = error.status ?? 500
+      // Surface actionable, user-friendly messages for common account/auth issues.
+      if (status === 401) {
+        return NextResponse.json(
+          { error: "The assistant's API key is invalid. Please check the ANTHROPIC_API_KEY configuration." },
+          { status: 401 },
+        )
+      }
+      if (status === 429) {
+        return NextResponse.json(
+          { error: "The assistant is receiving too many requests right now. Please try again in a moment." },
+          { status: 429 },
+        )
+      }
+      const rawMessage = (error.error as { error?: { message?: string } })?.error?.message ?? error.message
+      if (typeof rawMessage === "string" && rawMessage.toLowerCase().includes("credit balance")) {
+        return NextResponse.json(
+          {
+            error:
+              "The assistant is temporarily unavailable: the Anthropic account has run out of credits. Please add credits in the Anthropic Plans & Billing settings to re-enable responses.",
+          },
+          { status: 402 },
+        )
+      }
+      return NextResponse.json(
+        { error: rawMessage || "Failed to get response. Please try again." },
+        { status },
+      )
+    }
+
     return NextResponse.json({ error: "Failed to get response. Please try again." }, { status: 500 })
   }
 }
