@@ -18,7 +18,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "emergency", label: "Eligible Donors" },
   { id: "inactivity", label: "Inactivity" },
   { id: "demand", label: "Demand Map" },
-  { id: "SLA Enforcement", label: "Sla enforcement" },
+  { id: "sla", label: "Sla enforcement" },
 ]
 
 function Logo() {
