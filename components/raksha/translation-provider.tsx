@@ -12,7 +12,7 @@ interface TranslationContextType {
 
 const TranslationContext = createContext<TranslationContextType | undefined>(undefined)
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://bqg26gk0l4.execute-api.ap-south-1.amazonaws.com/dev"
+const API_URL = "/api"
 
 export function TranslationProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('en')
