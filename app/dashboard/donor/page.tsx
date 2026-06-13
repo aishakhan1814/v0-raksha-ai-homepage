@@ -172,9 +172,11 @@ function Sidebar({ donor, active, go }: { donor: typeof DONOR; active: Panel; go
             <option value="en">English</option>
             <option value="hi">हिन्दी (Hindi)</option>
             <option value="te">తెలుగు (Telugu)</option>
+            <option value="mr">मराठी (Marathi)</option>
             <option value="ta">தமிழ் (Tamil)</option>
             <option value="bn">বাংলা (Bengali)</option>
-            <option value="es">Español (Spanish)</option>
+            <option value="gu">ગુજરાતી (Gujarati)</option>
+            <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
             <option value="kn">ಕನ್ನಡ (Kannada)</option>
           </select>
         </div>

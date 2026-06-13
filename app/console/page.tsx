@@ -135,9 +135,11 @@ export default function ConsolePage() {
                 <option value="en">EN</option>
                 <option value="hi">HI</option>
                 <option value="te">TE</option>
+                <option value="mr">MR</option>
                 <option value="ta">TA</option>
                 <option value="bn">BN</option>
-                <option value="es">ES</option>
+                <option value="gu">GU</option>
+                <option value="pa">PA</option>
                 <option value="kn">KN</option>
               </select>
             </div>

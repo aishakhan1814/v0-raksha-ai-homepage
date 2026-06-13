@@ -42,9 +42,11 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
     { code: 'en', label: 'EN', name: 'English' },
     { code: 'hi', label: 'HI', name: 'हिन्दी' },
     { code: 'te', label: 'TE', name: 'తెలుగు' },
+    { code: 'mr', label: 'MR', name: 'मराठी' },
     { code: 'ta', label: 'TA', name: 'தமிழ்' },
     { code: 'bn', label: 'BN', name: 'বাংলা' },
-    { code: 'es', label: 'ES', name: 'Español' },
+    { code: 'gu', label: 'GU', name: 'ગુજરાતી' },
+    { code: 'pa', label: 'PA', name: 'ਪੰਜਾਬੀ' },
     { code: 'kn', label: 'KN', name: 'ಕನ್ನಡ' },
   ]
   const currentLang = languages.find(l => l.code === language) || languages[0]

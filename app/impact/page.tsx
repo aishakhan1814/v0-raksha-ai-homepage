@@ -5,6 +5,42 @@ import { Navbar } from "@/components/raksha/navbar"
 
 import { rawCSV } from "@/lib/dataset";
 
+function LogoMark({ size = 26 }: { size?: number }) {
+  const shieldHeight = size
+  const shieldWidth = (40 / 47) * shieldHeight
+  return (
+    <svg 
+      viewBox="0 0 48 56" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg" 
+      width={shieldWidth} 
+      height={shieldHeight}
+      className="shrink-0"
+    >
+      <path d="M24 2L44 11V30C44 43 24 54 24 54C24 54 4 43 4 30V11L24 2Z" fill="#8B1A2A"/>
+      <path 
+        d="M24 14C24 14 17 22.5 17 27C17 30.87 20.13 34 24 34C27.87 34 31 30.87 31 27C31 22.5 24 14 24 14Z" 
+        fill="white" 
+        opacity="0.95"
+      />
+      <path 
+        d="M16 39Q20 36 24 39Q28 42 32 39" 
+        stroke="#2CA8A0" 
+        strokeWidth="1.8" 
+        strokeLinecap="round" 
+        fill="none"
+      />
+      <path 
+        d="M18 44Q21 41.5 24 44Q27 46.5 30 44" 
+        stroke="#E8897A" 
+        strokeWidth="1.5" 
+        strokeLinecap="round" 
+        fill="none"
+      />
+    </svg>
+  )
+}
+
 /* ─────────────────────────────────────────
    FONTS & CORE STYLES — Injected via Style block
    ───────────────────────────────────────── */
