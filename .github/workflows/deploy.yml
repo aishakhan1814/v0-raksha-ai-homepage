@@ -1,0 +1,106 @@
+name: Deploy FastAPI Backend to AWS Lambda
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint & Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Install Linting Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Run Lint Check
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  test:
+    name: Run Unit & Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Verify Compilation
+        run: |
+          python -m py_compile backend/app/main.py backend/app/seed.py
+
+      - name: Run Backend Match Engine Simulation
+        run: |
+          python backend/app/test_match.py
+
+      - name: Run Backend Translation Simulator
+        run: |
+          python backend/app/test_translate.py
+
+      - name: Run Backend Chat Memory Simulation
+        run: |
+          python backend/app/test_history.py
+
+      - name: Run Step Functions Orchestration Simulation
+        run: |
+          python backend/app/test_step_function.py
+
+  deploy:
+    name: Deploy to AWS Lambda
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js (for Serverless Framework)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Set up Python (for backend deployment packaging)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Serverless Framework & Plugins
+        run: |
+          npm install -g serverless
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Deploy Stack using Serverless
+        working-directory: ./backend
+        run: |
+          serverless deploy --stage dev

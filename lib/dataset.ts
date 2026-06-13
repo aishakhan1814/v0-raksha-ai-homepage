@@ -1,0 +1,2 @@
+// PASTE YOUR CSV DATASET INSIDE THIS STRING
+export const rawCSV = ``;

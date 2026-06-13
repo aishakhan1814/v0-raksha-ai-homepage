@@ -1,0 +1,281 @@
+service: raksha-ai-api
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: ap-south-1
+  stage: dev
+  environment:
+    DONORS_TABLE: ${self:custom.donorsTable}
+    REQUESTS_TABLE: ${self:custom.requestsTable}
+    CHAT_TABLE: ${self:custom.chatTable}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:Scan
+        - dynamodb:DeleteItem
+      Resource:
+        - Fn::GetAtt: [ DonorsTable, Arn ]
+        - Fn::GetAtt: [ RequestsTable, Arn ]
+        - Fn::GetAtt: [ ChatSessionsTable, Arn ]
+    - Effect: Allow
+      Action:
+        - bedrock:InvokeModel
+      Resource:
+        - "arn:aws:bedrock:*:*:model/anthropic.claude-3-haiku-20240307-v1:0"
+    - Effect: Allow
+      Action:
+        - translate:TranslateText
+        - sns:Publish
+        - ses:SendEmail
+        - secretsmanager:GetSecretValue
+      Resource:
+        - "*"
+
+custom:
+  donorsTable: 'donors'
+  requestsTable: 'blood_requests'
+  chatTable: 'chat_sessions'
+
+functions:
+  api:
+    handler: app.main.handler
+    events:
+      - http:
+          path: /
+          method: any
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
+  match:
+    handler: app.main.step_function_match_handler
+  checkResponse:
+    handler: app.main.step_function_check_handler
+  escalate:
+    handler: app.main.step_function_escalate_handler
+
+resources:
+  Resources:
+    DonorsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.donorsTable}
+        AttributeDefinitions:
+          - AttributeName: donorId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: donorId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    
+    RequestsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.requestsTable}
+        AttributeDefinitions:
+          - AttributeName: requestId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: requestId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    ChatSessionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.chatTable}
+        AttributeDefinitions:
+          - AttributeName: patientId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: patientId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    StepFunctionsRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: raksha-step-functions-role-${self:provider.stage}
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - states.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: RakshaStepFunctionsPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - lambda:InvokeFunction
+                  Resource:
+                    - Fn::Sub: arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:raksha-ai-api-${self:provider.stage}-match
+                    - Fn::Sub: arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:raksha-ai-api-${self:provider.stage}-checkResponse
+                    - Fn::Sub: arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:raksha-ai-api-${self:provider.stage}-escalate
+                - Effect: Allow
+                  Action:
+                    - sns:Publish
+                  Resource:
+                    - "*"
+
+    RakshaStepFunction:
+      Type: AWS::StepFunctions::StateMachine
+      Properties:
+        StateMachineName: RakshaOutreachAutomation-${self:provider.stage}
+        RoleArn:
+          Fn::GetAtt: [ StepFunctionsRole, Arn ]
+        DefinitionString:
+          Fn::Sub: |
+            {
+              "Comment": "Raksha Thalassemia Blood Request Automation Flow",
+              "StartAt": "MatchDonor",
+              "States": {
+                "MatchDonor": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:raksha-ai-api-${self:provider.stage}-match",
+                  "Next": "ChoiceDonorFound"
+                },
+                "ChoiceDonorFound": {
+                  "Type": "Choice",
+                  "Choices": [
+                    {
+                      "Variable": "$.status",
+                      "StringEquals": "NO_DONOR_FOUND",
+                      "Next": "EndNoDonor"
+                    }
+                  ],
+                  "Default": "SendOutreach"
+                },
+                "SendOutreach": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:states:::sns:publish",
+                  "Parameters": {
+                    "PhoneNumber.$": "$.donor_phone",
+                    "Message.$": "$.outreach_message"
+                  },
+                  "Next": "WaitPeriod"
+                },
+                "WaitPeriod": {
+                  "Type": "Wait",
+                  "SecondsPath": "$.wait_seconds",
+                  "Next": "CheckResponse"
+                },
+                "CheckResponse": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:raksha-ai-api-${self:provider.stage}-checkResponse",
+                  "Next": "ChoiceResponseReceived"
+                },
+                "ChoiceResponseReceived": {
+                  "Type": "Choice",
+                  "Choices": [
+                    {
+                      "Variable": "$.status",
+                      "StringEquals": "FULFILLED",
+                      "Next": "EndFulfilled"
+                    }
+                  ],
+                  "Default": "EscalateOutreach"
+                },
+                "EscalateOutreach": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:raksha-ai-api-${self:provider.stage}-escalate",
+                  "Next": "EndEscalated"
+                },
+                "EndNoDonor": {
+                  "Type": "Pass",
+                  "End": true
+                },
+                "EndFulfilled": {
+                  "Type": "Pass",
+                  "End": true
+                },
+                "EndEscalated": {
+                  "Type": "Pass",
+                  "End": true
+                }
+              }
+            }
+
+    RakshaDashboard:
+      Type: AWS::CloudWatch::Dashboard
+      Properties:
+        DashboardName: RakshaAI-Monitoring-${self:provider.stage}
+        DashboardBody:
+          Fn::Sub: |
+            {
+              "widgets": [
+                {
+                  "type": "metric",
+                  "x": 0,
+                  "y": 0,
+                  "width": 8,
+                  "height": 6,
+                  "properties": {
+                    "metrics": [
+                      [ "AWS/Lambda", "Invocations", "FunctionName", "raksha-ai-api-${self:provider.stage}-api" ],
+                      [ "AWS/Lambda", "Invocations", "FunctionName", "raksha-ai-api-${self:provider.stage}-match" ],
+                      [ "AWS/Lambda", "Invocations", "FunctionName", "raksha-ai-api-${self:provider.stage}-checkResponse" ],
+                      [ "AWS/Lambda", "Invocations", "FunctionName", "raksha-ai-api-${self:provider.stage}-escalate" ]
+                    ],
+                    "period": 300,
+                    "stat": "Sum",
+                    "region": "${AWS::Region}",
+                    "title": "Lambda Invocation Count"
+                  }
+                },
+                {
+                  "type": "metric",
+                  "x": 8,
+                  "y": 0,
+                  "width": 8,
+                  "height": 6,
+                  "properties": {
+                    "metrics": [
+                      [ "AWS/DynamoDB", "ConsumedReadCapacityUnits", "TableName", "${self:custom.donorsTable}" ],
+                      [ "AWS/DynamoDB", "ConsumedWriteCapacityUnits", "TableName", "${self:custom.donorsTable}" ],
+                      [ "AWS/DynamoDB", "ConsumedReadCapacityUnits", "TableName", "${self:custom.requestsTable}" ],
+                      [ "AWS/DynamoDB", "ConsumedWriteCapacityUnits", "TableName", "${self:custom.requestsTable}" ]
+                    ],
+                    "period": 300,
+                    "stat": "Sum",
+                    "region": "${AWS::Region}",
+                    "title": "DynamoDB Consumed Capacity Units (Read/Write)"
+                  }
+                },
+                {
+                  "type": "metric",
+                  "x": 16,
+                  "y": 0,
+                  "width": 8,
+                  "height": 6,
+                  "properties": {
+                    "metrics": [
+                      [ "AWS/SNS", "NumberOfNotificationsDelivered" ],
+                      [ "AWS/SNS", "NumberOfNotificationsFailed" ]
+                    ],
+                    "period": 300,
+                    "stat": "Sum",
+                    "region": "${AWS::Region}",
+                    "title": "SNS Delivery Statistics"
+                  }
+                }
+              ]
+            }
+
+package:
+  individually: false
+  patterns:
+    - '!node_modules/**'
+    - '!.serverless/**'
+    - 'app/**'
+    - 'package/**'

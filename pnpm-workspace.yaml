@@ -1,0 +1,6 @@
+allowBuilds:
+  bcrypt: set this to true or false
+  sharp: set this to true or false
+minimumReleaseAgeExclude:
+  - '@aws-sdk/client-bedrock-runtime@3.1067.0'
+  - '@aws-sdk/token-providers@3.1067.0'
