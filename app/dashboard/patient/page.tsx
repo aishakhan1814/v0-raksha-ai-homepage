@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslation, Language } from "@/components/raksha/translation-provider";
 import {
   XAxis, YAxis, CartesianGrid, Tooltip,
   ReferenceLine, ResponsiveContainer, Area, AreaChart,
@@ -715,6 +716,7 @@ function PanelPassport({ patient, onEmergency, onShare, onTransfer }: { patient:
 
 // ── MAIN DEFAULT EXPORT ───────────────────────────────────────────────────────
 export default function PatientDashboard() {
+  const { language, setLanguage, translating } = useTranslation();
   const [active, setActive] = useState<string>("home");
   const [showEmergency, setShowEmergency] = useState(false);
   const [patient, setPatient] = useState({
@@ -1021,6 +1023,38 @@ export default function PatientDashboard() {
             }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", fontSize: "0.8rem", color: "#6B7280", padding: 0, textAlign: "left" }}>
               ← Log Out
             </button>
+          </div>
+
+          <div style={{ borderTop: "1px solid #1e293b", paddingTop: 12, display: "flex", flexDirection: "column", gap: 8, paddingLeft: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.8rem", color: "#6B7280" }}>
+              <span>🌐</span>
+              <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>Language</span>
+              {translating && <span className="w-1.5 h-1.5 rounded-full bg-raksha-teal animate-pulse" style={{ backgroundColor: '#2CA8A0', display: 'inline-block' }} />}
+            </div>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as Language)}
+              style={{
+                width: "100%",
+                background: "#0D1B30",
+                color: "#FAF9F7",
+                border: "1px solid rgba(139, 26, 42, 0.4)",
+                padding: "8px 12px",
+                fontSize: "0.8rem",
+                fontFamily: "'DM Sans', sans-serif",
+                outline: "none",
+                cursor: "pointer",
+                borderRadius: "4px"
+              }}
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+              <option value="bn">বাংলা (Bengali)</option>
+              <option value="es">Español (Spanish)</option>
+              <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            </select>
           </div>
         </div>
       </aside>

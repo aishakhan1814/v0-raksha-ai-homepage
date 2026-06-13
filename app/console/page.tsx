@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslation, Language } from "@/components/raksha/translation-provider";
 import { StatsPanel } from "@/components/raksha/console/stats-panel";
 import { DonorTable } from "@/components/raksha/console/donor-table";
 import { BridgesPanel } from "@/components/raksha/console/bridges-panel";
@@ -43,6 +44,7 @@ function Logo() {
 }
 
 export default function ConsolePage() {
+  const { language, setLanguage } = useTranslation();
   const [tab, setTab] = useState<Tab>("overview");
   const [consoleData, setConsoleData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -120,12 +122,32 @@ export default function ConsolePage() {
           <a href="/">
             <Logo />
           </a>
-          <a
-            href="/"
-            className="font-sans text-xs text-raksha-white/70 hover:text-raksha-teal"
-          >
-            Back to site
-          </a>
+          <div className="flex items-center gap-4">
+            {/* Language Selector */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-raksha-muted">🌐</span>
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as Language)}
+                className="bg-raksha-deep text-raksha-white border border-raksha-wine/40 px-2 py-1 text-xs outline-none cursor-pointer"
+                style={{ background: "#060C16", border: "1px solid rgba(139, 26, 42, 0.4)", borderRadius: "4px" }}
+              >
+                <option value="en">EN</option>
+                <option value="hi">HI</option>
+                <option value="te">TE</option>
+                <option value="ta">TA</option>
+                <option value="bn">BN</option>
+                <option value="es">ES</option>
+                <option value="kn">KN</option>
+              </select>
+            </div>
+            <a
+              href="/"
+              className="font-sans text-xs text-raksha-white/70 hover:text-raksha-teal"
+            >
+              Back to site
+            </a>
+          </div>
         </div>
       </header>
 

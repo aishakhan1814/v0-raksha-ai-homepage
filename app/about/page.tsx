@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Navbar } from "@/components/raksha/navbar";
 
 // ─── GLOBAL STYLES ────────────────────────────────────────────────────────────
 const GLOBAL_CSS = `
@@ -754,48 +755,7 @@ function StatCard({ value, suffix = "", label, inView }: { value: number; suffix
   );
 }
 
-// ─── NAVBAR ───────────────────────────────────────────────────────────────────
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [user, setUser] = useState<any>(null);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    
-    if (typeof window !== "undefined") {
-      const u = localStorage.getItem("raksha_user");
-      if (u) setUser(JSON.parse(u));
-    }
-
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const showConsole = user && (user.role === "coordinator" || user.role === "admin");
-
-  return (
-    <nav className="navbar" style={{ background: scrolled ? "rgba(6,12,22,0.97)" : "rgba(10,22,40,0.92)" }}>
-      <a href="/" className="navbar-logo">
-        <ShieldLogo />
-        <div>
-          <div className="navbar-logo-text">
-            <span className="raksha">Raksha</span>
-            <span className="ai-text">AI</span>
-          </div>
-          <div className="navbar-logo-subtitle">Blood Intelligence & Care Coordination</div>
-        </div>
-      </a>
-      <ul className="navbar-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/about" className="active">About</a></li>
-        <li><a href="/register/donor">Donate Blood</a></li>
-        <li><a href="/register/patient">For Patients</a></li>
-        {showConsole && <li><a href="/console">Console</a></li>}
-        <li><a href="/register/donor" className="navbar-cta">Get Started</a></li>
-      </ul>
-    </nav>
-  );
-}
 
 // ─── MAIN PAGE ────────────────────────────────────────────────────────────────
 export default function AboutPage() {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Navbar } from "@/components/raksha/navbar";
 
 // ─── TYPES ───────────────────────────────────────────────────────────────────
 
@@ -150,53 +151,7 @@ function RakshaLogo() {
   );
 }
 
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const lastY = useRef(0);
-  useEffect(() => {
-    const fn = () => {
-      const y = window.scrollY;
-      setScrolled(y > 40);
-      setHidden(y > lastY.current && y > 120);
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", fn, { passive: true });
 
-    if (typeof window !== "undefined") {
-      const u = localStorage.getItem("raksha_user");
-      if (u) setUser(JSON.parse(u));
-    }
-
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-  const links = ["How It Works", "For Donors", "For Patients", "Impact", "Library", "About", "Console", "Partners"];
-  const visibleLinks = links.filter(link => {
-    if (link === "Console") {
-      return user && (user.role === "coordinator" || user.role === "admin");
-    }
-    return true;
-  });
-  return (
-    <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, height: "68px", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 48px", background: scrolled ? "#0A1628" : "transparent", borderBottom: scrolled ? "1px solid #8B1A2A" : "none", transform: hidden ? "translateY(-100%)" : "translateY(0)", transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)", backdropFilter: scrolled ? "blur(12px)" : "none" }}>
-      <RakshaLogo />
-      <div style={{ display: "flex", gap: "28px" }}>
-        {visibleLinks.map(l => (
-          <a key={l} href={`/${l.toLowerCase().replace(/ /g, "-")}`}
-            style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "0.82rem", color: l === "Partners" ? "#2CA8A0" : "#9CA3AF", fontWeight: l === "Partners" ? 600 : 400, textDecoration: "none", letterSpacing: "0.02em", transition: "color 0.2s" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#FAF9F7")}
-            onMouseLeave={e => (e.currentTarget.style.color = l === "Partners" ? "#2CA8A0" : "#9CA3AF")}
-          >{l}</a>
-        ))}
-      </div>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <a href="/register/donor" style={{ background: "#C0152A", color: "#FAF9F7", fontFamily: "'DM Sans',sans-serif", fontWeight: 600, fontSize: "0.82rem", padding: "10px 18px", textDecoration: "none", letterSpacing: "0.03em", transition: "background 0.2s" }} onMouseEnter={e => (e.currentTarget.style.background = "#9B2335")} onMouseLeave={e => (e.currentTarget.style.background = "#C0152A")}>Register as Donor</a>
-        <a href="/register/patient" style={{ background: "transparent", color: "#FAF9F7", fontFamily: "'DM Sans',sans-serif", fontWeight: 500, fontSize: "0.82rem", padding: "10px 18px", textDecoration: "none", border: "1px solid rgba(250,249,247,0.35)", transition: "border-color 0.2s" }} onMouseEnter={e => (e.currentTarget.style.borderColor = "#FAF9F7")} onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(250,249,247,0.35)")}>Request Blood</a>
-      </div>
-    </nav>
-  );
-}
 
 // ─── VIDEO BACKGROUND HELPER ──────────────────────────────────────────────────
 

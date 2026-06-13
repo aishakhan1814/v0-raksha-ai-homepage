@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslation, Language } from "@/components/raksha/translation-provider";
 import { getPrediction } from "@/utils/predictDonor";
 
 // ─── TYPES ────────────────────────────────────────────────────────────────────
@@ -94,6 +95,7 @@ const btn = (bg = "#C0152A", fg = "#FAF9F7"): React.CSSProperties => ({ backgrou
 
 // ─── SIDEBAR ──────────────────────────────────────────────────────────────────
 function Sidebar({ donor, active, go }: { donor: typeof DONOR; active: Panel; go: (p: Panel) => void }) {
+  const { language, setLanguage, translating } = useTranslation();
   const initial = donor.name ? donor.name.charAt(0).toUpperCase() : "D";
   return (
     <aside style={{ width: 240, minHeight: "100vh", background: "#0A1628", borderRight: "1px solid #1e293b", display: "flex", flexDirection: "column", position: "fixed", top: 0, left: 0, bottom: 0, zIndex: 50, overflowY: "auto" }}>
@@ -144,6 +146,38 @@ function Sidebar({ donor, active, go }: { donor: typeof DONOR; active: Panel; go
           window.location.href = "/signin";
         }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: F.display, fontSize: "0.8rem", color: "#6B7280", padding: 0, textAlign: "left" }}>← Log Out</button>
         <div style={{ fontFamily: F.display, fontSize: "0.62rem", color: "#374151" }}>Demo · v1.0</div>
+
+        <div style={{ borderTop: "1px solid #1e293b", paddingTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.8rem", color: "#6B7280" }}>
+            <span>🌐</span>
+            <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600, fontFamily: F.display }}>Language</span>
+            {translating && <span className="w-1.5 h-1.5 rounded-full bg-raksha-teal animate-pulse" style={{ backgroundColor: '#2CA8A0', display: 'inline-block' }} />}
+          </div>
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as Language)}
+            style={{
+              width: "100%",
+              background: "#0D1B30",
+              color: "#FAF9F7",
+              border: "1px solid rgba(139, 26, 42, 0.4)",
+              padding: "8px 12px",
+              fontSize: "0.8rem",
+              fontFamily: F.display,
+              outline: "none",
+              cursor: "pointer",
+              borderRadius: "4px"
+            }}
+          >
+            <option value="en">English</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="es">Español (Spanish)</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          </select>
+        </div>
       </div>
     </aside>
   );

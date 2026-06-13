@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, useMemo } from "react"
+import { Navbar } from "@/components/raksha/navbar"
 
 import { rawCSV } from "@/lib/dataset";
 
@@ -439,113 +440,7 @@ function ScrollAnimate({ children }: { children: (inView: boolean) => React.Reac
   return <div ref={ref} style={{ width: "100%", height: "100%" }}>{children(inView)}</div>;
 }
 
-/* ─────────────────────────────────────────
-   INLINE LOGO SVG
-   ───────────────────────────────────────── */
-function LogoMark({ size = 32 }: { size?: number }) {
-  return (
-    <svg viewBox="0 0 48 56" fill="none" width={size} height={(size * 56)/48}>
-      <path d="M24 2L44 11V30C44 43 24 54 24 54S4 43 4 30V11Z" fill="#8B1A2A" />
-      <path d="M24 14C24 14 17 22.5 17 27C17 30.87 20.13 34 24 34C27.87 34 31 30.87 31 27C31 22.5 24 14 24 14Z" fill="white" opacity="0.95" />
-      <path d="M16 39Q20 36 24 39Q28 42 32 39" stroke="#2CA8A0" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-    </svg>
-  )
-}
 
-/* ─────────────────────────────────────────
-   NAVBAR COMPONENT
-   ───────────────────────────────────────── */
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [user, setUser] = useState<any>(null)
-
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 60)
-    window.addEventListener("scroll", fn, { passive: true })
-    
-    if (typeof window !== "undefined") {
-      const u = localStorage.getItem("raksha_user");
-      if (u) setUser(JSON.parse(u));
-    }
-
-    return () => window.removeEventListener("scroll", fn)
-  }, [])
-
-  const links = [
-    { label: "How It Works", href: "/how-it-works" },
-    { label: "For Donors", href: "/for-donors" },
-    { label: "For Patients", href: "/for-patients" },
-    { label: "Impact", href: "/impact" },
-    { label: "Library", href: "/library" },
-    { label: "About", href: "/about" },
-    { label: "Console", href: "/console" },
-  ]
-
-  const visibleLinks = links.filter(l => {
-    if (l.label === "Console") {
-      return user && (user.role === "coordinator" || user.role === "admin");
-    }
-    return true;
-  });
-
-  return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      height: "64px",
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "0 48px",
-      background: scrolled ? "rgba(10,10,12,0.96)" : "transparent",
-      backdropFilter: scrolled ? "blur(14px)" : "none",
-      borderBottom: scrolled ? "1px solid rgba(155,35,53,0.25)" : "none",
-      transition: "background 300ms, border-color 300ms",
-    }}>
-      <a href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-        <LogoMark size={30} />
-        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", fontWeight: 600 }}>
-          <span style={{ color: T.white }}>Raksha</span>
-          <span style={{ color: T.teal }}>AI</span>
-        </span>
-      </a>
-
-      <div style={{ display: "flex", gap: "28px" }}>
-        {visibleLinks.map(l => (
-          <a key={l.label} href={l.href} style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "14px",
-            color: l.href === "/impact" ? T.crimson : T.white,
-            textDecoration: "none",
-            fontWeight: l.href === "/impact" ? 600 : 400,
-            opacity: 0.88,
-            borderBottom: l.href === "/impact" ? `1px solid ${T.crimson}` : "none",
-            paddingBottom: "2px",
-          }}>
-            {l.label}
-          </a>
-        ))}
-      </div>
-
-      <div style={{ display: "flex", gap: "10px" }}>
-        <a href="/register/donor" style={{
-          background: T.crimson, color: T.white,
-          padding: "10px 20px", borderRadius: "0",
-          textDecoration: "none",
-          fontFamily: "'DM Sans', sans-serif", fontSize: "13px", fontWeight: 500,
-        }}>
-          Register as Donor
-        </a>
-        <a href="/register/patient" style={{
-          background: "transparent", color: T.white,
-          padding: "10px 20px",
-          border: "1px solid rgba(255,255,255,0.28)",
-          textDecoration: "none",
-          fontFamily: "'DM Sans', sans-serif", fontSize: "13px",
-        }}>
-          Request Blood
-        </a>
-      </div>
-    </nav>
-  )
-}
 
 /* ─────────────────────────────────────────
    FOOTER COMPONENT
