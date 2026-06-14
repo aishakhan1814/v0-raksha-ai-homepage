@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { RakshaLogo } from './logo'
-import { useTranslation, Language } from './translation-provider'
+import { useLanguage, Language } from '@/context/LanguageContext'
 
 const navLinks = [
   { label: 'How It Works', href: '/how-it-works' },
@@ -29,7 +29,8 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
     }
   }, [])
 
-  const { language, setLanguage, translating } = useTranslation()
+  const { lang: language, setLang: setLanguage } = useLanguage()
+  const translating = false
 
   const visibleLinks = navLinks.filter(link => {
     if (link.label === "Console") {

@@ -12,7 +12,23 @@ export function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [user, setUser] = useState<any>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await fetch('/api/auth/me')
+        const data = await res.json()
+        if (data.success && data.user) {
+          setUser(data.user)
+        }
+      } catch (err) {
+        console.error('Failed to fetch user session:', err)
+      }
+    }
+    fetchUser()
+  }, [])
 
   useEffect(() => {
     const handleOpen = () => setOpen(true);
@@ -25,7 +41,7 @@ export function ChatWidget() {
       setMessages([
         {
           role: 'assistant',
-          content: "Hello! I'm your RakshaAI Assistant. I can help you with donation scheduling, blood compatibility questions, and understanding your AI match score. How can I help?"
+          content: "Hello! I'm your RakshaAI Assistant. Please note: I provide general medical guidance and am not a substitute for professional medical advice. I can help you with donation scheduling, blood compatibility questions, and understanding your AI match score. How can I help?"
         }
       ])
     }
@@ -46,12 +62,19 @@ export function ChatWidget() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: updated })
+        body: JSON.stringify({
+          messages: updated,
+          userId: user?.id || undefined
+        })
       })
       const data = await res.json()
-      setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'I am here to help.' }])
+      if (data && data.success) {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'I am here to help.' }])
+      } else {
+        setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I couldn't process that — please try again." }])
+      }
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I couldn't connect. Please try again." }])
+      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I couldn't process that — please try again." }])
     } finally {
       setLoading(false)
     }

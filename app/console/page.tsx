@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslation, Language } from "@/components/raksha/translation-provider";
+import { useLanguage, Language } from "@/context/LanguageContext";
 import { StatsPanel } from "@/components/raksha/console/stats-panel";
 import { DonorTable } from "@/components/raksha/console/donor-table";
 import { BridgesPanel } from "@/components/raksha/console/bridges-panel";
@@ -44,7 +44,7 @@ function Logo() {
 }
 
 export default function ConsolePage() {
-  const { language, setLanguage } = useTranslation();
+  const { lang: language, setLang: setLanguage } = useLanguage();
   const [tab, setTab] = useState<Tab>("overview");
   const [consoleData, setConsoleData] = useState<any>(null);
   const [loading, setLoading] = useState(true);

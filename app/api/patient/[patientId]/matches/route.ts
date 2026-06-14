@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import path from "path";
 import fs from "fs";
+import { rerankMatchesWithRAG } from "@/lib/rag-matcher";
 
 // Haversine formula to compute distance between coordinates in km
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -68,19 +69,27 @@ export async function GET(
     const { db } = await connectToDatabase();
 
     // 1. Fetch patient profile from MongoDB
-    const patient = await db.collection("patients").findOne({
+    let patient = await db.collection("patients").findOne({
       $or: [
         { requestId: decodedId },
         { patientId: decodedId }
       ]
     });
 
+    // Fallback: If query was by requestId, but it wasn't saved on patients document
+    if (!patient && decodedId.startsWith("REQ-")) {
+      const requestDoc = await db.collection("blood_requests").findOne({ requestId: decodedId });
+      if (requestDoc && requestDoc.patientId) {
+        patient = await db.collection("patients").findOne({ patientId: requestDoc.patientId });
+      }
+    }
+
     if (!patient) {
       return NextResponse.json({ success: false, error: "Patient not found in MongoDB" }, { status: 404 });
     }
 
     const patientBlood = patient.bloodGroup || "B+";
-    const patientCity = patient.address ? patient.address.split(",").pop()?.trim() || "Hyderabad" : "Hyderabad";
+    const patientCity = patient.city || (patient.address ? patient.address.split(",").pop()?.trim() || "Hyderabad" : "Hyderabad");
     const patientLat = patient.latitude || 0;
     const patientLon = patient.longitude || 0;
     const transfusionCount = patient.donorCount ? parseInt(patient.donorCount) : 0;
@@ -275,8 +284,14 @@ export async function GET(
 
     results.sort((a, b) => b.composite_score - a.composite_score);
 
+    // Run RAG reranking on the matches (Two-Stage Matching Pipeline)
+    const rerankedMatches = await rerankMatchesWithRAG(
+      { bloodGroup: patientBlood, city: patientCity, antibody_history: antibodyHistory },
+      results
+    );
+
     // 4. Map results to format expected by dashboard/patient/page.tsx
-    const formattedMatches = results.map((m, idx) => {
+    const formattedMatches = rerankedMatches.map((m, idx) => {
       const nameParts = m.donor_name.split(" ");
       const initials = nameParts.map((n: string) => n[0] || "").join("").toUpperCase();
       
@@ -291,12 +306,13 @@ export async function GET(
         primary: idx === 0,
         city: m.city,
         matchScore: m.composite_score,
+        alloimmunization_risk: m.alloimmunization_risk || "Low",
         scoreBreakdown: {
           bloodTypeMatchScore: m.breakdown["Antigen compatibility"]?.score || 100,
           cityMatchScore: m.breakdown["Proximity"]?.score || 100,
           recencyScore: m.breakdown["Donation recency"]?.score || 100,
           rankingLabel: m.activity_label || "Active",
-          explanation: `${m.donor_name} is compatible for Rh antigens. Located ${m.distance_km} km away.`
+          explanation: m.scoreBreakdown?.explanation || `${m.donor_name} is compatible. Located ${m.distance_km || 0} km away.`
         },
         eligible: m.days_since_last >= 90
       };

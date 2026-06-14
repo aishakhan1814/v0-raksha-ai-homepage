@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import fs from "fs";
 import path from "path";
+import { rerankMatchesWithRAG } from "@/lib/rag-matcher";
 
 // Haversine formula to compute distance between coordinates in km
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -220,9 +221,15 @@ export async function POST(req: Request) {
           };
         });
 
+        // Run RAG reranking on the enriched matches (Two-Stage Matching Pipeline)
+        const rerankedMatches = await rerankMatchesWithRAG(
+          { bloodGroup: patientBlood, city: patientCity, antibody_history: antibodyHistory },
+          enrichedMatches
+        );
+
         return NextResponse.json({
           ...data,
-          top_matches: enrichedMatches,
+          top_matches: rerankedMatches,
           total_donors_scanned: donors.length,
         });
       }
@@ -375,6 +382,12 @@ export async function POST(req: Request) {
 
     results.sort((a, b) => b.composite_score - a.composite_score);
 
+    // Run RAG reranking on the fallback matches (Two-Stage Matching Pipeline)
+    const rerankedFallbackMatches = await rerankMatchesWithRAG(
+      { bloodGroup: patientBlood, city: patientCity, antibody_history: antibodyHistory },
+      results
+    );
+
     return NextResponse.json({
       success: true,
       patient_blood_group: patientBlood,
@@ -384,7 +397,7 @@ export async function POST(req: Request) {
       excluded_abo: excluded.abo_fail,
       excluded_conditions: excluded.conditions,
       excluded_inactive: excluded.inactive,
-      top_matches: results,
+      top_matches: rerankedFallbackMatches,
       evaluated_at: new Date().toLocaleDateString("en-IN", {
         day: "2-digit",
         month: "short",

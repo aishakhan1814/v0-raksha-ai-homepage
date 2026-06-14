@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useTranslation, Language } from "@/components/raksha/translation-provider";
+import { useLanguage, Language } from "@/context/LanguageContext";
 import { getPrediction } from "@/utils/predictDonor";
 
 // ─── TYPES ────────────────────────────────────────────────────────────────────
@@ -95,7 +95,8 @@ const btn = (bg = "#C0152A", fg = "#FAF9F7"): React.CSSProperties => ({ backgrou
 
 // ─── SIDEBAR ──────────────────────────────────────────────────────────────────
 function Sidebar({ donor, active, go }: { donor: typeof DONOR; active: Panel; go: (p: Panel) => void }) {
-  const { language, setLanguage, translating } = useTranslation();
+  const { lang: language, setLang: setLanguage } = useLanguage();
+  const translating = false;
   const initial = donor.name ? donor.name.charAt(0).toUpperCase() : "D";
   return (
     <aside style={{ width: 240, minHeight: "100vh", background: "#0A1628", borderRight: "1px solid #1e293b", display: "flex", flexDirection: "column", position: "fixed", top: 0, left: 0, bottom: 0, zIndex: 50, overflowY: "auto" }}>

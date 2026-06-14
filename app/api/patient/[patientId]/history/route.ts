@@ -11,18 +11,27 @@ export async function GET(
     const { db } = await connectToDatabase();
     
     // 1. Fetch patient to align details
-    const patient = await db.collection("patients").findOne({
+    let patient = await db.collection("patients").findOne({
       $or: [
         { requestId: decodedId },
         { patientId: decodedId }
       ]
     });
 
+    // Fallback: If query was by requestId, but it wasn't saved on patients document
+    if (!patient && decodedId.startsWith("REQ-")) {
+      const requestDoc = await db.collection("blood_requests").findOne({ requestId: decodedId });
+      if (requestDoc && requestDoc.patientId) {
+        patient = await db.collection("patients").findOne({ patientId: requestDoc.patientId });
+      }
+    }
+
     // 2. Fetch transfusions from MongoDB
     let transfusions = await db.collection("transfusions").find({
       $or: [
         { patientId: decodedId },
-        { patient_id: decodedId }
+        { patient_id: decodedId },
+        ...(patient ? [{ patientId: patient.patientId }, { patient_id: patient.patientId }] : [])
       ]
     }).toArray();
 
@@ -31,7 +40,7 @@ export async function GET(
       console.log(`No transfusion history found for ${decodedId}, seeding realistic records...`);
       
       // Get compatible donors from same city if possible
-      const patientCity = patient?.address?.split(",")?.pop()?.trim() || "Hyderabad";
+      const patientCity = patient?.city || (patient?.address?.split(",")?.pop()?.trim() || "Hyderabad");
       const patientBlood = patient?.bloodGroup || "B+";
       const compatibleDonors = await db.collection("donors").find({
         city: { $regex: new RegExp("^" + patientCity + "$", "i") }

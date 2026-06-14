@@ -37,15 +37,24 @@ export async function GET(req: NextRequest) {
       let hospitalAddress = "Acharya Donde Marg, Parel, Mumbai, Maharashtra 400012";
       
       if (patientId) {
-        const patient = await db.collection("patients").findOne({
+        let patient = await db.collection("patients").findOne({
           $or: [
             { requestId: patientId },
             { patientId: patientId }
           ]
         });
+
+        // Fallback: If query was by requestId, but it wasn't saved on patients document
+        if (!patient && patientId.startsWith("REQ-")) {
+          const requestDoc = await db.collection("blood_requests").findOne({ requestId: patientId });
+          if (requestDoc && requestDoc.patientId) {
+            patient = await db.collection("patients").findOne({ patientId: requestDoc.patientId });
+          }
+        }
+
         if (patient) {
           hospitalName = patient.hospital || "Rainbow Hospital";
-          hospitalAddress = patient.address || "Hyderabad";
+          hospitalAddress = patient.address || patient.city || "Hyderabad";
         }
       }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useTranslation, Language } from "@/components/raksha/translation-provider";
+import { useLanguage, Language } from "@/context/LanguageContext";
 import {
   XAxis, YAxis, CartesianGrid, Tooltip,
   ReferenceLine, ResponsiveContainer, Area, AreaChart,
@@ -716,7 +716,8 @@ function PanelPassport({ patient, onEmergency, onShare, onTransfer }: { patient:
 
 // ── MAIN DEFAULT EXPORT ───────────────────────────────────────────────────────
 export default function PatientDashboard() {
-  const { language, setLanguage, translating } = useTranslation();
+  const { lang: language, setLang: setLanguage } = useLanguage();
+  const translating = false;
   const [active, setActive] = useState<string>("home");
   const [showEmergency, setShowEmergency] = useState(false);
   const [patient, setPatient] = useState({
@@ -793,7 +794,7 @@ export default function PatientDashboard() {
 
         if (foundPatient) {
           activeBlood = foundPatient.bloodGroup;
-          activeCity = foundPatient.address?.split(",")?.pop()?.trim() || "Hyderabad";
+          activeCity = foundPatient.city || foundPatient.address?.split(",")?.pop()?.trim() || "Hyderabad";
           setPatient({
             id: patientId,
             name: foundPatient.firstName,
@@ -842,7 +843,7 @@ export default function PatientDashboard() {
             const defaultPatient = allPatients.find((p: any) => p.phone === "+919876543210") || allPatients[0];
             if (defaultPatient) {
               activeBlood = defaultPatient.bloodGroup;
-              activeCity = defaultPatient.address?.split(",")?.pop()?.trim() || "Hyderabad";
+              activeCity = defaultPatient.city || defaultPatient.address?.split(",")?.pop()?.trim() || "Hyderabad";
               patientId = defaultPatient.patientId || defaultPatient.requestId || "RKSH-ARJUN9";
               setPatient({
                 id: patientId,

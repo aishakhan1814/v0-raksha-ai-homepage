@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ChatWidget } from "@/components/raksha/chat-widget";
-import { TranslationProvider } from "@/components/raksha/translation-provider";
+import { LanguageProvider } from "@/context/LanguageContext";
 import AuthGate from "@/components/raksha/auth-gate";
 import "./globals.css";
 
@@ -48,13 +48,13 @@ export default function RootLayout({
       className={`${cormorant.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
     >
       <body className="font-sans antialiased bg-raksha-deep text-raksha-white">
-        <TranslationProvider>
+        <LanguageProvider>
           <AuthGate>
             <main>{children}</main>
             <ChatWidget />
             <Analytics />
           </AuthGate>
-        </TranslationProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
