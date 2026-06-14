@@ -5,13 +5,13 @@ import { RakshaLogo } from './logo'
 import { useLanguage, Language } from '@/context/LanguageContext'
 
 const navLinks = [
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'For Donors', href: '/for-donors' },
-  { label: 'For Patients', href: '/for-patients' },
-  { label: 'Impact', href: '/impact' },
-  { label: 'Library', href: '/library' },
-  { label: "About", href: "/about" },
-  { label: "Console", href: "/console" },
+  { key: 'nav.howItWorks', href: '/how-it-works' },
+  { key: 'nav.forDonors', href: '/for-donors' },
+  { key: 'nav.forPatients', href: '/for-patients' },
+  { key: 'nav.impact', href: '/impact' },
+  { key: 'nav.library', href: '/library' },
+  { key: 'nav.about', href: '/about' },
+  { key: 'nav.console', href: '/console' },
 ]
 
 export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
@@ -29,11 +29,11 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
     }
   }, [])
 
-  const { lang: language, setLang: setLanguage } = useLanguage()
+  const { lang: language, setLang: setLanguage, t } = useLanguage()
   const translating = false
 
   const visibleLinks = navLinks.filter(link => {
-    if (link.label === "Console") {
+    if (link.key === "nav.console") {
       return user && (user.role === "coordinator" || user.role === "admin");
     }
     return true;
@@ -91,11 +91,11 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
             <div className="hidden lg:flex items-center gap-8">
               {visibleLinks.map((link) => (
                 <a
-                  key={link.label}
+                  key={link.key}
                   href={link.href}
                   className="text-sm text-raksha-white/80 hover:text-raksha-teal transition-colors"
                 >
-                  {link.label}
+                  {t(link.key)}
                 </a>
               ))}
             </div>
@@ -163,12 +163,12 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
                   href="/"
                   className="px-5 py-2.5 border border-raksha-white/50 text-raksha-white text-sm font-medium hover:border-raksha-white transition-colors"
                 >
-                  Go Back to Homepage
+                  {t('nav.goBack')}
                 </a>
               ) : user ? (
                 <>
                   <span className="text-xs text-raksha-white/70 font-mono">
-                    LOGGED IN: <strong className="text-raksha-teal">{user.role?.toUpperCase()}</strong>
+                    {t('nav.loggedIn')} <strong className="text-raksha-teal">{user.role?.toUpperCase()}</strong>
                   </span>
                   <button
                     onClick={() => {
@@ -177,7 +177,7 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
                     }}
                     className="px-4 py-2 border border-raksha-crimson text-raksha-crimson text-xs font-semibold uppercase tracking-wider hover:bg-raksha-crimson hover:text-raksha-white transition-all cursor-pointer"
                   >
-                    Sign Out
+                    {t('nav.signOut')}
                   </button>
                 </>
               ) : (
@@ -186,13 +186,13 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
                     href="/register/donor"
                     className="px-5 py-2.5 bg-raksha-blood text-raksha-white text-sm font-medium hover:bg-raksha-crimson transition-colors"
                   >
-                    Register as Donor
+                    {t('nav.registerDonor')}
                   </a>
                   <a
                     href="/register/patient"
                     className="px-5 py-2.5 border border-raksha-white/50 text-raksha-white text-sm font-medium hover:border-raksha-white transition-colors"
                   >
-                    Request Blood
+                    {t('nav.requestBlood')}
                   </a>
                 </>
               )}
@@ -223,19 +223,19 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
             <div className="flex flex-col gap-4">
               {visibleLinks.map((link) => (
                 <a
-                  key={link.label}
+                  key={link.key}
                   href={link.href}
                   className="text-raksha-white/80 hover:text-raksha-teal transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {link.label}
+                  {t(link.key)}
                 </a>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-raksha-wine/30">
                 {user ? (
                   <>
                     <div className="text-xs text-center text-raksha-white/70 font-mono">
-                      LOGGED IN: <strong className="text-raksha-teal">{user.role?.toUpperCase()}</strong>
+                      {t('nav.loggedIn')} <strong className="text-raksha-teal">{user.role?.toUpperCase()}</strong>
                     </div>
                     <button
                       onClick={() => {
@@ -244,7 +244,7 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
                       }}
                       className="px-5 py-2.5 border border-raksha-crimson text-raksha-crimson text-sm font-semibold uppercase tracking-wider text-center cursor-pointer"
                     >
-                      Sign Out
+                      {t('nav.signOut')}
                     </button>
                   </>
                 ) : (
@@ -253,13 +253,13 @@ export function Navbar({ hideLinks = false }: { hideLinks?: boolean }) {
                       href="/register/donor"
                       className="px-5 py-2.5 bg-raksha-blood text-raksha-white text-sm font-medium text-center"
                     >
-                      Register as Donor
+                      {t('nav.registerDonor')}
                     </a>
                     <a
                       href="/register/patient"
                       className="px-5 py-2.5 border border-raksha-white/50 text-raksha-white text-sm font-medium text-center"
                     >
-                      Request Blood
+                      {t('nav.requestBlood')}
                     </a>
                   </>
                 )}

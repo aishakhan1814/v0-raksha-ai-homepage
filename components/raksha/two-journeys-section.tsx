@@ -1,8 +1,11 @@
 'use client'
 
 import { FadeIn } from './fade-in'
+import { useLanguage } from '@/context/LanguageContext'
 
 export function TwoJourneysSection() {
+  const { t } = useLanguage()
+
   return (
     <section id="donors" className="relative">
       {/* Split Background */}
@@ -15,7 +18,7 @@ export function TwoJourneysSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
         <FadeIn>
           <p className="text-raksha-crimson text-xs uppercase tracking-[0.15em] font-medium mb-16 text-center">
-            Two People. One Mission.
+            {t('journeys.label')}
           </p>
         </FadeIn>
 
@@ -39,25 +42,22 @@ export function TwoJourneysSection() {
               </div>
 
               <h3 className="font-display text-3xl lg:text-4xl text-raksha-white mb-6">
-                The Donor
+                {t('journeys.donorLabel')}
               </h3>
               
               <p className="text-raksha-muted leading-relaxed mb-8">
-                You give blood once. Raksha AI turns that into a relationship. We remind you 
-                when you&apos;re eligible again, match you with patients who need your blood type, 
-                and show you the impact you&apos;re making — not in abstract numbers, but in real lives.
+                {t('journeys.donorText1')}
               </p>
               
               <p className="text-raksha-muted leading-relaxed mb-8">
-                No more sporadic donations. No more wondering if your blood made a difference. 
-                Become a recurring hero for someone who needs you every 21 days.
+                {t('journeys.donorText2')}
               </p>
 
               <a
                 href="/register/donor"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-raksha-blood text-raksha-white font-medium hover:bg-raksha-crimson transition-colors"
               >
-                Become a Raksha Donor
+                {t('journeys.donorCta')}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -84,25 +84,22 @@ export function TwoJourneysSection() {
               </div>
 
               <h3 className="font-display text-3xl lg:text-4xl text-raksha-white mb-6">
-                The Patient Family
+                {t('journeys.patientLabel')}
               </h3>
               
               <p className="text-raksha-muted leading-relaxed mb-8">
-                You&apos;ve spent years managing transfusion schedules, calling donors, and 
-                hoping someone answers. Raksha AI takes that burden off your shoulders. 
-                We predict when your child needs blood, find compatible donors, and coordinate 
-                everything — so you can focus on being a parent, not a logistics manager.
+                {t('journeys.patientText1')}
               </p>
               
               <p className="text-raksha-muted leading-relaxed mb-8">
-                Register once. Let Raksha AI handle the rest.
+                {t('journeys.patientText2')}
               </p>
 
               <a
                 href="/register/patient"
                 className="inline-flex items-center gap-2 px-6 py-3 border border-raksha-blood text-raksha-blood font-medium hover:bg-raksha-blood hover:text-raksha-white transition-colors"
               >
-                Register Your Patient
+                {t('journeys.patientCta')}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>

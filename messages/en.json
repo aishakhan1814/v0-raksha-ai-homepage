@@ -1,0 +1,285 @@
+{
+  "nav": {
+    "howItWorks": "How It Works",
+    "forDonors": "For Donors",
+    "forPatients": "For Patients",
+    "impact": "Impact",
+    "library": "Library",
+    "about": "About",
+    "partners": "Partners",
+    "registerDonor": "Register as Donor",
+    "requestBlood": "Request Blood",
+    "signIn": "Sign In",
+    "console": "Console",
+    "goBack": "Go Back to Homepage",
+    "loggedIn": "LOGGED IN:",
+    "signOut": "Sign Out"
+  },
+  "hero": {
+    "label": "BLOOD WARRIORS × RAKSHA AI",
+    "headline": "Saving a life shouldn't require a miracle. Just a match.",
+    "sub": "Raksha AI connects voluntary blood donors with Thalassemia patients across India — through intelligent matching, automated scheduling, and care that never stops.",
+    "cta1": "Register as a Donor",
+    "cta2": "Find Blood for My Patient",
+    "stat1": "1,00,000+ Patients",
+    "stat2": "Every 21 Days",
+    "stat3": "500+ Transfusions / Lifetime"
+  },
+  "reality": {
+    "label": "THE CURRENT REALITY",
+    "quote": "They're not missing donors. They're missing a system.",
+    "body": "Families spend hours on phone calls, WhatsApp groups, and hospital queues — hoping someone will show up. It's not a donor shortage. It's a coordination crisis.",
+    "cta": "See How Raksha AI Works →"
+  },
+  "mission": {
+    "label": "OUR MISSION",
+    "quote": "Every Thalassemia patient deserves a donor who keeps coming back.",
+    "para1": "Thalassemia Major is not a one-time crisis. It is a lifelong condition where a child's survival depends entirely on access to compatible blood, on schedule, every 2–5 weeks. Forever.",
+    "para2": "Blood Warriors Foundation has spent years building a donor community and Blood Bridge network across India. But the matching is manual. The engagement fades. The coordination is fragile.",
+    "para3": "Raksha AI was built to be the infrastructure Blood Warriors never had — an intelligent, adaptive, multilingual platform that matches donors to patients.",
+    "stat1label": "Thalassemia patients in India",
+    "stat2label": "Average transfusion frequency",
+    "stat3label": "Transfusions in a lifetime"
+  },
+  "journeys": {
+    "label": "TWO PEOPLE. ONE MISSION.",
+    "donor": {
+      "headline": "You donate once. Raksha makes sure you never stop mattering.",
+      "body": "Raksha AI matches you to a specific patient based on blood compatibility, location, and availability.",
+      "cta": "Become a Raksha Donor →"
+    },
+    "patient": {
+      "headline": "Your child's next transfusion is already being arranged.",
+      "body": "Raksha AI builds a dedicated donor circle around your patient. Smart reminders, compatibility matching, and predictive scheduling.",
+      "cta": "Register Your Patient →"
+    },
+    "donorLabel": "The Donor",
+    "donorText1": "You give blood once. Raksha AI turns that into a relationship. We remind you when you're eligible again, match you with patients who need your blood type, and show you the impact you're making — not in abstract numbers, but in real lives.",
+    "donorText2": "No more sporadic donations. No more wondering if your blood made a difference. Become a recurring hero for someone who needs you every 21 days.",
+    "donorCta": "Become a Raksha Donor",
+    "patientLabel": "The Patient Family",
+    "patientText1": "You've spent years managing transfusion schedules, calling donors, and hoping someone answers. Raksha AI takes that burden off your shoulders. We predict when your child needs blood, find compatible donors, and coordinate everything — so you can focus on being a parent, not a logistics manager.",
+    "patientText2": "Register once. Let Raksha AI handle the rest.",
+    "patientCta": "Register Your Patient"
+  },
+  "how": {
+    "label": "THE RAKSHA AI ENGINE",
+    "headline": "Smarter matching. Proactive scheduling. Zero guesswork.",
+    "card1": {
+      "title": "Beyond Blood Type",
+      "body": "Raksha AI considers ABO compatibility, Rh phenotype, Kell antigen status, and alloimmunization history."
+    },
+    "card2": {
+      "title": "Before the Crisis",
+      "body": "The platform knows each patient's transfusion cycle. Donor outreach begins 7 days in advance."
+    },
+    "card3": {
+      "title": "Relationships, Not Transactions",
+      "body": "Post-donation impact stories, milestone badges, and personalized messages keep donors emotionally connected."
+    },
+    "card4": {
+      "title": "India-Scale Communication",
+      "body": "Raksha AI communicates via app, SMS, and WhatsApp — in Hindi, Tamil, Marathi, Bengali, Telugu, and more."
+    }
+  },
+  "impact": {
+    "label": "THE IMPACT SO FAR",
+    "stat1label": "Successful donor-patient matches",
+    "stat2label": "Active donors in network",
+    "stat3label": "Days between transfusions, on average",
+    "stat4label": "Indian languages supported"
+  },
+  "donors": {
+    "pageLabel": "FOR BLOOD DONORS",
+    "headline": "You are not just a blood type. You are someone's lifeline.",
+    "sub": "Thalassemia patients don't need a one-time hero. They need someone who comes back.",
+    "registerCta": "Register as a Donor",
+    "note": "Takes 3 minutes. Free. No obligation.",
+    "eligibility": {
+      "title": "Are You Eligible?",
+      "age": "Age: 18–65 years",
+      "weight": "Weight: Minimum 50 kg",
+      "hb": "Hemoglobin: ≥12.5 g/dL",
+      "last": "Last donation: More than 90 days ago"
+    }
+  },
+  "patients": {
+    "pageLabel": "FOR THALASSEMIA FAMILIES",
+    "headline": "You've been fighting this alone. You don't have to anymore.",
+    "sub": "Raksha AI builds a permanent support system around your patient.",
+    "registerCta": "Register My Patient",
+    "promise1": {
+      "title": "Compatible Donors, Not Just Same Blood Type"
+    },
+    "promise2": {
+      "title": "Scheduled in Advance, Before You Ask"
+    },
+    "promise3": {
+      "title": "A Backup for Every Appointment"
+    },
+    "promise4": {
+      "title": "In Your Language, On Your Device"
+    },
+    "promise5": {
+      "title": "Connected to Your Hospital"
+    }
+  },
+  "reg": {
+    "step1": "Your Details",
+    "step2": "Availability",
+    "step3": "Confirm & Submit",
+    "fullName": "Full Name",
+    "age": "Age",
+    "city": "City",
+    "state": "State",
+    "bloodGroup": "Blood Group",
+    "phone": "Phone Number",
+    "language": "Preferred Language",
+    "whatsapp": "WhatsApp available?",
+    "yes": "Yes",
+    "no": "No",
+    "consent": "I consent to Raksha AI storing and using this information to coordinate blood donation.",
+    "submit": "Register Now →",
+    "success": {
+      "donor": "You're now a Raksha Donor.",
+      "donorSub": "Your first match is being identified.",
+      "patient": "Your patient is registered.",
+      "patientSub": "We're building their donor circle now."
+    }
+  },
+  "dash": {
+    "goodMorning": "Good Morning",
+    "welcomeBack": "Welcome back,",
+    "nextDonation": "Next Donation",
+    "confirm": "Confirm I'll Be There ✓",
+    "reschedule": "Need to Reschedule",
+    "totalDonations": "Total Donations",
+    "missedAppointments": "Missed Appointments",
+    "myImpact": "My Impact",
+    "myCircle": "My Patient Circle",
+    "badges": "Badges & Milestones",
+    "community": "Community",
+    "emergency": "🆘 EMERGENCY REQUEST",
+    "confirmed": "Confirmed ✓",
+    "logout": "← Log Out"
+  },
+  "library": {
+    "label": "RAKSHA LIBRARY",
+    "headline": "Knowledge is the first step. This is yours.",
+    "sub": "Everything you need to understand Thalassemia, blood compatibility, and what it means to be a donor or a family.",
+    "search": "Search articles, guides, FAQs...",
+    "browseLabel": "BROWSE BY TOPIC",
+    "featuredLabel": "FEATURED THIS MONTH",
+    "readArticle": "Read Article →",
+    "subscribe": "Subscribe to Library Updates →",
+    "stayUpdated": "STAY UPDATED",
+    "newGuides": "New guides added monthly.",
+    "noSpam": "No spam. Only Thalassemia-relevant content."
+  },
+  "about": {
+    "label": "OUR STORY",
+    "headline": "This platform exists because a 4-year-old ran out of blood on a Tuesday.",
+    "sub": "It wasn't a statistic. It was a name. A face. A mother who spent 6 hours on the phone."
+  },
+  "partners": {
+    "label": "PARTNERSHIPS",
+    "headline": "Together, we can ensure no patient waits.",
+    "cta": "Become a Partner →"
+  },
+  "footer": {
+    "tagline": "Protecting lives, one match at a time.",
+    "platform": "Platform",
+    "org": "Organisation",
+    "resources": "Resources",
+    "privacy": "Privacy Policy",
+    "terms": "Terms",
+    "copyright": "© 2025 Raksha AI × Blood Warriors Foundation",
+    "emergency": "🆘 Emergency: 1800-XXX-XXXX",
+    "description": "Protecting lives, one match at a time. Raksha AI is transforming blood donation in India through intelligent matching and care coordination.",
+    "donationGuide": "Blood Donation Guide",
+    "thalassemiaFaq": "Thalassemia FAQ",
+    "partnerWithUs": "Partner With Us",
+    "aboutRaksha": "About Raksha AI",
+    "ourTeam": "Our Team",
+    "careers": "Careers",
+    "pressKit": "Press Kit",
+    "cookiePolicy": "Cookie Policy",
+    "emergencyText": "24/7 Emergency Blood Request: +91 1800-RAKSHA-AI",
+    "allRightsReserved": "All rights reserved.",
+    "company": "Company",
+    "legal": "Legal"
+  },
+  "common": {
+    "back": "← Back",
+    "next": "Next →",
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again.",
+    "success": "Success!",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "scroll": "Scroll"
+  },
+  "metric": {
+    "label": "The North Star Metric",
+    "heading": "Compressing the Critical Hour",
+    "subheading": "When hemoglobin crashes, every second counts. Here is how Raksha AI replaces chaotic human logistics with automated precision.",
+    "traditionalLabel": "The Traditional Way",
+    "manualTitle": "Manual Coordination",
+    "hours": "hours",
+    "whatsappTitle": "WhatsApp Blasts (~90 mins)",
+    "whatsappDesc": "Anxious families broadcast requests to spammy groups hoping for replies.",
+    "callingTitle": "Calling Inactive Lists (~120 mins)",
+    "callingDesc": "Dialing outdated contacts, experiencing dropouts, and facing mismatch risks.",
+    "delayTitle": "Hospital / Transport Delay (~42 mins)",
+    "delayDesc": "Manual confirmation, check-in delays, and coordination gaps at the bedside.",
+    "engine": "Raksha Engine",
+    "faster": "85% Faster",
+    "mobileFaster": "Raksha AI compression: 85% time saved",
+    "rakshaLabel": "The Raksha standard",
+    "aiTitle": "AI-Orchestrated Match",
+    "minutes": "minutes",
+    "aiMatchTitle": "AI Compatibility Match (<1 sec)",
+    "aiMatchDesc": "Instant screening based on ABO/Rh history, location, and alloimmunization risk.",
+    "outreachTitle": "Automated Outreach & Confirm (~2 mins)",
+    "outreachDesc": "Smart agents trigger multi-channel alerts (WhatsApp/SMS), securing immediate confirmations.",
+    "deliveryTitle": "Pre-Coordinated Delivery (~36 mins)",
+    "deliveryDesc": "Donor routes are tracked in real-time, and hospital check-in is pre-authorized.",
+    "activeCommitment": "Active Commitment",
+    "statement": "Raksha AI reduces average donor-to-bedside time from 4.2 hours to under 45 minutes at scale.",
+    "footerText": "Ensuring a predictable supply cycle for all registered Thalassemia warriors."
+  },
+  "engine": {
+    "label": "The Raksha AI Engine",
+    "headline": "Smarter matching. Proactive scheduling. Zero guesswork.",
+    "feature1Title": "Antigen-Aware Matching",
+    "feature1Desc": "Antigen-aware matching with alloimmunization risk prediction. Thalassemia patients develop antibodies against repeated donors; our model predicts and avoids high-risk pairings.",
+    "feature2Title": "Predictive Scheduling",
+    "feature2Desc": "Machine learning models analyze hemoglobin trends, transfusion history, and individual patient patterns to predict the optimal next transfusion date — before it becomes urgent.",
+    "feature3Title": "Donor Fatigue Prediction",
+    "feature3Desc": "Our models analyze each donor's personal dropout signals (response delay, declining frequency) and proactively trigger re-engagement alerts before they ghost, not after.",
+    "feature4Title": "Automated Donor Outreach",
+    "feature4Desc": "When a patient needs blood, Raksha AI automatically contacts eligible donors via SMS and WhatsApp in their preferred language. No more manual phone trees.",
+    "feature5Title": "Failure Learning Loop",
+    "feature5Desc": "When an outreach batch has <30% response rate, the system auto-tags those donors as low-availability and deprioritises them. SageMaker retrains the ranking model weekly.",
+    "feature6Title": "Care Memory",
+    "feature6Desc": "Amazon Bedrock stores conversation context across sessions so a patient's caregiver doesn't have to re-explain the patient's history every call—persistent memory over repeated interactions."
+  },
+  "stories": {
+    "label": "Real Stories",
+    "headline": "The humans behind the numbers",
+    "priya": {
+      "quote": "Before Raksha AI, every transfusion day was a crisis. Now, I get a notification, a donor is already confirmed, and we just show up. My daughter finally has a normal childhood between transfusions.",
+      "name": "Priya Sharma",
+      "location": "Mumbai",
+      "role": "Patient Family"
+    },
+    "rajesh": {
+      "quote": "I used to donate randomly — once a year, maybe. Now I donate every 3 months to the same child. I've seen her grow up through Raksha AI updates. She calls me her \"blood uncle.\" That's worth more than anything.",
+      "name": "Rajesh Kumar",
+      "location": "Delhi",
+      "role": "Recurring Donor"
+    },
+    "pullQuote": "When you save a life every 21 days, you don't just become a donor. You become family.",
+    "author": "— A Raksha AI Donor"
+  }
+}

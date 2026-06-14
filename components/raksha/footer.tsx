@@ -1,32 +1,7 @@
 'use client'
 
 import { RakshaLogo } from './logo'
-
-const footerLinks = {
-  platform: [
-    { label: 'How It Works', href: '#how-it-works' },
-    { label: 'For Donors', href: '#donors' },
-    { label: 'For Patients', href: '#patients' },
-    { label: 'Impact Dashboard', href: '' },
-  ],
-  resources: [
-    { label: 'Blood Donation Guide', href: '#' },
-    { label: 'Thalassemia FAQ', href: '#' },
-    { label: 'Research Library', href: '' },
-    { label: 'Partner With Us', href: '#' },
-  ],
-  company: [
-    { label: 'About Raksha AI', href: '#about' },
-    { label: 'Our Team', href: '#' },
-    { label: 'Careers', href: '#' },
-    { label: 'Press Kit', href: '#' },
-  ],
-  legal: [
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms of Service', href: '#' },
-    { label: 'Cookie Policy', href: '#' },
-  ],
-}
+import { useLanguage } from '@/context/LanguageContext'
 
 const socialLinks = [
   { 
@@ -68,6 +43,35 @@ const socialLinks = [
 ]
 
 export function Footer() {
+  const { t } = useLanguage()
+
+  const platformLinks = [
+    { label: t('nav.howItWorks'), href: '/how-it-works' },
+    { label: t('nav.forDonors'), href: '/for-donors' },
+    { label: t('nav.forPatients'), href: '/for-patients' },
+    { label: t('nav.impact'), href: '/impact' },
+  ]
+
+  const resourceLinks = [
+    { label: t('footer.donationGuide'), href: '#' },
+    { label: t('footer.thalassemiaFaq'), href: '#' },
+    { label: t('nav.library'), href: '/library' },
+    { label: t('footer.partnerWithUs'), href: '#' },
+  ]
+
+  const companyLinks = [
+    { label: t('footer.aboutRaksha'), href: '/about' },
+    { label: t('footer.ourTeam'), href: '#' },
+    { label: t('footer.careers'), href: '#' },
+    { label: t('footer.pressKit'), href: '#' },
+  ]
+
+  const legalLinks = [
+    { label: t('footer.privacy'), href: '#' },
+    { label: t('footer.terms'), href: '#' },
+    { label: t('footer.cookiePolicy'), href: '#' },
+  ]
+
   return (
     <footer id="about" className="bg-raksha-navy border-t border-raksha-crimson">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -76,8 +80,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <RakshaLogo height={32} variant="dark" showSubtitle />
             <p className="text-raksha-muted mt-6 leading-relaxed text-sm">
-              Protecting lives, one match at a time. Raksha AI is transforming blood donation 
-              in India through intelligent matching and care coordination.
+              {t('footer.description')}
             </p>
             
             {/* Social Links */}
@@ -97,9 +100,9 @@ export function Footer() {
 
           {/* Platform */}
           <div>
-            <h4 className="text-raksha-white font-semibold mb-4 text-sm">Platform</h4>
+            <h4 className="text-raksha-white font-semibold mb-4 text-sm">{t('footer.platform')}</h4>
             <ul className="space-y-3">
-              {footerLinks.platform.map((link) => (
+              {platformLinks.map((link) => (
                 <li key={link.label}>
                   <a href={link.href} className="text-raksha-muted text-sm hover:text-raksha-teal transition-colors">
                     {link.label}
@@ -111,9 +114,9 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-raksha-white font-semibold mb-4 text-sm">Resources</h4>
+            <h4 className="text-raksha-white font-semibold mb-4 text-sm">{t('footer.resources')}</h4>
             <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
+              {resourceLinks.map((link) => (
                 <li key={link.label}>
                   <a href={link.href} className="text-raksha-muted text-sm hover:text-raksha-teal transition-colors">
                     {link.label}
@@ -125,9 +128,9 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="text-raksha-white font-semibold mb-4 text-sm">Company</h4>
+            <h4 className="text-raksha-white font-semibold mb-4 text-sm">{t('footer.company')}</h4>
             <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
+              {companyLinks.map((link) => (
                 <li key={link.label}>
                   <a href={link.href} className="text-raksha-muted text-sm hover:text-raksha-teal transition-colors">
                     {link.label}
@@ -139,9 +142,9 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="text-raksha-white font-semibold mb-4 text-sm">Legal</h4>
+            <h4 className="text-raksha-white font-semibold mb-4 text-sm">{t('footer.legal')}</h4>
             <ul className="space-y-3">
-              {footerLinks.legal.map((link) => (
+              {legalLinks.map((link) => (
                 <li key={link.label}>
                   <a href={link.href} className="text-raksha-muted text-sm hover:text-raksha-teal transition-colors">
                     {link.label}
@@ -156,10 +159,10 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-raksha-wine/30">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-raksha-blood font-medium text-sm">
-              24/7 Emergency Blood Request: +91 1800-RAKSHA-AI
+              {t('footer.emergencyText')}
             </p>
             <p className="text-raksha-muted text-xs">
-              © {new Date().getFullYear()} Raksha AI. All rights reserved.
+              © {new Date().getFullYear()} Raksha AI. {t('footer.allRightsReserved')}
             </p>
           </div>
         </div>

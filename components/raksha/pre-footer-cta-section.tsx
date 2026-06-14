@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from 'react'
 import { FadeIn } from './fade-in'
+import { useLanguage } from '@/context/LanguageContext'
 
 export function PreFooterCTASection() {
+  const { t } = useLanguage()
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -43,20 +45,19 @@ export function PreFooterCTASection() {
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <FadeIn>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[64px] text-raksha-white leading-tight mb-8 text-balance">
-            Every drop counts. Every match matters.
+            {t('Every drop counts. Every match matters.')}
           </h2>
         </FadeIn>
 
         <FadeIn delay={100}>
           <p className="text-raksha-blood text-lg lg:text-xl font-medium mb-8">
-            By the time she is 18, she will need 210 more transfusions.
+            {t('By the time she is 18, she will need 210 more transfusions.')}
           </p>
         </FadeIn>
 
         <FadeIn delay={200}>
           <p className="text-raksha-muted text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-            Join the network of heroes who show up — not once, but every time. 
-            Your blood type could be someone&apos;s lifeline.
+            {t('Join the network of heroes who show up — not once, but every time. Your blood type could be someone\'s lifeline.')}
           </p>
         </FadeIn>
 
@@ -66,7 +67,7 @@ export function PreFooterCTASection() {
               href="/register/donor"
               className="w-full sm:w-auto px-8 py-4 bg-raksha-blood text-raksha-white font-medium hover:bg-raksha-crimson transition-colors flex items-center justify-center gap-2"
             >
-              I Want to Donate Blood
+              {t('I Want to Donate Blood')}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -75,7 +76,7 @@ export function PreFooterCTASection() {
               href="/register/patient"
               className="w-full sm:w-auto px-8 py-4 border border-raksha-white/50 text-raksha-white font-medium hover:border-raksha-white transition-colors flex items-center justify-center gap-2"
             >
-              Register My Patient
+              {t('Register My Patient')}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>

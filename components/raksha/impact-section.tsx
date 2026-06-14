@@ -4,13 +4,7 @@ import { useEffect, useState } from 'react'
 import { FadeIn } from './fade-in'
 import { Counter } from './counter'
 import { rawCSV } from '@/lib/dataset'
-
-const FALLBACK = [
-  { value: 12500, suffix: '+', label: 'Lives Protected' },
-  { value: 8200,  suffix: '+', label: 'Active Donors' },
-  { value: 98,    suffix: '%', label: 'Match Success Rate' },
-  { value: 45,    suffix: ' min', label: 'Avg Response Time' },
-]
+import { useLanguage } from '@/context/LanguageContext'
 
 interface Stats {
   livesProtected: number
@@ -86,7 +80,11 @@ function parseAndComputeStats(csvText: string) {
 }
 
 export function ImpactSection() {
-  const [stats, setStats] = useState(FALLBACK)
+  const { t } = useLanguage()
+  const [liveStats, setLiveStats] = useState({
+    livesProtected: 12500,
+    activeDonors: 8200
+  })
 
   useEffect(() => {
     const localStats = parseAndComputeStats(rawCSV);
@@ -99,37 +97,40 @@ export function ImpactSection() {
         const activeDonors = donorsData.success ? donorsData.count : (localStats?.activeDonors || 8200);
         const livesProtected = requestsData.success ? (requestsData.count + (localStats?.livesProtected || 12500)) : (localStats?.livesProtected || 12500);
         
-        setStats([
-          { value: livesProtected,   suffix: '+',    label: 'Lives Protected' },
-          { value: activeDonors,     suffix: '+',    label: 'Active Donors' },
-          { value: 98,               suffix: '%',    label: 'Match Success Rate' },
-          { value: 45,               suffix: ' min', label: 'Avg Response Time' },
-        ]);
+        setLiveStats({
+          livesProtected,
+          activeDonors
+        });
       })
       .catch((err) => {
         console.warn("Homepage API stats fetch failed:", err);
         if (localStats) {
-          setStats([
-            { value: localStats.livesProtected,   suffix: '+',    label: 'Lives Protected' },
-            { value: localStats.activeDonors,     suffix: '+',    label: 'Active Donors' },
-            { value: 98,                          suffix: '%',    label: 'Match Success Rate' },
-            { value: 45,                          suffix: ' min', label: 'Avg Response Time' },
-          ]);
+          setLiveStats({
+            livesProtected: localStats.livesProtected,
+            activeDonors: localStats.activeDonors
+          });
         }
       });
   }, [])
+
+  const stats = [
+    { value: liveStats.livesProtected,   suffix: '+',    label: t('Lives Protected') },
+    { value: liveStats.activeDonors,     suffix: '+',    label: t('Active Donors') },
+    { value: 98,                         suffix: '%',    label: t('Match Success Rate') },
+    { value: 45,                         suffix: ` ${t('min')}`, label: t('Avg Response Time') },
+  ];
 
   return (
     <section id="impact" className="relative py-24 lg:py-32 bg-[#8B0000]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <p className="text-raksha-white/60 text-xs uppercase tracking-[0.15em] font-medium mb-4 text-center">
-            Impact So Far
+            {t('impact.label')}
           </p>
         </FadeIn>
         <FadeIn delay={50}>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-raksha-white text-center mb-16 text-balance">
-            Numbers that represent hope
+            {t('Numbers that represent hope')}
           </h2>
         </FadeIn>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">

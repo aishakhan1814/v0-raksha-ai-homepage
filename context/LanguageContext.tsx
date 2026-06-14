@@ -4,17 +4,29 @@ import { createContext, useContext, useState, useEffect, ReactNode, useRef, useM
 import { translations } from "./translations"
 import { dictionary } from "@/components/raksha/dictionary"
 
+// Static JSON imports for messages
+import en from "../messages/en.json"
+import hi from "../messages/hi.json"
+import te from "../messages/te.json"
+import ta from "../messages/ta.json"
+import mr from "../messages/mr.json"
+import bn from "../messages/bn.json"
+
 export type Language = "en" | "hi" | "te" | "mr" | "ta" | "bn" | "gu" | "pa" | "kn"
+
+const messages: Record<string, any> = { en, hi, te, ta, mr, bn }
 
 interface LanguageContextType {
   lang: Language
   setLang: (l: Language) => void
+  switchLanguage: (l: Language) => void
   t: (key: string) => string
 }
 
 const LanguageContext = createContext<LanguageContextType>({
   lang: "en",
   setLang: () => {},
+  switchLanguage: () => {},
   t: (key) => key,
 })
 
@@ -30,7 +42,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   // Load saved language on mount
   useEffect(() => {
     const saved = localStorage.getItem("raksha-lang") as Language
-    if (saved && translations[saved]) {
+    if (saved && (messages[saved] || translations[saved])) {
       setLangState(saved)
     }
   }, [])
@@ -41,13 +53,38 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("raksha-lang", newLang)
   }
 
+  const switchLanguage = (newLang: Language) => {
+    setLang(newLang)
+  }
+
   // Precomputed combined dictionary for the current language
   const activeDict = useMemo(() => {
     if (lang === "en") return {}
     
     const combined: Record<string, string> = {}
     
-    // 1. Load static dictionary from dictionary.ts
+    // 1. Flatten the target language JSON messages and map them using English values
+    const targetMsgs = messages[lang] || {}
+    const enMsgs = messages["en"] || {}
+
+    function mapTranslations(targetObj: any, enObj: any) {
+      if (!targetObj || !enObj) return
+      Object.keys(enObj).forEach(key => {
+        const enVal = enObj[key]
+        const targetVal = targetObj[key]
+        if (typeof enVal === 'string' && typeof targetVal === 'string') {
+          if (enVal && targetVal && targetVal !== enVal) {
+            combined[enVal.replace(/\s+/g, ' ').trim()] = targetVal
+          }
+        } else if (typeof enVal === 'object' && typeof targetVal === 'object') {
+          mapTranslations(targetVal, enVal)
+        }
+      })
+    }
+
+    mapTranslations(targetMsgs, enMsgs)
+
+    // 2. Load static dictionary from dictionary.ts for legacy/fallback support
     const dictForLang = dictionary[lang as Exclude<Language, 'en'>]
     if (dictForLang) {
       Object.entries(dictForLang).forEach(([key, val]) => {
@@ -55,7 +92,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       })
     }
 
-    // 2. Load translations from translations.ts mapped by the english value
+    // 3. Load flat translations from translations.ts
     const enTrans = translations["en"] || {}
     const langTrans = translations[lang] || {}
     Object.keys(enTrans).forEach(key => {
@@ -69,8 +106,24 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return combined
   }, [lang])
 
-  // Key-based translation function with fallback to dictionary lookup
+  // Key-based translation function with fallback to nested dot notation & dictionary lookup
   const t = (key: string): string => {
+    // 1. Resolve dot notation if present
+    if (key.includes('.')) {
+      const langMessages = messages[lang] || messages["en"]
+      const value = key.split('.').reduce((acc, part) => acc && acc[part], langMessages)
+      if (value && typeof value === 'string') {
+        return value
+      }
+      // Fallback to English nested key
+      const enMessages = messages["en"]
+      const enValue = key.split('.').reduce((acc, part) => acc && acc[part], enMessages)
+      if (enValue && typeof enValue === 'string') {
+        return enValue
+      }
+    }
+
+    // 2. Resolve flat translation mapping
     const dict = translations[lang] || translations["en"]
     if (dict[key]) return dict[key]
     
@@ -258,7 +311,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [lang, activeDict])
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t }}>
+    <LanguageContext.Provider value={{ lang, setLang, switchLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   )

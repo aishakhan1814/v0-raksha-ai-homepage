@@ -2,8 +2,11 @@
 
 import { FadeIn } from './fade-in'
 import { Clock, ShieldAlert, Zap, ArrowRight, PhoneCall, MessageSquare, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { useLanguage } from '@/context/LanguageContext'
 
 export function NorthStarMetricSection() {
+  const { t } = useLanguage()
+
   return (
     <section className="relative py-24 lg:py-32 bg-gradient-to-br from-[#0B1528] via-[#0D1C33] to-[#070F1E] overflow-hidden grain-overlay">
       {/* Background glow effects */}
@@ -16,17 +19,17 @@ export function NorthStarMetricSection() {
         <div className="text-center mb-16 lg:mb-24">
           <FadeIn>
             <p className="text-raksha-crimson text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold mb-4">
-              The North Star Metric
+              {t('metric.label')}
             </p>
           </FadeIn>
           <FadeIn delay={100}>
             <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-raksha-white mb-6 text-balance max-w-3xl mx-auto leading-tight">
-              Compressing the <em className="italic text-raksha-warm">Critical Hour</em>
+              {t('metric.heading')}
             </h2>
           </FadeIn>
           <FadeIn delay={200}>
             <p className="text-lg text-raksha-muted max-w-xl mx-auto leading-relaxed">
-              When hemoglobin crashes, every second counts. Here is how Raksha AI replaces chaotic human logistics with automated precision.
+              {t('metric.subheading')}
             </p>
           </FadeIn>
         </div>
@@ -41,17 +44,17 @@ export function NorthStarMetricSection() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-raksha-blood/5 rounded-full blur-2xl pointer-events-none" />
                 
                 <div className="flex items-center justify-between mb-6">
-                  <span className="text-xs font-mono uppercase tracking-widest text-raksha-muted">The Traditional Way</span>
+                  <span className="text-xs font-mono uppercase tracking-widest text-raksha-muted">{t('metric.traditionalLabel')}</span>
                   <div className="p-2 bg-raksha-blood/10 rounded-lg text-raksha-blood">
                     <Clock className="w-5 h-5 animate-pulse" />
                   </div>
                 </div>
 
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold tracking-wider uppercase text-raksha-muted mb-2">Manual Coordination</h3>
+                  <h3 className="text-sm font-semibold tracking-wider uppercase text-raksha-muted mb-2">{t('metric.manualTitle')}</h3>
                   <div className="flex items-baseline gap-2">
                     <span className="font-display text-5xl lg:text-6xl text-raksha-muted line-through font-semibold">4.2</span>
-                    <span className="text-xl text-raksha-muted font-medium">hours</span>
+                    <span className="text-xl text-raksha-muted font-medium">{t('metric.hours')}</span>
                   </div>
                 </div>
 
@@ -63,8 +66,8 @@ export function NorthStarMetricSection() {
                       <div className="w-px h-10 bg-raksha-muted/20" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase text-raksha-muted/80">WhatsApp Blasts (~90 mins)</p>
-                      <p className="text-sm text-raksha-muted/60">Anxious families broadcast requests to spammy groups hoping for replies.</p>
+                      <p className="text-xs font-semibold uppercase text-raksha-muted/80">{t('metric.whatsappTitle')}</p>
+                      <p className="text-sm text-raksha-muted/60">{t('metric.whatsappDesc')}</p>
                     </div>
                   </div>
 
@@ -74,8 +77,8 @@ export function NorthStarMetricSection() {
                       <div className="w-px h-10 bg-raksha-muted/20" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase text-raksha-muted/80">Calling Inactive Lists (~120 mins)</p>
-                      <p className="text-sm text-raksha-muted/60">Dialing outdated contacts, experiencing dropouts, and facing mismatch risks.</p>
+                      <p className="text-xs font-semibold uppercase text-raksha-muted/80">{t('metric.callingTitle')}</p>
+                      <p className="text-sm text-raksha-muted/60">{t('metric.callingDesc')}</p>
                     </div>
                   </div>
 
@@ -84,8 +87,8 @@ export function NorthStarMetricSection() {
                       <div className="w-2 h-2 rounded-full bg-raksha-muted/40" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase text-raksha-muted/80">Hospital / Transport Delay (~42 mins)</p>
-                      <p className="text-sm text-raksha-muted/60">Manual confirmation, check-in delays, and coordination gaps at the bedside.</p>
+                      <p className="text-xs font-semibold uppercase text-raksha-muted/80">{t('metric.delayTitle')}</p>
+                      <p className="text-sm text-raksha-muted/60">{t('metric.delayDesc')}</p>
                     </div>
                   </div>
                 </div>
@@ -97,12 +100,12 @@ export function NorthStarMetricSection() {
           <div className="lg:col-span-2 flex flex-col items-center justify-center py-4">
             <FadeIn delay={200}>
               <div className="hidden lg:flex flex-col items-center gap-3">
-                <span className="text-[10px] font-mono tracking-widest text-raksha-crimson uppercase font-bold">Raksha Engine</span>
+                <span className="text-[10px] font-mono tracking-widest text-raksha-crimson uppercase font-bold">{t('metric.engine')}</span>
                 <div className="w-12 h-12 rounded-full border border-raksha-wine flex items-center justify-center bg-raksha-blood/10 shadow-[0_0_20px_rgba(139,26,42,0.3)]">
                   <Zap className="w-6 h-6 text-raksha-warm animate-bounce" />
                 </div>
                 <ArrowRight className="w-6 h-6 text-raksha-crimson animate-pulse" />
-                <span className="text-xs font-mono text-raksha-teal font-semibold">85% Faster</span>
+                <span className="text-xs font-mono text-raksha-teal font-semibold">{t('metric.faster')}</span>
               </div>
               
               {/* Mobile version */}
@@ -110,7 +113,7 @@ export function NorthStarMetricSection() {
                 <div className="w-10 h-10 rounded-full border border-raksha-wine flex items-center justify-center bg-raksha-blood/10">
                   <Zap className="w-5 h-5 text-raksha-warm" />
                 </div>
-                <span className="text-xs font-mono text-raksha-teal font-bold uppercase tracking-wider">Raksha AI compression: 85% time saved</span>
+                <span className="text-xs font-mono text-raksha-teal font-bold uppercase tracking-wider">{t('metric.mobileFaster')}</span>
               </div>
             </FadeIn>
           </div>
@@ -122,17 +125,17 @@ export function NorthStarMetricSection() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-raksha-teal/5 rounded-full blur-2xl pointer-events-none" />
                 
                 <div className="flex items-center justify-between mb-6">
-                  <span className="text-xs font-mono uppercase tracking-widest text-raksha-teal font-semibold">The Raksha standard</span>
+                  <span className="text-xs font-mono uppercase tracking-widest text-raksha-teal font-semibold">{t('metric.rakshaLabel')}</span>
                   <div className="p-2 bg-raksha-teal/10 rounded-lg text-raksha-teal shadow-[0_0_10px_rgba(44,168,160,0.2)]">
                     <Zap className="w-5 h-5 animate-pulse" />
                   </div>
                 </div>
 
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold tracking-wider uppercase text-raksha-white mb-2">AI-Orchestrated Match</h3>
+                  <h3 className="text-sm font-semibold tracking-wider uppercase text-raksha-white mb-2">{t('metric.aiTitle')}</h3>
                   <div className="flex items-baseline gap-2">
                     <span className="font-display text-5xl lg:text-6xl text-raksha-teal font-bold tracking-tight drop-shadow-[0_0_15px_rgba(44,168,160,0.4)]">38</span>
-                    <span className="text-xl text-raksha-white font-medium">minutes</span>
+                    <span className="text-xl text-raksha-white font-medium">{t('metric.minutes')}</span>
                   </div>
                 </div>
 
@@ -144,8 +147,8 @@ export function NorthStarMetricSection() {
                       <div className="w-px h-10 bg-raksha-teal/30" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase text-raksha-white">AI Compatibility Match (&lt;1 sec)</p>
-                      <p className="text-sm text-raksha-muted">Instant screening based on ABO/Rh history, location, and alloimmunization risk.</p>
+                      <p className="text-xs font-semibold uppercase text-raksha-white">{t('metric.aiMatchTitle')}</p>
+                      <p className="text-sm text-raksha-muted">{t('metric.aiMatchDesc')}</p>
                     </div>
                   </div>
 
@@ -155,8 +158,8 @@ export function NorthStarMetricSection() {
                       <div className="w-px h-10 bg-raksha-teal/30" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase text-raksha-white">Automated Outreach & Confirm (~2 mins)</p>
-                      <p className="text-sm text-raksha-muted">Smart agents trigger multi-channel alerts (WhatsApp/SMS), securing immediate confirmations.</p>
+                      <p className="text-xs font-semibold uppercase text-raksha-white">{t('metric.outreachTitle')}</p>
+                      <p className="text-sm text-raksha-muted">{t('metric.outreachDesc')}</p>
                     </div>
                   </div>
 
@@ -165,8 +168,8 @@ export function NorthStarMetricSection() {
                       <div className="w-2 h-2 rounded-full bg-raksha-teal" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase text-raksha-white">Pre-Coordinated Delivery (~36 mins)</p>
-                      <p className="text-sm text-raksha-muted">Donor routes are tracked in real-time, and hospital check-in is pre-authorized.</p>
+                      <p className="text-xs font-semibold uppercase text-raksha-white">{t('metric.deliveryTitle')}</p>
+                      <p className="text-sm text-raksha-muted">{t('metric.deliveryDesc')}</p>
                     </div>
                   </div>
                 </div>
@@ -182,14 +185,14 @@ export function NorthStarMetricSection() {
             <div className="absolute inset-0 bg-raksha-deep/30 backdrop-blur-sm pointer-events-none -z-10" />
             <div className="max-w-4xl mx-auto">
               <span className="inline-block px-3 py-1 bg-raksha-blood/30 border border-raksha-blood text-raksha-warm text-xs font-mono uppercase tracking-widest rounded-full mb-6">
-                Active Commitment
+                {t('metric.activeCommitment')}
               </span>
               <p className="font-display text-2xl sm:text-3xl md:text-4xl text-raksha-warm leading-snug italic mb-6">
-                &ldquo;Raksha AI reduces average donor-to-bedside time from 4.2 hours to under 45 minutes at scale.&rdquo;
+                &ldquo;{t('metric.statement')}&rdquo;
               </p>
               <div className="w-24 h-px bg-raksha-crimson mx-auto my-6" />
               <p className="text-xs sm:text-sm text-raksha-muted font-mono tracking-wider uppercase">
-                Ensuring a predictable supply cycle for all registered Thalassemia warriors.
+                {t('metric.footerText')}
               </p>
             </div>
           </div>

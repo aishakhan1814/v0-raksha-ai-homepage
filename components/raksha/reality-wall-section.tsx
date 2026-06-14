@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { FadeIn } from './fade-in'
+import { useLanguage } from '@/context/LanguageContext'
 
 const chaosWords = [
   'BLOOD GROUP MISMATCH', 'NO AVAILABLE DONORS', 'ALLOIMMUNIZATION RISK', 'IRON OVERLOAD',
@@ -12,6 +13,7 @@ const chaosWords = [
 ]
 
 export function RealityWallSection() {
+  const { t } = useLanguage()
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export function RealityWallSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <p className="text-raksha-crimson text-xs uppercase tracking-[0.15em] font-medium mb-12 text-center">
-            The Current Reality
+            {t('reality.label')}
           </p>
         </FadeIn>
 
@@ -112,16 +114,14 @@ export function RealityWallSection() {
         <FadeIn>
           <blockquote className="text-center max-w-4xl mx-auto mb-8">
             <p className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[56px] text-raksha-warm leading-tight">
-              {"They're not missing donors. They're missing a "}
-              <em className="italic">system.</em>
+              {t('reality.quote')}
             </p>
           </blockquote>
         </FadeIn>
 
         <FadeIn delay={100}>
           <p className="text-center text-raksha-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-            Families spend hours on phone calls, WhatsApp groups, and hospital queues — 
-            hoping someone will show up. It&apos;s not a donor shortage. It&apos;s a coordination crisis.
+            {t('reality.body')}
           </p>
         </FadeIn>
 
@@ -131,10 +131,7 @@ export function RealityWallSection() {
               href="#how-it-works"
               className="inline-flex items-center gap-2 px-8 py-4 bg-raksha-blood text-raksha-white font-medium hover:bg-raksha-crimson transition-colors"
             >
-              See How Raksha AI Works
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+              {t('reality.cta')}
             </a>
           </div>
         </FadeIn>
