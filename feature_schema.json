@@ -1,0 +1,29 @@
+{
+  "feature_order": [
+    "cycle_of_donations",
+    "frequency_in_days",
+    "registration_days",
+    "role",
+    "blood_group",
+    "gender",
+    "donor_type",
+    "eligibility_status"
+  ],
+  "numeric_features": [
+    "cycle_of_donations",
+    "frequency_in_days",
+    "registration_days"
+  ],
+  "categorical_features": [
+    "role",
+    "blood_group",
+    "gender",
+    "donor_type",
+    "eligibility_status"
+  ],
+  "target": {
+    "name": "is_inactive",
+    "description": "1 = Inactive donor, 0 = Active donor",
+    "positive_class": 1
+  }
+}

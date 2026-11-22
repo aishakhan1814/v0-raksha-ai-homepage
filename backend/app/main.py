@@ -1,15 +1,25 @@
 import sys, os
-if 'AWS_LAMBDA_FUNCTION_NAME' in os.environ or 'LAMBDA_TASK_ROOT' in os.environ:
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "package"))
+backend_package = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "package"))
+if os.path.exists(backend_package) and backend_package not in sys.path:
+    sys.path.append(backend_package)
+
+# Local scratch lib fallback if available
+scratch_lib = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "scratch", "lib"))
+if os.path.exists(scratch_lib) and scratch_lib not in sys.path:
+    sys.path.append(scratch_lib)
+
 import os
+import hmac
 import boto3
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, Field, ConfigDict
+from typing import List, Optional, Dict, Any
 import uuid
 import json
+import joblib
+import pandas as pd
 
 app = FastAPI(title="Raksha AI API", description="FastAPI Backend for Raksha AI")
 
@@ -21,6 +31,29 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Initialize ML Inference Pipeline at Startup
+MODEL_ARTIFACTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "model_artifacts"))
+PIPELINE_PATH = os.path.join(MODEL_ARTIFACTS_DIR, "rakshai_xgboost_pipeline.joblib")
+METADATA_PATH = os.path.join(MODEL_ARTIFACTS_DIR, "model_metadata.json")
+SCHEMA_PATH = os.path.join(MODEL_ARTIFACTS_DIR, "feature_schema.json")
+
+ml_pipeline = None
+ml_model_version = "1.0.0"
+
+try:
+    if os.path.exists(PIPELINE_PATH):
+        ml_pipeline = joblib.load(PIPELINE_PATH)
+        print(f"ML Inference Pipeline loaded successfully from {PIPELINE_PATH}")
+    else:
+        print(f"Warning: Model pipeline file not found at {PIPELINE_PATH}")
+        
+    if os.path.exists(METADATA_PATH):
+        with open(METADATA_PATH, "r", encoding="utf-8") as f:
+            meta = json.load(f)
+            ml_model_version = meta.get("version", "1.0.0")
+except Exception as e:
+    print(f"Warning: Failed to load ML model pipeline at startup: {e}")
 
 # Initialize DynamoDB resource
 # Local fallback uses environment variables or default AWS configurations
@@ -114,6 +147,169 @@ class ChatRequest(BaseModel):
     patient_id: Optional[str] = "RKSH-ARJUN9"
     message: str
     history: Optional[List[ChatMessage]] = []
+
+class DonorStatusPredictionRequest(BaseModel):
+    cycle_of_donations: float = Field(..., description="Donation interval cycle in days")
+    frequency_in_days: float = Field(..., description="Historical donation frequency in days")
+    registration_days: float = Field(..., description="Days since platform registration")
+    role: str = Field(..., description="Donor role e.g. 'Regular Donor', 'Bridge Donor', 'Emergency Donor', 'Guest'")
+    blood_group: str = Field(..., description="Blood group e.g. 'O Positive', 'B Positive'")
+    gender: str = Field(..., description="Gender e.g. 'Male', 'Female'")
+    donor_type: str = Field(..., description="Donor type e.g. 'Regular Donor', 'One-Time Donor'")
+    eligibility_status: str = Field(..., description="Clinical eligibility e.g. 'eligible', 'not eligible'")
+
+class ProbabilityDistribution(BaseModel):
+    active: float
+    inactive: float
+
+class DonorStatusPredictionResponse(BaseModel):
+    model_config = ConfigDict(protected_namespaces=())
+    is_inactive: int
+    status_label: str
+    probabilities: ProbabilityDistribution
+    model_version: str
+
+def verify_ml_api_key(x_api_key: Optional[str] = Header(None, alias="X-API-Key")) -> bool:
+    """
+    Validates API key for ML inference endpoint using constant-time comparison.
+    Fails closed (HTTP 503) if server environment variable RAKSHAI_ML_API_KEY is not configured.
+    Returns HTTP 401 if request header X-API-Key is missing or invalid.
+    Never logs or exposes the key.
+    """
+    configured_key = os.getenv("RAKSHAI_ML_API_KEY")
+    if not configured_key:
+        raise HTTPException(
+            status_code=503,
+            detail="ML service authentication is not configured on the server."
+        )
+    if not x_api_key or not hmac.compare_digest(x_api_key, configured_key):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or missing API key."
+        )
+    return True
+
+@app.post("/predict/donor-status", response_model=DonorStatusPredictionResponse)
+async def predict_donor_status(
+    req: DonorStatusPredictionRequest,
+    _auth: bool = Depends(verify_ml_api_key)
+):
+    """
+    Local ML inference endpoint predicting donor engagement activity status (Active vs. Inactive).
+    Strictly for administrative retention/outreach prioritization; NOT for clinical decisions.
+    Zero PII or sensitive request body logging.
+    """
+    if ml_pipeline is None:
+        raise HTTPException(
+            status_code=503, 
+            detail="ML inference model is currently unavailable or failed to initialize."
+        )
+    
+    try:
+        input_df = pd.DataFrame([{
+            "cycle_of_donations": float(req.cycle_of_donations),
+            "frequency_in_days": float(req.frequency_in_days),
+            "registration_days": float(req.registration_days),
+            "role": str(req.role),
+            "blood_group": str(req.blood_group),
+            "gender": str(req.gender),
+            "donor_type": str(req.donor_type),
+            "eligibility_status": str(req.eligibility_status)
+        }])
+        
+        # Predict class probabilities
+        probs = ml_pipeline.predict_proba(input_df)[0]
+        # Canonical mapping: Column 0 is P(Active), Column 1 is P(Inactive)
+        prob_active = float(round(probs[0], 4))
+        prob_inactive = float(round(probs[1], 4))
+        
+        is_inactive = int(prob_inactive >= 0.5)
+        status_label = "Inactive" if is_inactive == 1 else "Active"
+        
+        return DonorStatusPredictionResponse(
+            is_inactive=is_inactive,
+            status_label=status_label,
+            probabilities=ProbabilityDistribution(
+                active=prob_active,
+                inactive=prob_inactive
+            ),
+            model_version=ml_model_version
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Inference execution failed: {str(exc)}")
+
+
+# --- Clinical Guidelines RAG Endpoints ---
+
+class RagQueryRequest(BaseModel):
+    query: str
+    top_k: Optional[int] = 3
+    min_score_threshold: Optional[float] = 0.25
+
+class CitationItem(BaseModel):
+    document_title: str
+    issuing_organization: str
+    version: str
+    publication_date: str
+    section: str
+    page: int
+    relevance_score: float
+
+class RagQueryResponse(BaseModel):
+    success: bool
+    status: str
+    generation_mode: Optional[str] = "LOCAL_GROUNDED_SYNTHESIS"
+    retrieval_engine: Optional[str] = "BM25_IDF_TOKENIZED"
+    query: Optional[str] = None
+    answer: str
+    citations: List[CitationItem] = []
+    retrieved_chunks_count: int
+    bedrock_metadata: Optional[Dict[str, Any]] = None
+    disclaimer: str
+
+@app.post("/rag/query", response_model=RagQueryResponse)
+async def query_clinical_guidelines_rag(
+    req: RagQueryRequest,
+    _auth: bool = Depends(verify_ml_api_key)
+):
+    """
+    RAG Query Endpoint for Care Coordinator Decision Support.
+    Retrieves approved clinical guidelines from the Knowledge Base,
+    applies minimum relevance thresholds, synthesizes answers with strict
+    document/section/page citations, and abstains when context is insufficient.
+    """
+    try:
+        from guidelines_engine import get_guidelines_engine
+        engine = get_guidelines_engine()
+        result = engine.query(
+            query_text=req.query,
+            top_k=req.top_k or 3,
+            min_score_threshold=req.min_score_threshold if req.min_score_threshold is not None else 0.25
+        )
+        return result
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"RAG query execution failed: {str(exc)}")
+
+@app.post("/rag/sync")
+async def sync_clinical_guidelines(
+    _auth: bool = Depends(verify_ml_api_key)
+):
+    """
+    Initiates idempotent synchronization of approved guidelines into the knowledge base manifest.
+    Prevents repeated ingestion of unchanged documents via SHA-256 verification.
+    """
+    try:
+        from guidelines_engine import get_guidelines_engine
+        engine = get_guidelines_engine()
+        manifest = engine.sync_manifest()
+        return {
+            "success": True,
+            "message": "Clinical guidelines knowledge base synchronization completed successfully.",
+            "sync_manifest": manifest
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Synchronization failed: {str(exc)}")
+
 
 
 @app.post("/donor/register")

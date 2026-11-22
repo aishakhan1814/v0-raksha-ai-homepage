@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
+import { authorizeRequest } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const auth = await authorizeRequest(request, ["coordinator", "patient"]);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
+  }
+
   try {
     const { db } = await connectToDatabase();
     const patients = await db.collection("patients").find({}).toArray();

@@ -1,0 +1,40 @@
+{
+  "last_synced_at": "2026-11-22 19:55:22",
+  "total_documents": 3,
+  "total_chunks": 11,
+  "documents": [
+    {
+      "document_id": "NBTC-DGHS-BTS-2022",
+      "title": "National Standards for Blood Transfusion Services",
+      "version": "3.0",
+      "publication_date": "2022-04-15",
+      "chunk_count": 4,
+      "composite_sha256": "67f2492d2e73f93b2343aaaa5c49dbd1e768a41dca1bc7eb2c9b9fdbcfb8feb2",
+      "sync_status": "INDEXED_UP_TO_DATE"
+    },
+    {
+      "document_id": "IAP-NTWS-THAL-2021",
+      "title": "Clinical Practice Guidelines for Transfusion Management of Beta-Thalassemia Major",
+      "version": "2.1",
+      "publication_date": "2021-08-10",
+      "chunk_count": 4,
+      "composite_sha256": "464f8c9b9c3fd24c676bbf59002fd6669f765f90ed02d8aa1cdf585bb3bc93e6",
+      "sync_status": "INDEXED_UP_TO_DATE"
+    },
+    {
+      "document_id": "AABB-TM-ANTIGEN-2020",
+      "title": "Technical Manual: Standards for Minor Antigen Compatibility & Difficult Cross-Match Management",
+      "version": "20.0",
+      "publication_date": "2020-03-01",
+      "chunk_count": 3,
+      "composite_sha256": "65d8999c37f6d9525fb2a942bf32d52f4c7cd7ef84805e306274ddec52b345a0",
+      "sync_status": "INDEXED_UP_TO_DATE"
+    }
+  ],
+  "s3_sync": {
+    "bucket": "raksha-clinical-guidelines-dev",
+    "attempted": true,
+    "status": "NOT_ATTEMPTED",
+    "error": null
+  }
+}

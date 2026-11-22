@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import fs from "fs";
 import path from "path";
 import { rerankMatchesWithRAG } from "@/lib/rag-matcher";
+import { authorizeRequest } from "@/lib/auth";
 
 // Haversine formula to compute distance between coordinates in km
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -77,6 +78,11 @@ function mapBloodGroup(bg: string): string {
 }
 
 export async function POST(req: Request) {
+  const auth = await authorizeRequest(req, ["coordinator", "patient"]);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
+  }
+
   try {
     const body = await req.json();
     const {

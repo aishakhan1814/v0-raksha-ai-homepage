@@ -9,17 +9,21 @@ import { InactivityPanel } from "@/components/raksha/console/inactivity-panel";
 import { DemandPanel } from "@/components/raksha/console/demand-panel";
 import { EmergencyPanel } from "@/components/raksha/console/emergency-panel";
 import SLAEnforcement from "@/components/raksha/console/sla-page";
+import ClinicalGuidelinesAssistant from "@/components/raksha/console/guidelines-assistant";
+import CoordinationDashboard from "@/components/raksha/console/coordination-dashboard";
 
-type Tab = "overview" | "directory" | "bridges" | "emergency" | "inactivity" | "demand" | "sla";
+type Tab = "overview" | "coordination" | "directory" | "bridges" | "emergency" | "inactivity" | "demand" | "sla" | "guidelines";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "overview", label: "Overview" },
+  { id: "coordination", label: "Blood Requests & Outreach" },
   { id: "directory", label: "User Directory" },
   { id: "bridges", label: "Bridges" },
   { id: "emergency", label: "Eligible Donors" },
   { id: "inactivity", label: "Inactivity" },
   { id: "demand", label: "Demand Map" },
   { id: "sla", label: "SLA Enforcement" },
+  { id: "guidelines", label: "Clinical Guidelines (RAG)" },
 ];
 
 function Logo() {
@@ -203,6 +207,9 @@ export default function ConsolePage() {
             logActivity={consoleData?.logActivity} 
           />
         )}
+        {tab === "coordination" && (
+          <CoordinationDashboard />
+        )}
         {tab === "directory" && (
           <DonorTable donors={consoleData?.donors} />
         )}
@@ -226,6 +233,9 @@ export default function ConsolePage() {
             bloodRequests={consoleData?.bloodRequests} 
             onRefresh={loadData} 
           />
+        )}
+        {tab === "guidelines" && (
+          <ClinicalGuidelinesAssistant />
         )}
       </main>
     </div>

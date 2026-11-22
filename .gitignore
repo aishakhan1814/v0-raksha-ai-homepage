@@ -6,11 +6,38 @@ __v0_jsx-dev-runtime.ts
 .v0-trash/
 .vercel/
 
-# Environment variables
-.env*.local
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
 
-# Common ignores
-node_modules
+# Node dependencies & build outputs
+node_modules/
 .next/
+out/
+build/
+dist/
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+*.whl
+
+# Serverless & Lambda packaging builds
+backend/package/
+.serverless/
+
+# Local runtime data & temporary test stores
+data/
+*.log
+
+# OS generated files
 .DS_Store
-.vercel
+Thumbs.db

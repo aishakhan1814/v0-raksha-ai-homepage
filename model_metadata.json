@@ -1,0 +1,40 @@
+{
+  "model_name": "RakshAI Donor Engagement Classifier",
+  "algorithm": "XGBoost via Scikit-Learn Pipeline",
+  "version": "1.0.0",
+  "trained_date": "2026-11-22 12:16:34",
+  "target_encoding": {
+    "is_inactive": 1,
+    "is_active": 0
+  },
+  "hyperparameters": {
+    "max_depth": 4,
+    "learning_rate": 0.03,
+    "n_estimators": 120,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "reg_lambda": 5.0,
+    "scale_pos_weight": 9.312316715542522,
+    "eval_metric": "logloss",
+    "random_state": 42
+  },
+  "training_dimensions": {
+    "rows": 7033,
+    "features": 8
+  },
+  "cross_validation_metrics": {
+    "validation_strategy": "5-Fold GroupKFold on donor_group_id",
+    "pr_auc": "0.8729 \u00b1 0.0135",
+    "inactive_f1": "0.7990 \u00b1 0.0506",
+    "inactive_recall": "0.9714 \u00b1 0.0235",
+    "inactive_precision": "0.6826 \u00b1 0.0772",
+    "macro_f1": "0.8859 \u00b1 0.0297",
+    "balanced_accuracy": "0.9607 \u00b1 0.0087"
+  },
+  "environment": {
+    "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "sklearn_version": "1.9.1",
+    "xgboost_version": "3.4.1"
+  },
+  "limitation_statement": "This model is a retrospective administrative classifier predicting whether a donor is categorized as Active vs. Inactive based on historical platform tenure and frequency patterns. It is NOT a prospectively validated clinical predictor. Blood compatibility (ABO/Rh) and safety eligibility must strictly be determined by deterministic clinical rules and hematological laboratory tests."
+}

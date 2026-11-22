@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { authorizeCoordinator } from "@/lib/auth";
 
 export async function GET(request: Request) {
+  const auth = await authorizeCoordinator(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search") || "";

@@ -1,0 +1,193 @@
+[
+  {
+    "document_id": "NBTC-DGHS-BTS-2022",
+    "title": "National Standards for Blood Transfusion Services",
+    "issuing_organization": "National Blood Transfusion Council (NBTC) & DGHS, Ministry of Health and Family Welfare, Government of India",
+    "version": "3.0",
+    "publication_date": "2022-04-15",
+    "effective_date": "2022-05-01",
+    "category": "Blood Bank Operations & Donor Criteria",
+    "sections": [
+      {
+        "section_id": "SEC-4.2",
+        "section_title": "Donor Selection Criteria and Deferral Intervals",
+        "page": 28,
+        "content": "For whole blood donation, the minimum inter-donation interval must be 90 days (12 weeks) for male donors and 120 days (16 weeks) for female donors. Donors must weigh at least 45 kg for a 350 mL donation and at least 55 kg for a 450 mL donation. Pre-donation hemoglobin must be at least 12.5 g/dL (copper sulphate method or automated hematology analyzer). Donors with active infection, acute fever, jaundice history within 12 months, or major surgery within 6 months must be deferred.",
+        "keywords": [
+          "donation interval",
+          "deferral",
+          "hemoglobin requirement",
+          "minimum weight",
+          "female donation interval",
+          "male donation interval"
+        ]
+      },
+      {
+        "section_id": "SEC-5.1",
+        "section_title": "ABO and RhD Grouping Requirements",
+        "page": 42,
+        "content": "Every blood unit and patient sample must undergo forward (cell) grouping using anti-A, anti-B, and anti-D monoclonal sera, and reverse (serum) grouping using known A, B, and O pooled reagent red blood cells. Discrepancies between forward and reverse grouping must be resolved before releasing blood components. Weak D (Du) testing must be performed on all blood donor samples that are non-reactive on immediate spin with anti-D.",
+        "keywords": [
+          "ABO grouping",
+          "forward grouping",
+          "reverse grouping",
+          "RhD",
+          "weak D",
+          "grouping discrepancy"
+        ]
+      },
+      {
+        "section_id": "SEC-5.7",
+        "section_title": "Emergency Uncrossmatched Blood Release Protocol",
+        "page": 56,
+        "content": "In life-threatening hemorrhagic shock where delays would result in patient fatality, uncrossmatched blood may be issued only upon receipt of a signed written emergency request by the treating clinician. O-Negative uncrossmatched packed red blood cells must be issued for females of childbearing potential (under 50 years). O-Positive RBCs may be issued for adult males and post-menopausal females if O-Negative supplies are critically depleted. Immediate standard crossmatch must be initiated retrospectively, and the clinician must be notified immediately if incompatibility is detected.",
+        "keywords": [
+          "emergency release",
+          "uncrossmatched blood",
+          "O-negative emergency",
+          "massive transfusion",
+          "retrospective crossmatch"
+        ]
+      },
+      {
+        "section_id": "SEC-6.3",
+        "section_title": "Acute Transfusion Reactions and Hemovigilance Protocol",
+        "page": 71,
+        "content": "In the event of an acute adverse transfusion reaction (fever > 1\u00b0C increase, chills, rigors, dyspnea, hypotension, dark urine, or flank pain), the transfusion must be stopped immediately. Intravenous access must be maintained with normal saline. The blood unit, infusion set, post-transfusion patient blood sample, and urine sample must be returned immediately to the blood bank for clerical check, direct antiglobulin test (DAT), repeat ABO/Rh typing, and visual hemolysis check. The incident must be documented and reported to the National Hemovigilance Programme of India (HvPI).",
+        "keywords": [
+          "transfusion reaction",
+          "acute hemolytic reaction",
+          "febrile reaction",
+          "stop transfusion",
+          "DAT",
+          "hemovigilance",
+          "HvPI"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "IAP-NTWS-THAL-2021",
+    "title": "Clinical Practice Guidelines for Transfusion Management of Beta-Thalassemia Major",
+    "issuing_organization": "Indian Academy of Pediatrics (IAP) & National Thalassemia Welfare Society",
+    "version": "2.1",
+    "publication_date": "2021-08-10",
+    "effective_date": "2021-09-01",
+    "category": "Thalassemia Care Protocol",
+    "sections": [
+      {
+        "section_id": "SEC-2.1",
+        "section_title": "Pre-Transfusion Hemoglobin Targets and Regimen",
+        "page": 14,
+        "content": "The universally recommended hypertransfusion protocol for pediatric and adult Thalassemia Major patients aims to maintain pre-transfusion hemoglobin between 9.5 and 10.5 g/dL. This target suppresses ineffective erythropoiesis, prevents skeletal deformities, and inhibits excessive intestinal iron absorption. Transfusions should be scheduled every 2 to 4 weeks depending on the rate of hemoglobin decline. Post-transfusion hemoglobin should ideally not exceed 14.0 g/dL to prevent hyperviscosity.",
+        "keywords": [
+          "pre-transfusion hemoglobin",
+          "target hemoglobin",
+          "hypertransfusion",
+          "thalassemia major",
+          "transfusion schedule",
+          "erythropoiesis"
+        ]
+      },
+      {
+        "section_id": "SEC-3.4",
+        "section_title": "Extended Phenotyping and Alloimmunization Prevention",
+        "page": 22,
+        "content": "Red cell alloimmunization develops in 15% to 37% of chronically transfused Thalassemia patients. Prior to the very first transfusion, extended red cell antigen phenotyping must be performed for ABO, Rh (D, C, c, E, e) and Kell (K, k) systems. At minimum, transfused blood must be matched for ABO, RhD, C, c, E, e, and Kell. Matching for Rh and Kell antigens reduces alloimmunization rates to below 5%. If a patient develops Anti-Kell, all future units must be verified Kell-negative. If a patient develops Anti-E or Anti-C, corresponding antigen-negative blood is mandatory.",
+        "keywords": [
+          "alloimmunization",
+          "extended phenotyping",
+          "Kell antigen",
+          "Rh antigens",
+          "anti-E",
+          "anti-K",
+          "minor antigen matching"
+        ]
+      },
+      {
+        "section_id": "SEC-4.1",
+        "section_title": "Blood Component Specifications: Leukoreduction and Shelf-Life",
+        "page": 31,
+        "content": "Thalassemia patients must receive leukoreduced packed red blood cells (residual leukocytes < 1 x 10^6 per unit). Pre-storage leukofiltration within 48 hours of collection is preferred over bedside filtration. Fresh red blood cells stored for fewer than 7 to 14 days in additive solution (SAGM) are recommended to ensure optimal 2,3-DPG levels and maximum in vivo red cell survival, thereby reducing transfusion frequency and secondary iron accumulation.",
+        "keywords": [
+          "leukoreduction",
+          "leukodepletion",
+          "fresh blood",
+          "red cell age",
+          "SAGM",
+          "2,3-DPG",
+          "filtration"
+        ]
+      },
+      {
+        "section_id": "SEC-5.2",
+        "section_title": "Iron Overload Monitoring and Chelation Initiation",
+        "page": 45,
+        "content": "Each milliliter of transfused packed red blood cells delivers approximately 1.0 to 1.16 mg of elemental iron. Serum ferritin should be monitored every 3 months. Iron chelation therapy should be initiated when serum ferritin persistently exceeds 1,000 ng/mL, or after the patient has received 10 to 20 blood transfusions (typically around 2 to 3 years of age). First-line oral iron chelators include Deferasirox (20-40 mg/kg/day once daily) or Deferiprone (75-100 mg/kg/day in three divided doses). Annual liver iron concentration (LIC by Ferriscan/MRI T2*) and cardiac T2* MRI are recommended for patients aged >= 7 years.",
+        "keywords": [
+          "iron overload",
+          "serum ferritin",
+          "chelation therapy",
+          "deferasirox",
+          "deferiprone",
+          "cardiac T2*",
+          "ferritin monitoring"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "AABB-TM-ANTIGEN-2020",
+    "title": "Technical Manual: Standards for Minor Antigen Compatibility & Difficult Cross-Match Management",
+    "issuing_organization": "Association for the Advancement of Blood & Biotherapies (AABB)",
+    "version": "20.0",
+    "publication_date": "2020-03-01",
+    "effective_date": "2020-04-01",
+    "category": "Immunohematology Reference",
+    "sections": [
+      {
+        "section_id": "SEC-14.3",
+        "section_title": "Identification and Management of Multiple Alloantibodies",
+        "page": 312,
+        "content": "When a patient has documented red cell alloantibodies (e.g., anti-E, anti-K, anti-Fya, anti-Jka), units selected for transfusion must be antigen-negative by serological typing using licensed reagent antisera. An indirect antiglobulin test (IAT) crossmatch through the 37\u00b0C incubation and anti-human globulin (AHG) phase is mandatory; electronic crossmatch is strictly prohibited. If multiple antibodies make compatible units scarce, rare donor registries and regional reference laboratories must be mobilized.",
+        "keywords": [
+          "alloantibodies",
+          "IAT crossmatch",
+          "AHG phase",
+          "antigen negative units",
+          "electronic crossmatch contraindication",
+          "rare donor registry"
+        ]
+      },
+      {
+        "section_id": "SEC-15.1",
+        "section_title": "Indications for Irradiated and Washed Cellular Blood Components",
+        "page": 348,
+        "content": "Gamma or X-ray irradiation (minimum 25 Gy to the central plane) is mandatory for blood components transfused to allogeneic or autologous hematopoietic stem cell transplant recipients, patients receiving directed donations from blood relatives, and patients receiving HLA-matched components to prevent Transfusion-Associated Graft-versus-Host Disease (TA-GvHD). Washing red blood cells with 0.9% sterile saline is indicated for patients with documented severe or recurrent anaphylactic transfusion reactions, IgA deficiency with anti-IgA antibodies, or neonatal hyperkalemia risk.",
+        "keywords": [
+          "irradiated blood",
+          "TA-GvHD",
+          "stem cell transplant",
+          "directed donation",
+          "washed red cells",
+          "anaphylactic reaction",
+          "IgA deficiency"
+        ]
+      },
+      {
+        "section_id": "SEC-16.2",
+        "section_title": "Delayed Hemolytic Transfusion Reactions (DHTR) & Hyperhemolysis Protocol",
+        "page": 384,
+        "content": "Delayed hemolytic transfusion reactions occur 3 to 14 days post-transfusion due to anamnestic secondary immune response against minor antigens (commonly Kidd [Jka, Jkb], Rh, or Duffy). Symptoms include unexplained hemoglobin drop, jaundice, fever, and spherocytosis on blood smear. In rare cases, hyperhemolysis syndrome develops, where both donor and autologous patient red cells are destroyed. Transfusion in hyperhemolysis must be avoided if possible; high-dose intravenous immunoglobulin (IVIG) and systemic corticosteroids (methylprednisolone) are the primary therapeutic modalities.",
+        "keywords": [
+          "delayed hemolytic reaction",
+          "DHTR",
+          "hyperhemolysis",
+          "kidd system",
+          "IVIG",
+          "anamnestic response"
+        ]
+      }
+    ]
+  }
+]

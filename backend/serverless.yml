@@ -2,13 +2,16 @@ service: raksha-ai-api
 
 provider:
   name: aws
-  runtime: python3.9
+  runtime: python3.11
   region: ap-south-1
   stage: dev
   environment:
     DONORS_TABLE: ${self:custom.donorsTable}
     REQUESTS_TABLE: ${self:custom.requestsTable}
     CHAT_TABLE: ${self:custom.chatTable}
+    GUIDELINES_S3_BUCKET: ${self:custom.guidelinesBucket}
+    BEDROCK_MODEL_ID: ${env:BEDROCK_MODEL_ID, 'apac.anthropic.claude-3-5-sonnet-20241022-v2:0'}
+    RAKSHAI_ML_API_KEY: ${env:RAKSHAI_ML_API_KEY, ''}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -25,20 +28,33 @@ provider:
       Action:
         - bedrock:InvokeModel
       Resource:
-        - "arn:aws:bedrock:*:*:model/anthropic.claude-3-haiku-20240307-v1:0"
+        - "arn:aws:bedrock:ap-south-1::foundation-model/*"
+        - "arn:aws:bedrock:ap-south-1:*:inference-profile/*"
     - Effect: Allow
       Action:
-        - translate:TranslateText
-        - sns:Publish
-        - ses:SendEmail
+        - s3:GetObject
+        - s3:PutObject
+        - s3:ListBucket
+      Resource:
+        - Fn::Sub: "arn:aws:s3:::${self:custom.guidelinesBucket}"
+        - Fn::Sub: "arn:aws:s3:::${self:custom.guidelinesBucket}/*"
+    - Effect: Allow
+      Action:
         - secretsmanager:GetSecretValue
       Resource:
-        - "*"
+        - "arn:aws:secretsmanager:ap-south-1:*:secret:RakshaSecrets*"
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource:
+        - "arn:aws:sns:ap-south-1:*:*"
 
 custom:
   donorsTable: 'donors'
   requestsTable: 'blood_requests'
   chatTable: 'chat_sessions'
+  guidelinesBucket: 'raksha-clinical-guidelines-${self:provider.stage}'
+  bedrockKnowledgeBaseId: ${env:BEDROCK_KNOWLEDGE_BASE_ID, 'MOCK_BEDROCK_KB_ID'}
 
 functions:
   api:
@@ -58,6 +74,20 @@ functions:
     handler: app.main.step_function_check_handler
   escalate:
     handler: app.main.step_function_escalate_handler
+  ragQuery:
+    handler: app.rag_query.rag_query_handler
+    events:
+      - http:
+          path: /rag/query
+          method: post
+          cors: true
+  syncGuidelines:
+    handler: app.sync_guidelines.sync_guidelines_handler
+    events:
+      - http:
+          path: /rag/sync
+          method: post
+          cors: true
 
 resources:
   Resources:
@@ -96,6 +126,22 @@ resources:
           - AttributeName: patientId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+
+    RakshaGuidelinesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.guidelinesBucket}
+        VersioningConfiguration:
+          Status: Enabled
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
 
     StepFunctionsRole:
       Type: AWS::IAM::Role
@@ -279,3 +325,5 @@ package:
     - '!.serverless/**'
     - 'app/**'
     - 'package/**'
+    - 'guidelines/**'
+    - 'model_artifacts/**'
