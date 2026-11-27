@@ -39,21 +39,33 @@ METADATA_PATH = os.path.join(MODEL_ARTIFACTS_DIR, "model_metadata.json")
 SCHEMA_PATH = os.path.join(MODEL_ARTIFACTS_DIR, "feature_schema.json")
 
 ml_pipeline = None
+model_metadata: Dict[str, Any] = {}
+feature_schema: Dict[str, Any] = {}
+ml_feature_order: List[str] = []
 ml_model_version = "1.0.0"
 
 try:
-    if os.path.exists(PIPELINE_PATH):
-        ml_pipeline = joblib.load(PIPELINE_PATH)
-        print(f"ML Inference Pipeline loaded successfully from {PIPELINE_PATH}")
-    else:
-        print(f"Warning: Model pipeline file not found at {PIPELINE_PATH}")
-        
-    if os.path.exists(METADATA_PATH):
-        with open(METADATA_PATH, "r", encoding="utf-8") as f:
-            meta = json.load(f)
-            ml_model_version = meta.get("version", "1.0.0")
-except Exception as e:
-    print(f"Warning: Failed to load ML model pipeline at startup: {e}")
+    with open(METADATA_PATH, "r", encoding="utf-8") as metadata_file:
+        model_metadata = json.load(metadata_file)
+    with open(SCHEMA_PATH, "r", encoding="utf-8") as schema_file:
+        feature_schema = json.load(schema_file)
+    ml_feature_order = feature_schema.get("feature_order", [])
+    if ml_feature_order != [
+        "cycle_of_donations",
+        "frequency_in_days",
+        "registration_days",
+        "role",
+        "blood_group",
+        "gender",
+        "donor_type",
+        "eligibility_status",
+    ]:
+        raise ValueError("Feature schema does not match the served prediction contract")
+    ml_pipeline = joblib.load(PIPELINE_PATH)
+    ml_model_version = str(model_metadata["version"])
+except Exception as exc:
+    # Keep health responses honest without logging filesystem paths or request data.
+    print(f"ML model assets unavailable ({type(exc).__name__}).")
 
 # Initialize DynamoDB resource
 # Local fallback uses environment variables or default AWS configurations
@@ -61,25 +73,6 @@ region = os.getenv('AWS_REGION', 'ap-south-1')
 donors_table_name = os.getenv('DONORS_TABLE', 'donors')
 requests_table_name = os.getenv('REQUESTS_TABLE', 'blood_requests')
 chat_table_name = os.getenv('CHAT_TABLE', 'chat_sessions')
-
-def get_secret(secret_id: str, key_name: str, default_value: str = None) -> str:
-    """
-    Retrieves a secret key from AWS Secrets Manager with a single boto3 call.
-    Falls back to environment variables or defaults if offline/unconfigured.
-    """
-    try:
-        client = boto3.client('secretsmanager', region_name=region)
-        secret_value = client.get_secret_value(SecretId=secret_id)
-        secret_json = json.loads(secret_value['SecretString'])
-        return secret_json.get(key_name, default_value)
-    except Exception as e:
-        # Fallback to local environment variable or default value
-        print(f"AWS Secrets Manager call failed for secret {secret_id}: {e}. Falling back to env.")
-        return os.getenv(key_name, default_value)
-
-# One line of code to fetch API keys securely from AWS Secrets Manager
-sms_gateway_key = get_secret('RakshaSecrets', 'SMS_GATEWAY_API_KEY', 'MOCK_LOCAL_DEVELOPMENT_SMS_KEY')
-print(f"Security Check: Loaded SMS Gateway API Key from AWS Secrets Manager: {sms_gateway_key}")
 
 # Helper to load DynamoDB table resource
 def get_dynamodb_resource():
@@ -149,9 +142,9 @@ class ChatRequest(BaseModel):
     history: Optional[List[ChatMessage]] = []
 
 class DonorStatusPredictionRequest(BaseModel):
-    cycle_of_donations: float = Field(..., description="Donation interval cycle in days")
-    frequency_in_days: float = Field(..., description="Historical donation frequency in days")
-    registration_days: float = Field(..., description="Days since platform registration")
+    cycle_of_donations: float = Field(..., ge=0, allow_inf_nan=False, description="Donation interval cycle in days")
+    frequency_in_days: float = Field(..., ge=0, allow_inf_nan=False, description="Historical donation frequency in days")
+    registration_days: float = Field(..., ge=0, allow_inf_nan=False, description="Days since platform registration")
     role: str = Field(..., description="Donor role e.g. 'Regular Donor', 'Bridge Donor', 'Emergency Donor', 'Guest'")
     blood_group: str = Field(..., description="Blood group e.g. 'O Positive', 'B Positive'")
     gender: str = Field(..., description="Gender e.g. 'Male', 'Female'")
@@ -202,11 +195,11 @@ async def predict_donor_status(
     if ml_pipeline is None:
         raise HTTPException(
             status_code=503, 
-            detail="ML inference model is currently unavailable or failed to initialize."
+            detail="ML inference model is currently unavailable."
         )
     
     try:
-        input_df = pd.DataFrame([{
+        features = {
             "cycle_of_donations": float(req.cycle_of_donations),
             "frequency_in_days": float(req.frequency_in_days),
             "registration_days": float(req.registration_days),
@@ -215,7 +208,8 @@ async def predict_donor_status(
             "gender": str(req.gender),
             "donor_type": str(req.donor_type),
             "eligibility_status": str(req.eligibility_status)
-        }])
+        }
+        input_df = pd.DataFrame([features], columns=ml_feature_order)
         
         # Predict class probabilities
         probs = ml_pipeline.predict_proba(input_df)[0]
@@ -236,7 +230,8 @@ async def predict_donor_status(
             model_version=ml_model_version
         )
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Inference execution failed: {str(exc)}")
+        print(f"ML inference failed ({type(exc).__name__}).")
+        raise HTTPException(status_code=503, detail="ML inference is temporarily unavailable.")
 
 
 # --- Clinical Guidelines RAG Endpoints ---
@@ -1699,7 +1694,27 @@ async def reengage_user(req: ReengageRequest):
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "region": region}
+    if ml_pipeline is None or not model_metadata or not ml_feature_order:
+        raise HTTPException(status_code=503, detail="ML model assets are unavailable.")
+    return {
+        "status": "healthy",
+        "model_loaded": True,
+        "model_version": ml_model_version,
+    }
+
+
+@app.get("/model/info")
+async def model_info():
+    if ml_pipeline is None or not model_metadata or not ml_feature_order:
+        raise HTTPException(status_code=503, detail="ML model assets are unavailable.")
+    return {
+        "model_name": model_metadata.get("model_name"),
+        "algorithm": model_metadata.get("algorithm"),
+        "version": ml_model_version,
+        "feature_order": ml_feature_order,
+        "target": feature_schema.get("target"),
+        "limitation_statement": model_metadata.get("limitation_statement"),
+    }
 
 # AWS Lambda Handler mapping for API Gateway proxy integrations
 handler = Mangum(app)
